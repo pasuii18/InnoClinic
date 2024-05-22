@@ -1,8 +1,11 @@
-﻿namespace Presentation.Common.Config;
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace Infrastructure.Common.Configs;
 
 public static class CorsConfig
 {
-    public static IServiceCollection ConfigureCors(this IServiceCollection services)
+    public static IServiceCollection ConfigureCors(
+        this IServiceCollection services)
     {
         services.AddCors(options =>
         {

@@ -1,27 +1,53 @@
-﻿@model Domain.Models.RegisterViewModel
-<form asp-controller="Auth" asp-action="Register" method="post">
-    <input type="hidden" asp-for="ReturnUrl"/>
-    <div>Register</div>
-    <div>
-        <label>Username</label>
-        <input asp-for="Username" name="Username"/>
-        <span asp-validation-for="Username" class="text-danger"></span>
+﻿@model Domain.Common.Models.RegisterViewModel
+<div class="container">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-4 border rounded p-4 mt-3 text-center">
+            <form asp-controller="Auth" asp-action="Register" method="post">
+                <input type="hidden" asp-for="ReturnUrl"/>
+                <h3 class="mb-4">Register</h3>
+                
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group mb-1">
+                    <input class="form-control" asp-for="Email" name="Email" placeholder="Email"/>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-2">
+                    <div class="input-group mb-2">
+                        <input class="form-control" id="passwordInput" asp-for="Password" name="Password" placeholder="Password" type="password" />
+                        <div class="input-group-append">
+                            <button id="togglePassword" type="button" class="btn btn-secondary">(◡ ͜ ◡)</button>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-2">
+                    <input class="form-control" asp-for="ConfirmPassword" name="ConfirmPassword" placeholder="ConfirmPassword"/>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                
+                <div class="row justify-content-center mb-2">
+                    <div class="col">
+                        <button type="submit" class="btn btn-success btn-block">Register</button>
+                    </div>
+                </div>
+                
+                <div class="row justify-content-center">
+                    <div class="col">
+                        <a href="@Url.Action("Login", "Auth", new { returnUrl = Model.ReturnUrl })" class="btn btn-dark btn-block">Already have an account?</a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-    <div>
-        <label>Password</label>
-        <input asp-for="Password" name="Password"/>
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Confirm Password</label>
-        <input asp-for="ConfirmPassword" name="ConfirmPassword"/>
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-    <div>
-        <button type="submit">Sign up</button>
-    </div>
-</form>
-<div>
-    <a href="@Url.Action("Login", "Auth", new { returnUrl = Model.ReturnUrl })">Login</a>
 </div>
 
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        var passwordInput = document.getElementById('passwordInput');
+        var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.textContent = type === 'password' ? '(◡ ͜ ◡)' : '(○ ͜ ○)';
+    });
+</script>

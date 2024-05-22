@@ -1,9 +1,10 @@
 using Application.Services;
-using Domain.Interfaces;
+using Domain.Common.Interfaces;
+using Domain.Entities;
 using Infrastructure;
+using Infrastructure.Common.Configs;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
-using Presentation.Common.Config;
 using Presentation.Common.Middleware;
 
 namespace Presentation;
@@ -14,9 +15,7 @@ public class Program()
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddInfrastructure(builder.Configuration);
-        builder.Services.ConfigureCors();
-        builder.Services.ConfigureIdentityServer(builder.Environment);
+        builder.Services.AddInfrastructure(builder.Environment, builder.Configuration);
 
         builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -34,13 +33,11 @@ public class Program()
         
         using (var scope = app.Services.CreateScope())
         {
-            var serviceProvider = scope.ServiceProvider;
             try
             {
-                var context = serviceProvider.GetRequiredService<AppDbContext>();
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 DbInitializer.InitializeDb(context);
-                DbInitializer.InitializeData(context, userManager);
+                DbInitializer.InitializeData(context, scope);
             }
             catch (Exception e)
             {

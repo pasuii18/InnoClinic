@@ -2,7 +2,7 @@
 using IdentityServer4;
 using IdentityServer4.Models;
 
-namespace Presentation.Common.Config;
+namespace Infrastructure.Common.Configs;
 
 public static class Configuration
 {
@@ -12,10 +12,6 @@ public static class Configuration
             new ApiResource("GatewayAPI")
             {
                 Scopes = { "GatewayAccess" }
-            },
-            new ApiResource("ClientWebApp")
-            {
-                Scopes = { "GatewayAccess", "ClientWebApp" }
             }
         };
     
@@ -24,30 +20,21 @@ public static class Configuration
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
-            new IdentityResource
-            {
-                Name = "new_scope",
-                UserClaims =
-                {
-                    "custom_claim"
-                }
-            }
         };
     
     public static IEnumerable<ApiScope> GetApiScopes() =>
         new List<ApiScope>
         {
             new ApiScope("GatewayAccess"),
-            new ApiScope("ClientWebApp"),
         };
 
     public static IEnumerable<Client> GetClients() =>
         new List<Client>
         {
-            new Client
+            new Client // fix: redirect uris and scoped
             {
-                ClientId = "InternalClinicPortal",
-                ClientSecrets = { new Secret("internalClinicPortalSecret".ToSha256()) },
+                ClientId = "ClientWebApp",
+                ClientSecrets = { new Secret("ClientWebAppSecret".ToSha256()) },
                 AllowedGrantTypes = GrantTypes.Code,
                 RequirePkce = true,
                 RedirectUris = { "https://localhost:44323/signin-oidc"},
@@ -55,28 +42,26 @@ public static class Configuration
                 AllowedScopes = 
                 { 
                     "GatewayAccess", 
-                    "ClientWebApp", 
                     IdentityServerConstants.StandardScopes.OpenId, 
-                    IdentityServerConstants.StandardScopes.Profile,
-                    "new_scope"
+                    IdentityServerConstants.StandardScopes.Profile
                 },
                 RequireConsent = false,
                 AlwaysIncludeUserClaimsInIdToken = true,
                 AllowOfflineAccess = true,
             },
-            new Client
+            new Client // fix: redirect uris and scoped
             {
-                ClientId = "AngularClient",
+                ClientId = "InternalClinicPortal",
+                ClientSecrets = { new Secret("InternalClinicPortalSecret".ToSha256()) },
                 AllowedGrantTypes = GrantTypes.Code,
                 RequirePkce = true,
-                RequireClientSecret = false,
                 RedirectUris = { "https://localhost:44323/signin-oidc"},
                 PostLogoutRedirectUris = { "https://localhost:44323/Home/Home"},
                 AllowedScopes = 
                 { 
                     "GatewayAccess", 
                     IdentityServerConstants.StandardScopes.OpenId, 
-                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.Profile
                 },
                 RequireConsent = false,
                 AlwaysIncludeUserClaimsInIdToken = true,

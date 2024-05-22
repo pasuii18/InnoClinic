@@ -1,5 +1,5 @@
-﻿using Domain.Interfaces;
-using Domain.Models;
+﻿using Domain.Common.Interfaces;
+using Domain.Common.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +22,10 @@ public class AuthController(
     {
         if (!ModelState.IsValid) return View(vm);
 
-        if (await _authService.SignInAsync(vm)) return Redirect(vm.ReturnUrl);
+        var result = await _authService.SignInAsync(vm);
+        if (result.IsSuccess) return Redirect(vm.ReturnUrl);
         
-        ModelState.AddModelError(string.Empty, "Login Error");
+        ModelState.AddModelError(string.Empty, result.Error.Description);
         return View(vm);
     }
     
@@ -39,9 +40,10 @@ public class AuthController(
     {
         if (!ModelState.IsValid) return View(vm);
 
-        if (await _authService.SignUpAsync(vm)) return Redirect(vm.ReturnUrl);
+        var result = await _authService.SignUpAsync(vm);
+        if (result.IsSuccess) return Redirect(vm.ReturnUrl);
         
-        ModelState.AddModelError(string.Empty, "Error occurred");
+        ModelState.AddModelError(string.Empty, result.Error.Description);
         return View(vm);
     }
     

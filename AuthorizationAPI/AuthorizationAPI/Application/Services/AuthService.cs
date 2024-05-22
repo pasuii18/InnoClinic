@@ -1,35 +1,43 @@
-﻿using Domain.Interfaces;
-using Domain.Models;
+﻿using Domain.Common.Interfaces;
+using Domain.Common.Models;
+using Domain.Common.Result;
+using Domain.Entities;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services;
 
 public class AuthService(
-        SignInManager<IdentityUser> signInManager,
-        UserManager<IdentityUser> userManager,
+        SignInManager<User> signInManager,
+        UserManager<User> userManager,
         IIdentityServerInteractionService interactionService)
     : IAuthService
 {
-    public async Task<bool> SignInAsync(LoginViewModel vm)
+    public async Task<Result> SignInAsync(LoginViewModel vm)
     {
-        var user = await userManager.FindByNameAsync(vm.Username);
-        if (user == null) return false;
+        var user = await userManager.FindByEmailAsync(vm.Email);
+        if (user == null) return Result.Failure(AuthErrors.IncorrectUserData);
 
-        var result = await signInManager.PasswordSignInAsync(vm.Username, vm.Password, false, false);
+        var result = await signInManager.PasswordSignInAsync(user, vm.Password, false, false);
+        if(!result.Succeeded) Result.Failure(AuthErrors.IncorrectUserData);
 
-        return result.Succeeded;
+        return Result.Success();
     }
 
-    public async Task<bool> SignUpAsync(RegisterViewModel vm)
+    public async Task<Result> SignUpAsync(RegisterViewModel vm)
     {
-        var user = new IdentityUser(vm.Username);
-        var result = await userManager.CreateAsync(user, vm.Password);
+        if (!vm.Email.Contains('@')) return Result.Failure(AuthErrors.IncorrectEmail);
         
-        if (!result.Succeeded) return false;
+        var user = await userManager.FindByEmailAsync(vm.Email);
+        if (user != null) return Result.Failure(AuthErrors.EmailAlreadyTaken);
         
-        await signInManager.SignInAsync(user, false);
-        return true;
+        var newUser = new User { UserName = vm.Email, Email = vm.Email }; // prob fix someday
+        var result = await userManager.CreateAsync(newUser, vm.Password);
+        
+        if (!result.Succeeded) return Result.Failure(AuthErrors.UndefinedError);
+        
+        await signInManager.SignInAsync(newUser, false);
+        return Result.Success();
     }
 
     public async Task<string> Logout(string logoutId)

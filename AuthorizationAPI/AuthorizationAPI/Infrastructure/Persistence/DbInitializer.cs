@@ -1,5 +1,7 @@
-﻿using Infrastructure.Persistence.Seeds;
+﻿using Domain.Entities;
+using Infrastructure.Persistence.Seeds;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Persistence
 {
@@ -11,9 +13,9 @@ namespace Infrastructure.Persistence
         }
         
         public static void InitializeData(
-            AppDbContext context, UserManager<IdentityUser> userManager)
+            AppDbContext context, IServiceScope scope)
         {
-            AppDbSeeds.InitializeData(context, userManager);
+            AppDbSeeds.InitializeData(context, scope);
         }
     }
 }
