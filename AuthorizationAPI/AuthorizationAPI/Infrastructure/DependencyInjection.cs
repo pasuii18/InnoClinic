@@ -13,15 +13,8 @@ public static class DependencyInjection
             IWebHostEnvironment environment,
             IConfiguration configuration)
     {
-        var conString = configuration.GetConnectionString("DbConnection");
-        var sqlServerConnectionString = new SqlConnectionStringBuilder(conString) // fix: user secrets
-        {
-            UserID = "sa",
-            Password = "pa55w0rd!"
-        };
-        
-        services.ConfigureDb(sqlServerConnectionString.ConnectionString);
-        services.ConfigureIdentityServer(environment, sqlServerConnectionString.ConnectionString);
+        services.ConfigureDb(configuration.GetConnectionString("DbConnection"));
+        services.ConfigureIdentityServer(environment, configuration.GetConnectionString("DbConnection"));
         services.ConfigureCors();
         services.ConfigureServices();
 

@@ -19,7 +19,7 @@ public class AuthService(
         if (user == null) return Result.Failure(AuthErrors.IncorrectUserData);
 
         var result = await signInManager.PasswordSignInAsync(user, vm.Password, false, false);
-        if(!result.Succeeded) Result.Failure(AuthErrors.IncorrectUserData);
+        if(!result.Succeeded) return Result.Failure(AuthErrors.IncorrectUserData);
 
         return Result.Success();
     }

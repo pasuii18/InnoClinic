@@ -402,3 +402,11 @@ bin
 obj
 .ihar
 ClientMVC
+Seeds
+
+.yml
+Properties
+.json
+appsettings.json
+appsettings.development.json
+appsettings.production.json
