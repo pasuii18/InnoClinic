@@ -1,74 +1,74 @@
-﻿using System.Data;
-using Application.Common.Interfaces.RepositoryInterfaces;
-using Domain.Common.Dtos.OfficesDtos;
-using Domain.Common.Interfaces;
+﻿using Application.Common;
+using Application.Common.Dtos.OfficesDtos;
+using Application.Interfaces.RepositoryInterfaces;
+using Application.Interfaces.ServicesInterfaces;
 using Domain.Entities;
-using Mapster;
 using MongoDB.Driver;
 
 namespace Application.Services;
 
 public class OfficesService(IOfficesRepo _officesRepo) : IOfficesService
 {
-    public async Task<List<OfficeReadDto>> GetAllOffices()
+    public async Task<IReadOnlyCollection<OfficeReadDto>> GetAllOffices(PageSettings pageSettings, CancellationToken cancellationToken)
     {
-        var offices = await _officesRepo.GetAllOffices();
-        return offices.Adapt<List<OfficeReadDto>>();
+        var offices = await _officesRepo.GetAllOffices(pageSettings, cancellationToken);
+        var officeReadDtos = offices.Select(OfficeReadDto.MapFromOffice).ToList();
+        return officeReadDtos;
     }
 
-    public async Task<OfficeReadDto> GetOfficeInfo(Guid idOffice)
+    public async Task<OfficeReadDto> GetOfficeInfo(Guid idOffice, CancellationToken cancellationToken)
     {
-        var office = await _officesRepo.GetOfficeById(idOffice);
+        var office = await _officesRepo.GetOfficeById(idOffice, cancellationToken);
         
         if (office == null) throw new KeyNotFoundException("Office not found");
-        
-        return office.Adapt<OfficeReadDto>();
+
+        return OfficeReadDto.MapFromOffice(office);
     }
 
-    public async Task ChangeOfficeStatus(Guid idOffice, OfficeStatusUpdateDto officeStatusUpdateDto)
+    public async Task<bool> ChangeOfficeStatus(Guid idOffice, CancellationToken cancellationToken)
     {
-        var office = await _officesRepo.GetOfficeById(idOffice);
+        var office = await _officesRepo.GetOfficeById(idOffice, cancellationToken);
         
         if (office == null) throw new KeyNotFoundException("Office not found");
-        if (office.IsActive == officeStatusUpdateDto.IsActive) throw new DuplicateNameException("Office is already in this status");
         
         var filter = Builders<Office>.Filter.Eq(o => o.IdOffice, idOffice);
         var update = Builders<Office>.Update
-            .Set(o => o.IsActive, officeStatusUpdateDto.IsActive);
+            .Set(o => o.IsActive, !office.IsActive);
         
-        await _officesRepo.UpdateOffice(filter, update);
+        await _officesRepo.UpdateOffice(filter, update, cancellationToken);
+
+        return !office.IsActive;
     }
 
-    public async Task<Guid> CreateOffice(OfficeCreateDto office)
+    public Task<Guid> CreateOffice(OfficeCreateDto office, CancellationToken cancellationToken)
     {
-        var newOffice = office.Adapt<Office>();
-        newOffice.IdOffice = Guid.NewGuid();
-        await _officesRepo.CreateOffice(newOffice);
-        return newOffice.IdOffice;
+        var newOffice = OfficeCreateDto.MapInOffice(office);
+        _officesRepo.CreateOffice(newOffice, cancellationToken);
+        return Task.FromResult(newOffice.IdOffice);
     }
     
-    public async Task UpdateOffice(Guid idOffice, OfficeUpdateDto officeUpdateDto)
+    public async Task UpdateOffice(OfficeUpdateDto officeUpdateDto, CancellationToken cancellationToken)
     {
-        var office = await _officesRepo.GetOfficeById(idOffice);
+        var office = await _officesRepo.GetOfficeById(officeUpdateDto.IdOffice, cancellationToken);
         
         if (office == null) throw new KeyNotFoundException("Office not found");
         
-        var filter = Builders<Office>.Filter.Eq(o => o.IdOffice, idOffice);
+        var filter = Builders<Office>.Filter.Eq(o => o.IdOffice, officeUpdateDto.IdOffice);
         var update = Builders<Office>.Update
             .Set(o => o.Address, officeUpdateDto.Address)
             .Set(o => o.RegistryPhoneNumber, officeUpdateDto.RegistryPhoneNumber)
             .Set(o => o.IsActive, officeUpdateDto.IsActive)
             .Set(o => o.IdPhoto, officeUpdateDto.IdPhoto);
         
-        await _officesRepo.UpdateOffice(filter, update);
+        await _officesRepo.UpdateOffice(filter, update, cancellationToken);
     }
 
-    public async Task DeleteOffice(Guid idOffice)
+    public async Task DeleteOffice(Guid idOffice, CancellationToken cancellationToken)
     {
-        var office = await _officesRepo.GetOfficeById(idOffice);
+        var office = await _officesRepo.GetOfficeById(idOffice, cancellationToken);
         
         if (office == null) throw new KeyNotFoundException("Office not found");
         
-        await _officesRepo.DeleteOffice(idOffice);
+        await _officesRepo.DeleteOffice(idOffice, cancellationToken);
     }
 }

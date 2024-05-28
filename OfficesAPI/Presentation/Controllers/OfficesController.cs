@@ -1,96 +1,66 @@
-﻿using Domain.Common.Dtos.OfficesDtos;
-using Domain.Common.Interfaces;
-using FluentValidation;
+﻿using Application.Common;
+using Application.Common.Dtos.OfficesDtos;
+using Application.Interfaces.ServicesInterfaces;
+using Infrastructure.Common;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
-using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace Presentation.Controllers;
 
 [Route("api/v1/[controller]")]
 public class OfficesController(
     IOfficesService _officesService) 
-    : Controller
+    : ControllerBase
 {
     [HttpGet]
     [Route("getAllOffices")]
-    public async Task<ActionResult<List<OfficeReadDto>>> GetAllOffices()
+    public async Task<ActionResult<IReadOnlyCollection<OfficeReadDto>>> GetAllOffices([AutoValidateAlways] PageSettings pageSettings, 
+        CancellationToken cancellationToken)
     {
-        Log.Logger.Information("Received request to get all offices.");
-        return Ok(await _officesService.GetAllOffices());
+        var offices = await _officesService.GetAllOffices(pageSettings, cancellationToken);
+        return Ok(offices);
     }
     
     [HttpGet]
-    [Route("{idOffice}/getInfo")]
-    public async Task<ActionResult<OfficeReadDto>> GetOfficeInfo(
-        Guid idOffice)
+    [Route("{idOffice}/information")]
+    public async Task<ActionResult<OfficeReadDto>> GetOfficeInfo(Guid idOffice, 
+        CancellationToken cancellationToken)
     {
-        Log.Logger.Information($"Received request to get office information." +
-                               $" IdOffice is {idOffice}");
-        return Ok(await _officesService.GetOfficeInfo(idOffice));
+        var office = await _officesService.GetOfficeInfo(idOffice, cancellationToken);
+        return Ok(office);
     }
     
     [HttpPut]
-    [Route("{idOffice}/changeStatus")]
-    public async Task<ActionResult> ChangeOfficeStatus(
-        Guid idOffice,
-        OfficeStatusUpdateDto officeStatusUpdateDto)
+    [Route("{idOffice}/status")]
+    public async Task<IActionResult> ChangeOfficeStatus(Guid idOffice, 
+        CancellationToken cancellationToken)
     {
-        Log.Logger.Information($"Received request to change office status." +
-                               $" IdOffice is {idOffice}" +
-                               $" Status is {officeStatusUpdateDto.IsActive}");
-        
-        await _officesService.ChangeOfficeStatus(idOffice, officeStatusUpdateDto);
-        return Ok("Office status updated");
+        var result = await _officesService.ChangeOfficeStatus(idOffice, cancellationToken);
+        return Ok($"Office status updated to \"{(result ? "Active" : "Not active")}\"");
     }
     
     [HttpPost]
-    [Route("create")]
-    public async Task<ActionResult<Guid>> CreateOffice(
-        OfficeCreateDto officeCreateDto,
-        [FromServices] IValidator<OfficeCreateDto> validator)
+    public async Task<ActionResult<Guid>> CreateOffice([AutoValidateAlways] OfficeCreateDto officeCreateDto,
+        CancellationToken cancellationToken)
     {
-        var validationResult = await validator.ValidateAsync(officeCreateDto);
-        if (!validationResult.IsValid)
-        {
-            var errorMessage = string.Join(" ", validationResult.Errors.Select(e => e.ErrorMessage));
-            throw new ValidationException(errorMessage);
-        }
-
-        Log.Logger.Information($"Received request to create office. " +
-                               $"Create Office Object: {System.Text.Json.JsonSerializer.Serialize(officeCreateDto)}");
-        
-        return Ok(await _officesService.CreateOffice(officeCreateDto));
+        var result = await _officesService.CreateOffice(officeCreateDto, cancellationToken);
+        return Ok($"Office created successfully. Id is \"{result}\"");
     }
     
     [HttpPut]
-    [Route("{idOffice}/update")]
-    public async Task<ActionResult> UpdateOffice(
-        Guid idOffice, 
-        OfficeUpdateDto officeUpdateDto,
-        [FromServices] IValidator<OfficeUpdateDto> validator)
+    public async Task<IActionResult> UpdateOffice([AutoValidateAlways] OfficeUpdateDto officeUpdateDto,
+        CancellationToken cancellationToken)
     {
-        var validationResult = await validator.ValidateAsync(officeUpdateDto);
-        if (!validationResult.IsValid)
-        {
-            var errorMessage = string.Join(" ", validationResult.Errors.Select(e => e.ErrorMessage));
-            throw new ValidationException(errorMessage);
-        }
-        
-        Log.Logger.Information($"Received request to update office. " +
-                               $"Update Office Object: {System.Text.Json.JsonSerializer.Serialize(officeUpdateDto)}");
-        await _officesService.UpdateOffice(idOffice, officeUpdateDto);
+        await _officesService.UpdateOffice(officeUpdateDto, cancellationToken);
         return Ok("Office updated");
     }
     
     [HttpDelete]
-    [Route("{idOffice}/delete")]
-    public async Task<ActionResult> DeleteOffice(
-        Guid idOffice)
+    [Route("{idOffice}")]
+    public async Task<IActionResult> DeleteOffice(Guid idOffice,
+        CancellationToken cancellationToken)
     {
-        Log.Logger.Information($"Received request to delete office." +
-                               $" IdOffice is {idOffice}");
-        await _officesService.DeleteOffice(idOffice);
+        await _officesService.DeleteOffice(idOffice, cancellationToken);
         return NoContent();
     }
 }

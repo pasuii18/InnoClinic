@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using MongoDB.Driver;
 
-namespace Application.Common.Interfaces;
+namespace Application.Interfaces;
 
 public interface IMongoDbContext
 {

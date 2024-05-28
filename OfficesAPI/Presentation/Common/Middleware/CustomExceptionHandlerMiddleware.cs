@@ -7,11 +7,13 @@ using Serilog;
 namespace Presentation.Common.Middleware;
 
 public class CustomExceptionHandlerMiddleware(
-    RequestDelegate next, 
-    ILogger<CustomExceptionHandlerMiddleware> _logger)
+    RequestDelegate next)
 {
     public async Task Invoke(HttpContext context)
     {
+        Log.Logger.Information($"Incoming request: " +
+                               $"Method: {context.Request.Method} " +
+                               $"Path: {context.Request.Path}");
         try
         {
             await next(context);
@@ -19,6 +21,13 @@ public class CustomExceptionHandlerMiddleware(
         catch (Exception e)
         {
             await HandleExceptionAsync(context, e);
+            Log.Logger.Error($"An error occured! " +
+                             $"Message: {e.Message}");
+        }
+        finally
+        {
+            Log.Information($"Completed request. " +
+                            $"Status code: {context.Response.StatusCode}");
         }
     }
 
@@ -28,10 +37,6 @@ public class CustomExceptionHandlerMiddleware(
         var result = string.Empty;
         switch (e)
         {
-            case ValidationException validationException:
-                code = HttpStatusCode.BadRequest;
-                result = JsonSerializer.Serialize(new { error = validationException.Message });
-                break;
             case KeyNotFoundException keyNotFoundException:
                 code = HttpStatusCode.NotFound;
                 result = JsonSerializer.Serialize(new { error = keyNotFoundException.Message });
@@ -40,13 +45,15 @@ public class CustomExceptionHandlerMiddleware(
                 code = HttpStatusCode.Conflict;
                 result = JsonSerializer.Serialize(new { error = duplicateNameException.Message });
                 break;
+            default:
+                result = JsonSerializer.Serialize(new { error = e.Message });
+                break;
         }
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)code;
 
         if (result == string.Empty) result = JsonSerializer.Serialize(new { error = e.Message });
-        Log.Logger.Error($"An error occured! Code: {code}, Message: {e.Message}");
         
         return context.Response.WriteAsync(result);
     }

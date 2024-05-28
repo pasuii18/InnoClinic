@@ -1,6 +1,8 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Interfaces;
 using Domain.Entities;
+using Infrastructure.Common.Options;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace Infrastructure.Persistence;
@@ -9,12 +11,11 @@ public class MongoDbContext : IMongoDbContext
 {
     private readonly IMongoDatabase _database;
     
-    public MongoDbContext(IConfiguration configuration)
+    public MongoDbContext(CustomMongoDbClient client)
     {
-        var connectionString = configuration.GetConnectionString("MongoDbConnection");
-        var client = new MongoClient(connectionString);
-        _database = client.GetDatabase("OfficesDb");
+        _database = client.GetDatabase(MongoDbOptions.MongoDbName);
+        Offices = _database.GetCollection<Office>("Offices");
     }
 
-    public IMongoCollection<Office> Offices => _database.GetCollection<Office>("Offices");
+    public IMongoCollection<Office> Offices { get; }
 }
