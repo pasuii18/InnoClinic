@@ -2,6 +2,7 @@
 using System.Data;
 using System.Net;
 using System.Text.Json;
+using Application.Common;
 using Serilog;
 
 namespace Presentation.Common.Middleware;
@@ -27,34 +28,26 @@ public class CustomExceptionHandlerMiddleware(
         finally
         {
             Log.Information($"Completed request. " +
-                            $"Status code: {context.Response.StatusCode}");
+                            $"Status code: {context.Response.StatusCode}" +
+                            $"Method: {context.Request.Method} " + 
+                            $"Path: {context.Request.Path}");
         }
     }
 
     private Task HandleExceptionAsync(HttpContext context, Exception e)
     {
         var code = HttpStatusCode.InternalServerError;
-        var result = string.Empty;
         switch (e)
         {
-            case KeyNotFoundException keyNotFoundException:
+            case KeyNotFoundException:
                 code = HttpStatusCode.NotFound;
-                result = JsonSerializer.Serialize(new { error = keyNotFoundException.Message });
-                break;
-            case DuplicateNameException duplicateNameException:
-                code = HttpStatusCode.Conflict;
-                result = JsonSerializer.Serialize(new { error = duplicateNameException.Message });
-                break;
-            default:
-                result = JsonSerializer.Serialize(new { error = e.Message });
                 break;
         }
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)code;
-
-        if (result == string.Empty) result = JsonSerializer.Serialize(new { error = e.Message });
         
-        return context.Response.WriteAsync(result);
+        return context.Response.WriteAsync(JsonSerializer.Serialize(new CustomResult(false, e.Message, (int)code)));
+
     }
 }

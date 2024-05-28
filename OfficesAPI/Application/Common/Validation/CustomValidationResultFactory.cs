@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,8 @@ public class CustomValidationResultFactory
             .SelectMany(entry => entry.Value)
             .ToList();
 
-        return BadRequest(new { Errors = errorMessages });
+        return BadRequest(new CustomResult(false, "Some validation errors occurred!", 
+            (int)HttpStatusCode.BadRequest, errorMessages));
     }
 }
 
