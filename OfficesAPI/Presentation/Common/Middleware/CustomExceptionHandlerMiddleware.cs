@@ -36,18 +36,11 @@ public class CustomExceptionHandlerMiddleware(
 
     private Task HandleExceptionAsync(HttpContext context, Exception e)
     {
-        var code = HttpStatusCode.InternalServerError;
-        switch (e)
-        {
-            case KeyNotFoundException:
-                code = HttpStatusCode.NotFound;
-                break;
-        }
-
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)code;
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         
-        return context.Response.WriteAsync(JsonSerializer.Serialize(new CustomResult(false, e.Message, (int)code)));
+        return context.Response.WriteAsync(
+            JsonSerializer.Serialize(new CustomResult(false, e.Message, (int)HttpStatusCode.InternalServerError)));
 
     }
 }

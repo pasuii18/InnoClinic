@@ -16,4 +16,9 @@ public class CustomResult(bool isSuccess, string message, int statusCode) : ICus
     {
         this.Data = data;
     }
+    
+    public int GetStatusCode()
+    {
+        return StatusCode != 0 ? StatusCode : 500;
+    }
 }
