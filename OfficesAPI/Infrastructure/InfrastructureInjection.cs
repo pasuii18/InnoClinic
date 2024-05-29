@@ -15,8 +15,6 @@ public static class InfrastructureInjection
     (this IServiceCollection services, 
         IConfiguration configuration)
     {
-        // services.Configure<LoggerOptions>(
-        //     configuration.GetSection("Serilog"));
         services.Configure<MongoDbOptions>(
             configuration.GetSection("ConnectionStrings"));
         

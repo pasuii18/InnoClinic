@@ -4,7 +4,3 @@
     container_name: mongodb
     ports:
       - "27017:27017"
-# cannot connect cuz of "Authentication failed."
-#    environment:
-#      - MONGO_INITDB_ROOT_USERNAME=sa
-#      - MONGO_INITDB_ROOT_PASSWORD=pa55word!

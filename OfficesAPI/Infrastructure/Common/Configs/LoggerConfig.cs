@@ -19,25 +19,5 @@ public class LoggerConfig
             .CreateLogger();
         
         Log.Logger.Write(LogEventLevel.Information, "OfficeAPI service started!");
-
-       // var optionsValue = options.Value;
-       // var loggerConfig = new LoggerConfiguration()
-       //     .MinimumLevel.Is(Enum.Parse<LogEventLevel>(optionsValue.MinimumLevel));
-       //
-       // foreach (var (source, level) in optionsValue.Override)
-       // {
-       //     loggerConfig.MinimumLevel.Override(source, Enum.Parse<LogEventLevel>(level));
-       // }
-       //
-       // loggerConfig.WriteTo.MongoDB(cfg =>
-       // {
-       //     cfg.DatabaseUrl = optionsValue.DatabaseUrl;
-       //     cfg.CollectionName = optionsValue.CollectionName;
-       //     cfg.CappedMaxSizeMb = Convert.ToInt32(optionsValue.CappedMaxSizeMb);
-       //     cfg.CappedMaxDocuments = Convert.ToInt32(optionsValue.CappedMaxDocuments);
-       // });
-       //
-       // loggerConfig.CreateLogger();
-       
     }
 }
