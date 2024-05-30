@@ -1,3 +1,7 @@
+using Application.Interfaces.ReposInterfaces;
+using Infrastructure;
+using Infrastructure.Persistence.Repositories;
+
 namespace ProfilesAPI;
 
 public class Program
@@ -6,8 +10,9 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddInfrastructure(builder.Configuration);
+        
         builder.Services.AddAuthorization();
-
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
