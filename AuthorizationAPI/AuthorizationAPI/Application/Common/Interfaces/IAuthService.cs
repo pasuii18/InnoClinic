@@ -1,6 +1,6 @@
-﻿using Domain.Common.Models;
+﻿using Application.Common.Models;
 
-namespace Domain.Common.Interfaces;
+namespace Application.Common.Interfaces;
 
 public interface IAuthService
 {

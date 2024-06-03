@@ -1,5 +1,5 @@
-﻿using Domain.Common.Interfaces;
-using Domain.Common.Models;
+﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

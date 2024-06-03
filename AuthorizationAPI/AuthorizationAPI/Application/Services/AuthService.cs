@@ -1,6 +1,6 @@
-﻿using Domain.Common.Interfaces;
-using Domain.Common.Models;
-using Domain.Common.Result;
+﻿using Application.Common.Interfaces;
+using Application.Common.Models;
+using Application.Common.Result;
 using Domain.Entities;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;

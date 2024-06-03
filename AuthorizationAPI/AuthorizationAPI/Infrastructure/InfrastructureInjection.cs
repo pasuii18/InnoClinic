@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
 
-public static class DependencyInjection
+public static class InfrastructureInjection
 {
     public static IServiceCollection AddInfrastructure
         (this IServiceCollection services, 
@@ -16,7 +16,6 @@ public static class DependencyInjection
         services.ConfigureDb(configuration.GetConnectionString("DbConnection"));
         services.ConfigureIdentityServer(environment, configuration.GetConnectionString("DbConnection"));
         services.ConfigureCors();
-        services.ConfigureServices();
 
         return services;
     }

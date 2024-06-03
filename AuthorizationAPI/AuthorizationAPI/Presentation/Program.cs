@@ -1,5 +1,5 @@
+using Application;
 using Application.Services;
-using Domain.Common.Interfaces;
 using Domain.Entities;
 using Infrastructure;
 using Infrastructure.Common.Configs;
@@ -17,11 +17,11 @@ public class Program()
 
         builder.Services.AddInfrastructure(builder.Environment, builder.Configuration);
 
-        builder.Services.AddScoped<IAuthService, AuthService>();
-
         builder.Services.AddControllersWithViews();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddApplication();
 
         var app = builder.Build();
 
