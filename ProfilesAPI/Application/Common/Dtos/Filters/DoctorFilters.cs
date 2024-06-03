@@ -2,5 +2,5 @@
 
 public record DoctorFilters(
     string? FullName, 
-    Guid? Specialization, 
+    Guid? IdSpecialization, 
     Guid? IdOffice);

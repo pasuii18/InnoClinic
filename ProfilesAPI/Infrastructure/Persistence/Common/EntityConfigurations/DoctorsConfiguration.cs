@@ -18,9 +18,5 @@ public class DoctorsConfiguration : IEntityTypeConfiguration<Doctor>
         builder.Property(doctor => doctor.IdAccount).IsRequired();
         builder.Property(doctor => doctor.IdSpecialization).IsRequired();
         builder.Property(doctor => doctor.IdOffice).IsRequired();
-
-        builder.HasOne(doctor => doctor.Account)
-            .WithOne(doctorAccount => doctorAccount.Doctor)
-            .HasForeignKey<Account>(doctorAccount => doctorAccount.IdAccount);
     }
 }

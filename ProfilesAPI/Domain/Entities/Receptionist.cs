@@ -8,5 +8,4 @@ public class Receptionist
     public string MiddleName { get; set; }
     public Guid IdAccount { get; set; }
     public Guid IdOffice { get; set; }
-    public Account Account { get; set; }
 }

@@ -15,9 +15,5 @@ public class PatientsConfiguration : IEntityTypeConfiguration<Patient>
         builder.Property(patient => patient.IsLinkedToAccount).IsRequired();
         builder.Property(patient => patient.DateOfBirth).HasColumnType("date");
         builder.Property(patient => patient.IdAccount).IsRequired(false);
-
-        builder.HasOne(patient => patient.Account)
-            .WithOne(patientAccount => patientAccount.Patient)
-            .HasForeignKey<Account>(patientAccount => patientAccount.IdAccount);
     }
 }

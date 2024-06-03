@@ -14,9 +14,5 @@ public class ReceptionistsConfiguration : IEntityTypeConfiguration<Receptionist>
         builder.Property(receptionist => receptionist.MiddleName).IsRequired().HasMaxLength(20);
         builder.Property(receptionist => receptionist.IdAccount).IsRequired().HasMaxLength(30);
         builder.Property(receptionist => receptionist.IdOffice).IsRequired().HasMaxLength(30);
-
-        builder.HasOne(receptionist => receptionist.Account)
-            .WithOne(receptionistAccount => receptionistAccount.Receptionist)
-            .HasForeignKey<Account>(receptionistAccount => receptionistAccount.IdAccount);
     }
 }

@@ -6,9 +6,14 @@ namespace Application.Interfaces.ReposInterfaces;
 
 public interface IPatientsRepo
 {
-    public Task<IReadOnlyCollection<Patient>> GetPatients();
-    public Task<IReadOnlyCollection<Patient>> GetPatientsByFiltration(PatientFilters filters);
-    public Task<Patient> GetPatientById(Guid idPatient);
-    public Task CreatePatient(Patient patient);
-    public Task DeletePatient(Guid idPatient);
+    public Task<IReadOnlyCollection<Patient>> GetPatients(
+        PatientFilters filters, PageSettings pageSettings, CancellationToken cancellationToken);
+    public Task<Patient> GetPatientById(
+        Guid idPatient, CancellationToken cancellationToken);
+    public Task CreatePatient(
+        Patient patient, CancellationToken cancellationToken);
+    public Task UpdatePatient(
+        Patient patient, CancellationToken cancellationToken);
+    public Task DeletePatient(
+        Guid idPatient, CancellationToken cancellationToken);
 }

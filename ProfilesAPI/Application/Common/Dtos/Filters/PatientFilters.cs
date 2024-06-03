@@ -1,3 +1,3 @@
 ﻿namespace Application.Common.Dtos.Filters;
 
-public record PatientFilters(string FullName);
+public record PatientFilters(string OrderBy, bool OrderType, string? FullName);

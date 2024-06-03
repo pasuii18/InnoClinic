@@ -1,66 +1,75 @@
 ﻿using System.Text;
+using Application.Common.Dtos;
 using Application.Common.Dtos.Filters;
 using Application.Interfaces.ReposInterfaces;
 using Dapper;
 using Domain.Entities;
+using Infrastructure.Persistence.Common;
 using Infrastructure.Persistence.Contexts;
 
 namespace Infrastructure.Persistence.Repositories;
 
-public class PatientsRepo(ProfilesDbContext _context) : IPatientsRepo
+public class PatientsRepo(ProfilesDbContext _context) 
+    : IPatientsRepo
 {
-    public async Task<IReadOnlyCollection<Patient>> GetPatients()
+    public async Task<IReadOnlyCollection<Patient>> GetPatients(
+        PatientFilters filters, PageSettings pageSettings, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = "SELECT * FROM Patient";
-            var patients = await connection.QueryAsync<Patient>(query);
+            var query = ReposQueries.GetByFiltration(nameof(Patient));
+            
+            if (!string.IsNullOrEmpty(filters.FullName)) 
+                query.Append(ReposQueries.AddFullNameFilter(filters.FullName.Split(" ")));
+
+            query.Append(ReposQueries.AddOrder(filters.OrderBy, filters.OrderType));
+            query.Append(ReposQueries.Pagination);
+            
+            var parameters = new DynamicParameters(filters);
+            parameters.Add("Page", pageSettings.Page);
+            parameters.Add("PageSize", pageSettings.PageSize);
+            var patients = await connection.QueryAsync<Patient>(query.ToString(), parameters);
             return patients.ToList().AsReadOnly();
         }
     }
-
-    public async Task<Patient> GetPatientById(Guid idPatient)
+    
+    public async Task<Patient> GetPatientById(
+        Guid idPatient, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = "SELECT * FROM Patient WHERE IdPatient = @idPatient";
+            var query = ReposQueries.GetById(nameof(Patient));
             var patient = await connection.QuerySingleOrDefaultAsync<Patient>(query, new { idPatient });
             return patient;
         }
     }
 
-    public async Task<IReadOnlyCollection<Patient>> GetPatientsByFiltration(PatientFilters filters)
+    public async Task CreatePatient(
+        Patient patient, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = new StringBuilder("SELECT * FROM Patient WHERE 1=1");
-
-            // if (!string.IsNullOrEmpty(filters.FullName)) query.Append(" AND FirstName LIKE @FullName");
-
-            var patients = await connection.QueryAsync<Patient>(query.ToString(), filters);
-            return patients.ToList().AsReadOnly();
-        }
-    }
-
-    // fix
-    public async Task CreatePatient(Patient patient)
-    {
-        using (var connection = _context.CreateConnection())
-        {
-            var query = @"INSERT INTO Patient (IdPatient, FirstName, LastName, MiddleName, IsLinkedToAccount, DateOfBirth, IdAccount)
-                            VALUES (@IdPatient, @FirstName, @LastName, @MiddleName, @IsLinkedToAccount, @DateOfBirth, @IdAccount)";
-
-            patient.IdPatient = Guid.NewGuid();
-
+            var query = ReposQueries.Create(patient);
             await connection.ExecuteAsync(query, patient);
         }
     }
 
-    public async Task DeletePatient(Guid idPatient)
+    public async Task UpdatePatient(
+        Patient patient, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = "DELETE FROM Patient WHERE IdPatient = @idPatient";
+            var query = ReposQueries.UpdateById(patient);
+            await connection.ExecuteAsync(query, patient);
+        }
+    }
+
+    public async Task DeletePatient(
+        Guid idPatient, CancellationToken cancellationToken)
+    {
+        using (var connection = _context.CreateConnection())
+        {
+            var query = ReposQueries.DeleteById(nameof(Patient));
             await connection.ExecuteAsync(query, new { idPatient });
         }
     }

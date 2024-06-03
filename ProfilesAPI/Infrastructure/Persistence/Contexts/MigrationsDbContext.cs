@@ -20,10 +20,4 @@ public class MigrationsDbContext(DbContextOptions<MigrationsDbContext> options,
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
     }
-    
-    // no sense cuz ill use dapper prob
-    public DbSet<Patient> Patients { get; set; }
-    public DbSet<Doctor> Doctors { get; set; }
-    public DbSet<Receptionist> Receptionists { get; set; }
-    public DbSet<Account> Accounts { get; set; }
 }

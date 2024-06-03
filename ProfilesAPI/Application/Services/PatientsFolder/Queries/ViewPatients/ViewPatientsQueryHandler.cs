@@ -1,12 +1,20 @@
-﻿using Application.Interfaces;
+﻿using System.Net;
+using Application.Common;
+using Application.Common.Dtos.PatientDtos;
+using Application.Interfaces;
+using Application.Interfaces.ReposInterfaces;
 using MediatR;
 
 namespace Application.Services.PatientsFolder.Queries.ViewPatients;
 
-public class ViewPatientsQueryHandler : IRequestHandler<ViewPatientsQuery, ICustomResult>
+public class ViewPatientsQueryHandler(IPatientsRepo _patientsRepo) : IRequestHandler<ViewPatientsQuery, ICustomResult>
 {
-    public Task<ICustomResult> Handle(ViewPatientsQuery request, CancellationToken cancellationToken)
+    public async Task<ICustomResult> Handle(ViewPatientsQuery request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var patients = await _patientsRepo.GetPatients(
+            request.PatientFilters, request.PageSettings, cancellationToken);
+        
+        var patientReadDtos = patients.Select(PatientReadDto.MapFromPatient).ToList();
+        return new CustomResult(true, Messages.Success, (int)HttpStatusCode.OK, patientReadDtos);
     }
 }

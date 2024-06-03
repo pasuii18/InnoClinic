@@ -1,12 +1,22 @@
-﻿using Application.Interfaces;
+﻿using System.Net;
+using Application.Common;
+using Application.Interfaces;
+using Application.Interfaces.ReposInterfaces;
 using MediatR;
 
 namespace Application.Services.PatientsFolder.Commands.DeletePatient;
 
-public class DeletePatientCommandHandler : IRequestHandler<DeletePatientCommand, ICustomResult>
+public class DeletePatientCommandHandler(IPatientsRepo _patientsRepo) : IRequestHandler<DeletePatientCommand, ICustomResult>
 {
-    public Task<ICustomResult> Handle(DeletePatientCommand request, CancellationToken cancellationToken)
+    public async Task<ICustomResult> Handle(DeletePatientCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var patient = await _patientsRepo.GetPatientById(request.IdPatient, cancellationToken);
+        
+        if(patient == null) return new CustomResult(false, Messages.PatientNotFound, (int)HttpStatusCode.NotFound); 
+        
+        await _patientsRepo.DeletePatient(
+            request.IdPatient, cancellationToken);
+        
+        return new CustomResult(true, Messages.PatientDeleted, (int)HttpStatusCode.OK);    
     }
 }
