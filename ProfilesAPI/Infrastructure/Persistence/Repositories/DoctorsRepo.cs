@@ -33,7 +33,8 @@ public class DoctorsRepo(ProfilesDbContext _context)
             var parameters = new DynamicParameters(filters);
             parameters.Add("Page", pageSettings.Page);
             parameters.Add("PageSize", pageSettings.PageSize);
-            var doctors = await connection.QueryAsync<Doctor>(query.ToString(), parameters);
+            var doctors = await connection.QueryAsync<Doctor>(
+                new CommandDefinition(query.ToString(), parameters, cancellationToken: cancellationToken));
             return doctors.ToList().AsReadOnly();
         }
     }
@@ -44,7 +45,8 @@ public class DoctorsRepo(ProfilesDbContext _context)
         using (var connection = _context.CreateConnection())
         {
             var query = ReposQueries.GetById(nameof(Doctor));
-            var doctor = await connection.QueryFirstOrDefaultAsync<Doctor>(query, new { idDoctor });
+            var doctor = await connection.QueryFirstOrDefaultAsync<Doctor>(
+                new CommandDefinition(query, new { idDoctor }, cancellationToken: cancellationToken));
             return doctor;
         }
     }
@@ -55,7 +57,8 @@ public class DoctorsRepo(ProfilesDbContext _context)
         using (var connection = _context.CreateConnection())
         {
             var query = ReposQueries.Create(doctor);
-            await connection.ExecuteAsync(query, doctor);
+            await connection.ExecuteAsync(
+                new CommandDefinition(query, doctor, cancellationToken: cancellationToken));
         }
     }
 
@@ -64,7 +67,8 @@ public class DoctorsRepo(ProfilesDbContext _context)
         using (var connection = _context.CreateConnection())
         {
             var query = ReposQueries.UpdateById(doctor);
-            await connection.ExecuteAsync(query, doctor);
+            await connection.ExecuteAsync(
+                new CommandDefinition(query, doctor, cancellationToken: cancellationToken));
         }
     }
 }

@@ -28,7 +28,8 @@ public class PatientsRepo(ProfilesDbContext _context)
             var parameters = new DynamicParameters(filters);
             parameters.Add("Page", pageSettings.Page);
             parameters.Add("PageSize", pageSettings.PageSize);
-            var patients = await connection.QueryAsync<Patient>(query.ToString(), parameters);
+            var patients = await connection.QueryAsync<Patient>(
+                new CommandDefinition(query.ToString(), parameters, cancellationToken: cancellationToken));
             return patients.ToList().AsReadOnly();
         }
     }
@@ -39,7 +40,8 @@ public class PatientsRepo(ProfilesDbContext _context)
         using (var connection = _context.CreateConnection())
         {
             var query = ReposQueries.GetById(nameof(Patient));
-            var patient = await connection.QuerySingleOrDefaultAsync<Patient>(query, new { idPatient });
+            var patient = await connection.QuerySingleOrDefaultAsync<Patient>(
+                new CommandDefinition(query, new { idPatient }, cancellationToken: cancellationToken));
             return patient;
         }
     }
@@ -50,7 +52,8 @@ public class PatientsRepo(ProfilesDbContext _context)
         using (var connection = _context.CreateConnection())
         {
             var query = ReposQueries.Create(patient);
-            await connection.ExecuteAsync(query, patient);
+            await connection.ExecuteAsync(
+                new CommandDefinition(query, patient, cancellationToken: cancellationToken));
         }
     }
 
@@ -60,7 +63,8 @@ public class PatientsRepo(ProfilesDbContext _context)
         using (var connection = _context.CreateConnection())
         {
             var query = ReposQueries.UpdateById(patient);
-            await connection.ExecuteAsync(query, patient);
+            await connection.ExecuteAsync(
+                new CommandDefinition(query, patient, cancellationToken: cancellationToken));
         }
     }
 
@@ -70,7 +74,8 @@ public class PatientsRepo(ProfilesDbContext _context)
         using (var connection = _context.CreateConnection())
         {
             var query = ReposQueries.DeleteById(nameof(Patient));
-            await connection.ExecuteAsync(query, new { idPatient });
+            await connection.ExecuteAsync(
+                new CommandDefinition(query, new { idPatient }, cancellationToken: cancellationToken));
         }
     }
 }
