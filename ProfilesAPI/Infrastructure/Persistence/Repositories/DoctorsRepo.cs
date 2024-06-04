@@ -12,34 +12,24 @@ namespace Infrastructure.Persistence.Repositories;
 public class DoctorsRepo(ProfilesDbContext _context)
     : IDoctorsRepo
 {
-    private const string TableName = "Doctor";
-    
-    public async Task<IReadOnlyCollection<Doctor>> GetDoctors(
-        PageSettings pageSettings, CancellationToken cancellationToken)
-    {
-        using (var connection = _context.CreateConnection())
-        {
-            var query = ReposQueries.GetAllFrom(TableName) + ReposQueries.Pagination;
-            var doctors = await connection.QueryAsync<Doctor>(query, pageSettings);
-            return doctors.ToList().AsReadOnly();
-        }
-    }
-    
     public async Task<IReadOnlyCollection<Doctor>> GetDoctorsByFiltration(
         PageSettings pageSettings, DoctorFilters filters, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.GetByFiltration(TableName);
-            
-            if (!string.IsNullOrEmpty(filters.FullName)) 
-                query.Append(ReposQueries.AddFilter(nameof(filters.FullName)));
-            if (filters.IdSpecialization != Guid.Empty) 
+            var query = ReposQueries.GetByFiltration(nameof(Doctor));
+
+            if (!string.IsNullOrEmpty(filters.FullName))
+                query.Append(ReposQueries.AddFullNameFilter(filters.FullName));
+            if (filters.IdSpecialization != Guid.Empty && filters.IdSpecialization != null) 
                 query.Append(ReposQueries.AddFilter(nameof(filters.IdSpecialization)));
-            if (filters.IdOffice != Guid.Empty) 
+            if (filters.IdOffice != Guid.Empty && filters.IdOffice != null) 
                 query.Append(ReposQueries.AddFilter(nameof(filters.IdOffice)));
             
+            query.Append(ReposQueries.AddFilter(nameof(filters.Status)));
+            query.Append(ReposQueries.AddOrder(filters.OrderBy, filters.OrderType));
             query.Append(ReposQueries.Pagination);
+            
             var parameters = new DynamicParameters(filters);
             parameters.Add("Page", pageSettings.Page);
             parameters.Add("PageSize", pageSettings.PageSize);
@@ -53,8 +43,8 @@ public class DoctorsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.GetById(TableName);
-            var doctor = await connection.QueryFirstOrDefaultAsync(query, new { idDoctor });
+            var query = ReposQueries.GetById(nameof(Doctor));
+            var doctor = await connection.QueryFirstOrDefaultAsync<Doctor>(query, new { idDoctor });
             return doctor;
         }
     }
@@ -64,15 +54,16 @@ public class DoctorsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = @"INSERT INTO Doctors 
-                (IdDoctor, FirstName, LastName, MiddleName, 
-                 DateOfBirth, CareerStartYear, Status, IdAccount, 
-                 IdSpecialization, IdOffice)
-                        VALUES 
-                (@IdDoctor, @FirstName, @LastName, @MiddleName, 
-                 @DateOfBirth, @CareerStartYear, @Status, @IdAccount, 
-                 @IdSpecialization, @IdOffice)";
-    
+            var query = ReposQueries.Create(doctor);
+            await connection.ExecuteAsync(query, doctor);
+        }
+    }
+
+    public async Task UpdateDoctor(Doctor doctor, CancellationToken cancellationToken)
+    {
+        using (var connection = _context.CreateConnection())
+        {
+            var query = ReposQueries.UpdateById(doctor);
             await connection.ExecuteAsync(query, doctor);
         }
     }

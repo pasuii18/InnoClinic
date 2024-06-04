@@ -4,7 +4,7 @@ namespace Application.Common.Dtos.PatientDtos;
 
 public record PatientCreateDto
 (string FirstName, string LastName, string MiddleName, 
-    string PhoneNumber, bool IsLinkedToAccount, DateOnly DateOfBirth, Guid IdPhoto)
+    string PhoneNumber, bool IsLinkedToAccount, DateTime DateOfBirth, Guid IdPhoto)
 {
     public CreatePatientCommand MapInCommand()
     {

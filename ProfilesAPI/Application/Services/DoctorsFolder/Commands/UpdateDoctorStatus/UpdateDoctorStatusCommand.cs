@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.Services.DoctorsFolder.Commands.EditDoctorStatus;
 
-public class EditDoctorStatusCommand : IRequest<ICustomResult>
+public class UpdateDoctorStatusCommand : IRequest<ICustomResult>
 {
     public Guid IdDoctor { get; set; }
     public DoctorStatus Status { get; set; }

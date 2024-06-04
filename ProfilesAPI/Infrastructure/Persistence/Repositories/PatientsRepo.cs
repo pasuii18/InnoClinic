@@ -20,7 +20,7 @@ public class PatientsRepo(ProfilesDbContext _context)
             var query = ReposQueries.GetByFiltration(nameof(Patient));
             
             if (!string.IsNullOrEmpty(filters.FullName)) 
-                query.Append(ReposQueries.AddFullNameFilter(filters.FullName.Split(" ")));
+                query.Append(ReposQueries.AddFullNameFilter(filters.FullName));
 
             query.Append(ReposQueries.AddOrder(filters.OrderBy, filters.OrderType));
             query.Append(ReposQueries.Pagination);

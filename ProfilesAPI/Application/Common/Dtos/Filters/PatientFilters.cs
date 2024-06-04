@@ -1,3 +1,5 @@
-﻿namespace Application.Common.Dtos.Filters;
+﻿using Domain;
 
-public record PatientFilters(string OrderBy, bool OrderType, string? FullName);
+namespace Application.Common.Dtos.Filters;
+
+public record PatientFilters(OrderBy OrderBy, OrderType OrderType, string? FullName);

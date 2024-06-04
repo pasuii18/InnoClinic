@@ -12,11 +12,11 @@ public class DeletePatientCommandHandler(IPatientsRepo _patientsRepo) : IRequest
     {
         var patient = await _patientsRepo.GetPatientById(request.IdPatient, cancellationToken);
         
-        if(patient == null) return new CustomResult(false, Messages.PatientNotFound, (int)HttpStatusCode.NotFound); 
+        if(patient == null) return new CustomResult(false, Messages.PatientNotFound, HttpStatusCode.NotFound); 
         
         await _patientsRepo.DeletePatient(
             request.IdPatient, cancellationToken);
         
-        return new CustomResult(true, Messages.PatientDeleted, (int)HttpStatusCode.OK);    
+        return new CustomResult(true, Messages.PatientDeleted, HttpStatusCode.OK);    
     }
 }

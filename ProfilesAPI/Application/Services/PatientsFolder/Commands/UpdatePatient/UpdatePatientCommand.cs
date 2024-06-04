@@ -11,7 +11,7 @@ public class UpdatePatientCommand : IRequest<ICustomResult>
     public string LastName { get; set; }
     public string MiddleName { get; set; }
     public string PhoneNumber { get; set; }
-    public DateOnly DateOfBirth { get; set; }
+    public DateTime DateOfBirth { get; set; }
     public Guid IdPhoto { get; set; }
     
     public void MapInPatient(Patient patient)

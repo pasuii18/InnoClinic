@@ -13,6 +13,6 @@ public class CreatePatientCommandHandler(IPatientsRepo _patientsRepo) : IRequest
         var patient = CreatePatientCommand.MapInPatient(request);
         await _patientsRepo.CreatePatient(patient, cancellationToken);
         
-        return new CustomResult(true, Messages.PatientCreated, (int)HttpStatusCode.OK, patient.IdPatient);   
+        return new CustomResult(true, Messages.PatientCreated, HttpStatusCode.OK, patient.IdPatient);   
     }
 }

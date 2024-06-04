@@ -11,7 +11,7 @@ public class CreatePatientCommand : IRequest<ICustomResult>
     public string MiddleName { get; set; }
     public string PhoneNumber { get; set; } // only for patient || ex for admin
     public bool IsLinkedToAccount { get; set; }
-    public DateOnly DateOfBirth { get; set; }
+    public DateTime DateOfBirth { get; set; }
     public Guid IdPhoto { get; set; } // for AuthAPI 
 
     public static Patient MapInPatient(CreatePatientCommand command)

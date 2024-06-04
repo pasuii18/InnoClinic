@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Domain;
 
 namespace Infrastructure.Persistence.Common;
 
@@ -12,9 +13,10 @@ public static class ReposQueries
         new StringBuilder($"SELECT * FROM {tableName} WHERE 1=1");
     public static string AddFilter(string field) => 
         $" AND {field} = @{field}";
-    public static string AddFullNameFilter(string[] fields)
+    public static string AddFullNameFilter(string fullName)
     {
         var stringBuilder = new StringBuilder();
+        var fields = fullName.Split(" ");
         foreach (var field in fields)
         {
             stringBuilder.Append($" AND (FirstName LIKE '%{field}%' OR LastName LIKE '%{field}%' OR MiddleName LIKE '%{field}%')");
@@ -22,8 +24,8 @@ public static class ReposQueries
 
         return stringBuilder.ToString();
     }
-    public static string AddOrder(string field, bool type) => 
-        $" ORDER BY {field} {(type ? "ASC" : "DESC")}";
+    public static string AddOrder(OrderBy field, OrderType type) => 
+        $" ORDER BY {field} {(type == OrderType.Ascending ? "ASC" : "DESC")}";
     public static string GetById(string tableName) => 
         $"SELECT * FROM {tableName} WHERE Id{tableName} = @Id{tableName}";
     public static string DeleteById(string tableName) => 

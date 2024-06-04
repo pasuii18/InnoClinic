@@ -8,5 +8,5 @@ public enum DoctorStatus
     SickLeave = 4,
     SelfIsolation = 5,
     LeaveWithoutPay = 6, 
-    Inactive = 7,
+    Inactive = 7, 
 }

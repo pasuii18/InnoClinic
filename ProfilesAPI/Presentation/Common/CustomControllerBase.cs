@@ -17,7 +17,7 @@ public class CustomControllerBase : ControllerBase
     {
         return new ObjectResult(result)
         {
-            StatusCode = result.GetStatusCode()
+            StatusCode = (int)result.GetStatusCode()
         };
     }
 }

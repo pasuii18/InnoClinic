@@ -14,7 +14,7 @@ public class ViewPatientsQueryHandler(IPatientsRepo _patientsRepo) : IRequestHan
         var patients = await _patientsRepo.GetPatients(
             request.PatientFilters, request.PageSettings, cancellationToken);
         
-        var patientReadDtos = patients.Select(PatientReadDto.MapFromPatient).ToList();
-        return new CustomResult(true, Messages.Success, (int)HttpStatusCode.OK, patientReadDtos);
+        var patientReadDtos = patients.Select(PatientReadDto.MapFromPatient).ToList().AsReadOnly();
+        return new CustomResult(true, Messages.Success, HttpStatusCode.OK, patientReadDtos);
     }
 }

@@ -60,6 +60,42 @@ namespace Application {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Doctor created successfully!.
+        /// </summary>
+        internal static string DoctorCreated {
+            get {
+                return ResourceManager.GetString("DoctorCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doctor not found!.
+        /// </summary>
+        internal static string DoctorNotFound {
+            get {
+                return ResourceManager.GetString("DoctorNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doctor status updated successfully!.
+        /// </summary>
+        internal static string DoctorStatusUpdated {
+            get {
+                return ResourceManager.GetString("DoctorStatusUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doctor updated successfully!.
+        /// </summary>
+        internal static string DoctorUpdated {
+            get {
+                return ResourceManager.GetString("DoctorUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Patient created successfully!.
         /// </summary>
         internal static string PatientCreated {

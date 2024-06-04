@@ -33,4 +33,16 @@
     <data name="PatientCreated" xml:space="preserve">
         <value>Patient created successfully!</value>
     </data>
+    <data name="DoctorNotFound" xml:space="preserve">
+        <value>Doctor not found!</value>
+    </data>
+    <data name="DoctorCreated" xml:space="preserve">
+        <value>Doctor created successfully!</value>
+    </data>
+    <data name="DoctorUpdated" xml:space="preserve">
+        <value>Doctor updated successfully!</value>
+    </data>
+    <data name="DoctorStatusUpdated" xml:space="preserve">
+        <value>Doctor status updated successfully!</value>
+    </data>
 </root>

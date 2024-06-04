@@ -1,12 +1,22 @@
-﻿using Application.Interfaces;
+﻿using System.Net;
+using Application.Common;
+using Application.Common.Dtos.DoctorDtos;
+using Application.Interfaces;
+using Application.Interfaces.ReposInterfaces;
 using MediatR;
 
 namespace Application.Services.DoctorsFolder.Queries.ViewDoctors;
 
-public class ViewDoctorsQueryHandler : IRequestHandler<ViewDoctorsQuery, ICustomResult>
+public class ViewDoctorsQueryHandler(IDoctorsRepo _doctorsRepo)
+    : IRequestHandler<ViewDoctorsQuery, ICustomResult>
 {
-    public Task<ICustomResult> Handle(ViewDoctorsQuery request, CancellationToken cancellationToken)
+    public async Task<ICustomResult> Handle(ViewDoctorsQuery request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var doctors = await _doctorsRepo.GetDoctorsByFiltration(
+            request.PageSettings, request.DoctorFilters, cancellationToken);
+        
+        // + PHOTO AND SPECIALIZATION + OFFICE ADDRESS
+        var doctorsDtos = doctors.Select(DoctorReadDto.MapFromDoctor).ToList().AsReadOnly();
+        return new CustomResult(true, Messages.Success, HttpStatusCode.OK, doctorsDtos);
     }
 }

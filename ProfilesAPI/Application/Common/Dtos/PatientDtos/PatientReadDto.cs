@@ -3,7 +3,7 @@
 namespace Application.Common.Dtos.PatientDtos;
 
 public record PatientReadDto(
-    Guid IdPatient, string FirstName, string LastName, string MiddleName, DateOnly DateOfBirth)
+    Guid IdPatient, string FirstName, string LastName, string MiddleName, DateTime DateOfBirth)
 {
     public static PatientReadDto MapFromPatient(Patient patient)
     {

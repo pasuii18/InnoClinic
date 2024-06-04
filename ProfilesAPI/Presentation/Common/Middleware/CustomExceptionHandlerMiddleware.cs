@@ -25,6 +25,6 @@ public class CustomExceptionHandlerMiddleware(
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         
         return context.Response.WriteAsync(
-            JsonSerializer.Serialize(new CustomResult(false, e.Message, (int)HttpStatusCode.InternalServerError)));
+            JsonSerializer.Serialize(new CustomResult(false, e.Message, HttpStatusCode.InternalServerError)));
     }
 }

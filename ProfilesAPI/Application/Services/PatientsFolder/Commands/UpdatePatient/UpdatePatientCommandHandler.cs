@@ -11,11 +11,11 @@ public class UpdatePatientCommandHandler(IPatientsRepo _patientsRepo) : IRequest
     public async Task<ICustomResult> Handle(UpdatePatientCommand request, CancellationToken cancellationToken)
     {
         var patient = await _patientsRepo.GetPatientById(request.IdPatient, cancellationToken);
-        if(patient == null) return new CustomResult(false, Messages.PatientNotFound, (int)HttpStatusCode.NotFound); 
+        if(patient == null) return new CustomResult(false, Messages.PatientNotFound, HttpStatusCode.NotFound); 
         
         request.MapInPatient(patient);
         await _patientsRepo.UpdatePatient(patient, cancellationToken);
         
-        return new CustomResult(true, Messages.PatientUpdated, (int)HttpStatusCode.OK);    
+        return new CustomResult(true, Messages.PatientUpdated, HttpStatusCode.OK);    
     }
 }
