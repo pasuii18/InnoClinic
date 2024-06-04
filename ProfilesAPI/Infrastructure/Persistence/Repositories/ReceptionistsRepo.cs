@@ -1,4 +1,5 @@
 ﻿using Application.Common.Dtos;
+using Application.Common.Dtos.Filters;
 using Application.Interfaces.ReposInterfaces;
 using Dapper;
 using Domain.Entities;
@@ -10,15 +11,23 @@ namespace Infrastructure.Persistence.Repositories;
 public class ReceptionistsRepo(ProfilesDbContext _context)
 : IReceptionistsRepo
 {
-    private const string TableName = "Receptionist";
-    
     public async Task<IReadOnlyCollection<Receptionist>> GetReceptionists(
-        PageSettings pageSettings, CancellationToken cancellationToken)
+        ReceptionistFilters filters, PageSettings pageSettings, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.GetAllFrom(TableName) + ReposQueries.Pagination;
-            var receptionists = await connection.QueryAsync<Receptionist>(query, pageSettings);
+            var query = ReposQueries.GetByFiltration(nameof(Receptionist));
+            
+            if (!string.IsNullOrEmpty(filters.FullName)) 
+                query.Append(ReposQueries.AddFullNameFilter(filters.FullName));
+
+            query.Append(ReposQueries.AddOrder(filters.OrderBy, filters.OrderType));
+            query.Append(ReposQueries.Pagination);
+            
+            var parameters = new DynamicParameters(filters);
+            parameters.Add("Page", pageSettings.Page);
+            parameters.Add("PageSize", pageSettings.PageSize);
+            var receptionists = await connection.QueryAsync<Receptionist>(query.ToString(), parameters);
             return receptionists.ToList().AsReadOnly();
         }
     }
@@ -28,8 +37,8 @@ public class ReceptionistsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.GetById(TableName);
-            var receptionist = await connection.QueryFirstOrDefaultAsync(query, new { idReceptionist });
+            var query = ReposQueries.GetById(nameof(Receptionist));
+            var receptionist = await connection.QueryFirstOrDefaultAsync<Receptionist>(query, new { idReceptionist });
             return receptionist;
         }
     }
@@ -39,13 +48,16 @@ public class ReceptionistsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = @"INSERT INTO Receptionists 
-                (IdReceptionist, FirstName, LastName, MiddleName, 
-                 IdAccount, IdOffice)
-                        VALUES 
-                (@IdReceptionist, @FirstName, @LastName, @MiddleName, 
-                 @IdAccount, @IdOffice)";
-    
+            var query = ReposQueries.Create(receptionist);
+            await connection.ExecuteAsync(query, receptionist);
+        }
+    }
+
+    public async Task UpdateReceptionist(Receptionist receptionist, CancellationToken cancellationToken)
+    {
+        using (var connection = _context.CreateConnection())
+        {
+            var query = ReposQueries.UpdateById(receptionist);
             await connection.ExecuteAsync(query, receptionist);
         }
     }
@@ -55,7 +67,7 @@ public class ReceptionistsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.DeleteById(TableName);
+            var query = ReposQueries.DeleteById(nameof(Receptionist));
             await connection.ExecuteAsync(query, new { idReceptionist });
         }
     }

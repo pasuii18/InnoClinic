@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Domain;
+using Domain.Common.Enums;
 
 namespace Infrastructure.Persistence.Common;
 

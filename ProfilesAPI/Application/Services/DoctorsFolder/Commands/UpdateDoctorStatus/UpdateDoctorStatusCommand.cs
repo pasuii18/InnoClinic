@@ -1,10 +1,8 @@
-﻿using Application.Common;
-using Application.Interfaces;
-using Domain;
-using Domain.Entities;
+﻿using Application.Interfaces;
+using Domain.Common.Enums;
 using MediatR;
 
-namespace Application.Services.DoctorsFolder.Commands.EditDoctorStatus;
+namespace Application.Services.DoctorsFolder.Commands.UpdateDoctorStatus;
 
 public class UpdateDoctorStatusCommand : IRequest<ICustomResult>
 {

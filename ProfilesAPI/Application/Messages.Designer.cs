@@ -132,6 +132,42 @@ namespace Application {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Receptionist created successfully!.
+        /// </summary>
+        internal static string ReceptionistCreated {
+            get {
+                return ResourceManager.GetString("ReceptionistCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Receptionist deleted successfully!.
+        /// </summary>
+        internal static string ReceptionistDeleted {
+            get {
+                return ResourceManager.GetString("ReceptionistDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Receptionist not found!.
+        /// </summary>
+        internal static string ReceptionistNotFound {
+            get {
+                return ResourceManager.GetString("ReceptionistNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Receptionist updated successfully!.
+        /// </summary>
+        internal static string ReceptionistUpdated {
+            get {
+                return ResourceManager.GetString("ReceptionistUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Success!.
         /// </summary>
         internal static string Success {

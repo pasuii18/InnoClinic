@@ -1,10 +1,9 @@
-﻿using Application.Common;
-using Application.Interfaces;
-using Domain;
+﻿using Application.Interfaces;
+using Domain.Common.Enums;
 using Domain.Entities;
 using MediatR;
 
-namespace Application.Services.DoctorsFolder.Commands.EditDoctor;
+namespace Application.Services.DoctorsFolder.Commands.UpdateDoctor;
 
 public class UpdateDoctorCommand : IRequest<ICustomResult>
 {

@@ -1,4 +1,5 @@
 ﻿using Application.Common.Dtos;
+using Application.Common.Dtos.Filters;
 using Domain.Entities;
 
 namespace Application.Interfaces.ReposInterfaces;
@@ -6,11 +7,13 @@ namespace Application.Interfaces.ReposInterfaces;
 public interface IReceptionistsRepo
 {
     public Task<IReadOnlyCollection<Receptionist>> GetReceptionists(
-        PageSettings pageSettings, CancellationToken cancellationToken);
+        ReceptionistFilters filters, PageSettings pageSettings, CancellationToken cancellationToken);
     public Task<Receptionist> GetReceptionistById(
         Guid idReceptionist, CancellationToken cancellationToken);
     public Task CreateReceptionist(
-        Receptionist patient, CancellationToken cancellationToken);
+        Receptionist receptionist, CancellationToken cancellationToken);
+    public Task UpdateReceptionist(
+        Receptionist receptionist, CancellationToken cancellationToken);
     public Task DeleteReceptionist(
         Guid idReceptionist, CancellationToken cancellationToken);
 }

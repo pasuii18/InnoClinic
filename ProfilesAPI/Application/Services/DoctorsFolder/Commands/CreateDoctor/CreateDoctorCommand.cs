@@ -1,6 +1,7 @@
 ﻿using Application.Common;
 using Application.Interfaces;
 using Domain;
+using Domain.Common.Enums;
 using Domain.Entities;
 using MediatR;
 

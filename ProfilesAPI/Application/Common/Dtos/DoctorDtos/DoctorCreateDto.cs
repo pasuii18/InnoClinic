@@ -1,5 +1,6 @@
 ﻿using Application.Services.DoctorsFolder.Commands.CreateDoctor;
 using Domain;
+using Domain.Common.Enums;
 
 namespace Application.Common.Dtos.DoctorDtos;
 

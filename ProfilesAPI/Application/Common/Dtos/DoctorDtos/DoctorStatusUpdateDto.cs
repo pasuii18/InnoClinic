@@ -1,5 +1,6 @@
-﻿using Application.Services.DoctorsFolder.Commands.EditDoctorStatus;
+﻿using Application.Services.DoctorsFolder.Commands.UpdateDoctorStatus;
 using Domain;
+using Domain.Common.Enums;
 
 namespace Application.Common.Dtos.DoctorDtos;
 

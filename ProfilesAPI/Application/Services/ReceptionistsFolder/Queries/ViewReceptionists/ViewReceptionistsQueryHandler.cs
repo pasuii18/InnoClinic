@@ -1,12 +1,21 @@
-﻿using Application.Interfaces;
+﻿using System.Net;
+using Application.Common;
+using Application.Common.Dtos.ReceptionistDtos;
+using Application.Interfaces;
+using Application.Interfaces.ReposInterfaces;
 using MediatR;
 
 namespace Application.Services.ReceptionistsFolder.Queries.ViewReceptionists;
 
-public class ViewReceptionistsQueryHandler : IRequestHandler<ViewReceptionistsQuery, ICustomResult>
+public class ViewReceptionistsQueryHandler(IReceptionistsRepo _receptionistsRepo) 
+    : IRequestHandler<ViewReceptionistsQuery, ICustomResult>
 {
-    public Task<ICustomResult> Handle(ViewReceptionistsQuery request, CancellationToken cancellationToken)
+    public async Task<ICustomResult> Handle(ViewReceptionistsQuery request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var receptionists = await _receptionistsRepo.GetReceptionists(
+            request.ReceptionistFilters, request.PageSettings, cancellationToken);
+        
+        var receptionistDto = receptionists.Select(ReceptionistReadDto.MapFromReceptionist).ToList().AsReadOnly();
+        return new CustomResult(true, Messages.Success, HttpStatusCode.OK, receptionistDto);
     }
 }

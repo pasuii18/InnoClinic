@@ -4,7 +4,7 @@ using Application.Interfaces;
 using Application.Interfaces.ReposInterfaces;
 using MediatR;
 
-namespace Application.Services.DoctorsFolder.Commands.EditDoctor;
+namespace Application.Services.DoctorsFolder.Commands.UpdateDoctor;
 
 public class UpdateDoctorCommandHandler(IDoctorsRepo _doctorsRepo)
     : IRequestHandler<UpdateDoctorCommand, ICustomResult>

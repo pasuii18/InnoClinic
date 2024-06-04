@@ -1,11 +1,10 @@
 ﻿using System.Net;
 using Application.Common;
-using Application.Common.Dtos.DoctorDtos;
 using Application.Interfaces;
 using Application.Interfaces.ReposInterfaces;
 using MediatR;
 
-namespace Application.Services.DoctorsFolder.Commands.EditDoctorStatus;
+namespace Application.Services.DoctorsFolder.Commands.UpdateDoctorStatus;
 
 public class UpdateDoctorStatusCommandHandler(IDoctorsRepo _doctorsRepo)
     : IRequestHandler<UpdateDoctorStatusCommand, ICustomResult>

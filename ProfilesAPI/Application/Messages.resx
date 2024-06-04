@@ -45,4 +45,16 @@
     <data name="DoctorStatusUpdated" xml:space="preserve">
         <value>Doctor status updated successfully!</value>
     </data>
+    <data name="ReceptionistNotFound" xml:space="preserve">
+        <value>Receptionist not found!</value>
+    </data>
+    <data name="ReceptionistCreated" xml:space="preserve">
+        <value>Receptionist created successfully!</value>
+    </data>
+    <data name="ReceptionistDeleted" xml:space="preserve">
+        <value>Receptionist deleted successfully!</value>
+    </data>
+    <data name="ReceptionistUpdated" xml:space="preserve">
+        <value>Receptionist updated successfully!</value>
+    </data>
 </root>
