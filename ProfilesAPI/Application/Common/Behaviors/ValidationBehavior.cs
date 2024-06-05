@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 
-namespace Application.Common.Validation.Behaviors;
+namespace Application.Common.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
@@ -17,10 +17,10 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
             .SelectMany(result => result.Errors)
             .Where(failure => failure != null)
             .ToList();
-
+        
         if (failures.Count != 0)
         {
-            var errorMessages = failures.Select(failure => failure.ErrorMessage).ToList();
+            var errorMessages = failures.Select(failure => failure.ErrorMessage).ToList().AsReadOnly();
             var errorMessage = string.Join(" ", errorMessages);
             
             throw new ValidationException(errorMessage);

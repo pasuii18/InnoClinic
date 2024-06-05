@@ -1,9 +1,8 @@
-﻿using System.Net;
-using Application.Common;
-using Application.Common.Dtos.ReceptionistDtos;
+﻿using Application.Common;
 using Application.Interfaces;
 using Application.Interfaces.ReposInterfaces;
 using MediatR;
+using System.Net;
 
 namespace Application.Services.ReceptionistsFolder.Commands.DeleteReceptionist;
 

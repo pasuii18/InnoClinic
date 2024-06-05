@@ -25,8 +25,8 @@ public class ReceptionistsRepo(ProfilesDbContext _context)
             query.Append(ReposQueries.Pagination);
             
             var parameters = new DynamicParameters(filters);
-            parameters.Add("Page", pageSettings.Page);
-            parameters.Add("PageSize", pageSettings.PageSize);
+            parameters.Add(nameof(pageSettings.Page), pageSettings.Page);
+            parameters.Add(nameof(pageSettings.PageSize), pageSettings.PageSize);
             var receptionists = await connection.QueryAsync<Receptionist>(
                 new CommandDefinition(query.ToString(), parameters, cancellationToken: cancellationToken));
             return receptionists.ToList().AsReadOnly();

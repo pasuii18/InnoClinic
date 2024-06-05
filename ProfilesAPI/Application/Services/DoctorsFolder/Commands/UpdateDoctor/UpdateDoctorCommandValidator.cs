@@ -1,6 +1,4 @@
-﻿using Application.Common.Validation;
-using Application.Common.Validation.ValidationRules;
-using Application.Services.DoctorsFolder.Commands.CreateDoctor;
+﻿using Application.Common.ValidationRules;
 using FluentValidation;
 
 namespace Application.Services.DoctorsFolder.Commands.UpdateDoctor;

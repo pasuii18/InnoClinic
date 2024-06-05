@@ -1,7 +1,7 @@
-﻿using System.Data;
-using Infrastructure.Persistence.Common.Options;
+﻿using Infrastructure.Persistence.Common.Options;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using System.Data;
 
 namespace Infrastructure.Persistence.Contexts;
 

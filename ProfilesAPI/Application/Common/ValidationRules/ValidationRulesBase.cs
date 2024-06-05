@@ -2,17 +2,22 @@
 using Domain.Common.Enums;
 using FluentValidation;
 
-namespace Application.Common.Validation.ValidationRules;
+namespace Application.Common.ValidationRules;
 
 public static class ValidationRulesBase
 {
-    public static IRuleBuilderOptions<T, string> Address<T>(this IRuleBuilder<T, string> ruleBuilder)
+    public static IRuleBuilderOptions<T, string> OfficeAddress<T>(this IRuleBuilder<T, string> ruleBuilder)
     {        
         return ruleBuilder
             .NotEmpty().WithMessage("The office address is required.")
             .MaximumLength(100).WithMessage("The office address must not exceed 100 characters.")
             .Matches(@"^[a-zA-Z]{2,20},\s*[a-zA-Z0-9]{2,20},\s*[a-zA-Z0-9]{1,5},\s*[a-zA-Z0-9]{1,5}$")
             .WithMessage("The address is invalid. It must be in the format: 'Street, City, House, Office'.");
+    }
+    public static IRuleBuilderOptions<T, string> Email<T>(this IRuleBuilder<T, string> ruleBuilder)
+    {        
+        return ruleBuilder
+            .EmailAddress().WithMessage("The email address is invalid.");
     }
     public static IRuleBuilder<T, PageSettings> PageSettings<T>(this IRuleBuilder<T, PageSettings> ruleBuilder)
     {
@@ -62,16 +67,16 @@ public static class ValidationRulesBase
     public static IRuleBuilder<T, string> FullName<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
         return ruleBuilder
-            .Matches(@"^[a-zA-Z '-]*$").WithMessage("The full name contains invalid characters.");
+            .Matches(@"^[a-zA-Z '-]*$").WithMessage("The full name can only contain letters, spaces, apostrophes and hyphens");
     }
     public static IRuleBuilder<T, Guid> IdPhoto<T>(this IRuleBuilder<T, Guid> ruleBuilder)
     {
         return ruleBuilder
-            .NotEmpty().WithMessage("The photo ID is required.");
+            .NotEqual(Guid.Empty).WithMessage("The photo ID is required.");
     }
     public static IRuleBuilder<T, Guid> IdOffice<T>(this IRuleBuilder<T, Guid> ruleBuilder)
     {
         return ruleBuilder
-            .NotEmpty().WithMessage("The office ID is required.");
+            .NotEqual(Guid.Empty).WithMessage("The office ID is required.");
     }
 }

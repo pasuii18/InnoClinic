@@ -1,7 +1,7 @@
 ﻿using Application.Common.Dtos.Filters;
 using FluentValidation;
 
-namespace Application.Common.Validation.ValidationRules;
+namespace Application.Common.ValidationRules;
 
 public static class PatientValidationRules
 {
@@ -15,7 +15,7 @@ public static class PatientValidationRules
     public static IRuleBuilder<T, Guid> IdPatient<T>(this IRuleBuilder<T, Guid> ruleBuilder)
     {
         return ruleBuilder
-            .NotEmpty().WithMessage("The patient ID is required.");
+            .NotEqual(Guid.Empty).WithMessage("The patient ID is required.");
     }
     public static IRuleBuilder<T, PatientFilters> PatientFilters<T>(this IRuleBuilder<T, PatientFilters> ruleBuilder)
     {

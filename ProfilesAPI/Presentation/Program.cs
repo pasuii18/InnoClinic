@@ -1,7 +1,5 @@
 using Application;
-using Application.Interfaces.ReposInterfaces;
 using Infrastructure;
-using Infrastructure.Persistence.Repositories;
 using ProfilesAPI.Common.Middleware;
 
 namespace ProfilesAPI;

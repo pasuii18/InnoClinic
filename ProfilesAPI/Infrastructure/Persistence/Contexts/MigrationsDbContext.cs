@@ -1,9 +1,7 @@
-﻿using System.Reflection;
-using Domain.Entities;
-using Infrastructure.Persistence.Common.EntityConfigurations;
-using Infrastructure.Persistence.Common.Options;
+﻿using Infrastructure.Persistence.Common.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Reflection;
 
 namespace Infrastructure.Persistence.Contexts;
 

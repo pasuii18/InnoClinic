@@ -1,6 +1,5 @@
-﻿using System.Text;
-using Domain;
-using Domain.Common.Enums;
+﻿using Domain.Common.Enums;
+using System.Text;
 
 namespace Infrastructure.Persistence.Common;
 
@@ -8,8 +7,6 @@ public static class ReposQueries
 {
     public static string Pagination => 
         " OFFSET (@Page - 1) * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY";
-    public static string GetAllFrom(string tableName) => 
-        $"SELECT * FROM {tableName}";
     public static StringBuilder GetByFiltration(string tableName) => 
         new StringBuilder($"SELECT * FROM {tableName} WHERE 1=1");
     public static string AddFilter(string field) => 

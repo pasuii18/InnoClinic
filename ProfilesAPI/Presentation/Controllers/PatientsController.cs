@@ -4,7 +4,6 @@ using Application.Common.Dtos.PatientDtos;
 using Application.Services.PatientsFolder.Commands.DeletePatient;
 using Application.Services.PatientsFolder.Queries.ViewPatientProfile;
 using Application.Services.PatientsFolder.Queries.ViewPatients;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ProfilesAPI.Common;
 

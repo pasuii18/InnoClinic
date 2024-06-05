@@ -1,9 +1,9 @@
-﻿using System.Net;
-using Application.Common;
+﻿using Application.Common;
 using Application.Common.Dtos.DoctorDtos;
 using Application.Interfaces;
 using Application.Interfaces.ReposInterfaces;
 using MediatR;
+using System.Net;
 
 namespace Application.Services.DoctorsFolder.Queries.ViewDoctorProfile;
 

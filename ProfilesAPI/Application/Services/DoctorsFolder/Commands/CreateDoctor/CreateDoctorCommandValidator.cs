@@ -1,5 +1,4 @@
-﻿using Application.Common.Validation;
-using Application.Common.Validation.ValidationRules;
+﻿using Application.Common.ValidationRules;
 using FluentValidation;
 
 namespace Application.Services.DoctorsFolder.Commands.CreateDoctor;
@@ -17,7 +16,7 @@ public class CreateDoctorCommandValidator : AbstractValidator<CreateDoctorComman
         RuleFor(command => command.DateOfBirth)
             .DateOfBirth();
         RuleFor(command => command.Email)
-            .EmailAddress();
+            .Email();
         RuleFor(command => command.CareerStartYear)
             .CareerStartYear();
         RuleFor(command => command.Status)

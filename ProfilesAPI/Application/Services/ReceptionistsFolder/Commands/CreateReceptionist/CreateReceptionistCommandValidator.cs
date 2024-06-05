@@ -1,5 +1,4 @@
-﻿using Application.Common.Validation;
-using Application.Common.Validation.ValidationRules;
+﻿using Application.Common.ValidationRules;
 using FluentValidation;
 
 namespace Application.Services.ReceptionistsFolder.Commands.CreateReceptionist;
@@ -15,7 +14,7 @@ public class CreateReceptionistCommandValidator : AbstractValidator<CreateRecept
         RuleFor(command => command.MiddleName)
             .MiddleName();
         RuleFor(command => command.Email)
-            .EmailAddress();
+            .Email();
         RuleFor(command => command.IdOffice)
             .IdOffice();
         RuleFor(command => command.IdPhoto)

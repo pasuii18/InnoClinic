@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

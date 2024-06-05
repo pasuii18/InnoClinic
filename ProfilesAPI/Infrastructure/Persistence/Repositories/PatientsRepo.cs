@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Application.Common.Dtos;
+﻿using Application.Common.Dtos;
 using Application.Common.Dtos.Filters;
 using Application.Interfaces.ReposInterfaces;
 using Dapper;
@@ -26,8 +25,8 @@ public class PatientsRepo(ProfilesDbContext _context)
             query.Append(ReposQueries.Pagination);
             
             var parameters = new DynamicParameters(filters);
-            parameters.Add("Page", pageSettings.Page);
-            parameters.Add("PageSize", pageSettings.PageSize);
+            parameters.Add(nameof(pageSettings.Page), pageSettings.Page);
+            parameters.Add(nameof(pageSettings.PageSize), pageSettings.PageSize);
             var patients = await connection.QueryAsync<Patient>(
                 new CommandDefinition(query.ToString(), parameters, cancellationToken: cancellationToken));
             return patients.ToList().AsReadOnly();

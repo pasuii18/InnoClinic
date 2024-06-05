@@ -1,9 +1,9 @@
-﻿using System.Net;
-using Application.Common;
+﻿using Application.Common;
 using Application.Common.Dtos.ReceptionistDtos;
 using Application.Interfaces;
 using Application.Interfaces.ReposInterfaces;
 using MediatR;
+using System.Net;
 
 namespace Application.Services.ReceptionistsFolder.Queries.ViewReceptionists;
 

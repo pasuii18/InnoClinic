@@ -1,6 +1,6 @@
-﻿using System.Net;
+﻿using Application.Common;
+using System.Net;
 using System.Text.Json;
-using Application.Common;
 
 namespace ProfilesAPI.Common.Middleware;
 
