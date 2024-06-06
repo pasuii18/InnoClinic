@@ -6,6 +6,7 @@ using Application.Interfaces;
 using Application.Interfaces.RepositoryInterfaces;
 using Application.Interfaces.ServicesInterfaces;
 using Domain.Entities;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Application.Services;
@@ -19,7 +20,7 @@ public class OfficesService(IOfficesRepo _officesRepo) : IOfficesService
         return new CustomResult(true, Messages.Success, (int)HttpStatusCode.OK, officeReadDtos);
     }
 
-    public async Task<ICustomResult> GetOfficeInfo(Guid idOffice, CancellationToken cancellationToken)
+    public async Task<ICustomResult> GetOfficeInfo(string idOffice, CancellationToken cancellationToken)
     {
         var office = await _officesRepo.GetOfficeById(idOffice, cancellationToken);
         if (office == null) return new CustomResult(false, Messages.OfficeNotFound, (int)HttpStatusCode.NotFound);
@@ -28,12 +29,12 @@ public class OfficesService(IOfficesRepo _officesRepo) : IOfficesService
         return new CustomResult(true, Messages.Success, (int)HttpStatusCode.OK, officeDto);
     }
 
-    public async Task<ICustomResult> ChangeOfficeStatus(Guid idOffice, CancellationToken cancellationToken)
+    public async Task<ICustomResult> ChangeOfficeStatus(string idOffice, CancellationToken cancellationToken)
     {
         var office = await _officesRepo.GetOfficeById(idOffice, cancellationToken);
         if (office == null) return new CustomResult(false, Messages.OfficeNotFound, (int)HttpStatusCode.NotFound);
         
-        var filter = Builders<Office>.Filter.Eq(o => o.IdOffice, idOffice);
+        var filter = Builders<Office>.Filter.Eq(o => o.IdOffice, ObjectId.Parse(idOffice));
         var update = Builders<Office>.Update
             .Set(o => o.IsActive, !office.IsActive);
         
@@ -47,7 +48,8 @@ public class OfficesService(IOfficesRepo _officesRepo) : IOfficesService
     {
         var newOffice = OfficeCreateDto.MapInOffice(office);
         _officesRepo.CreateOffice(newOffice, cancellationToken);
-        return new CustomResult(true, Messages.OfficeCreatedSuccess, (int)HttpStatusCode.Created, newOffice.IdOffice);
+        return new CustomResult(true, Messages.OfficeCreatedSuccess, 
+            (int)HttpStatusCode.Created, newOffice.IdOffice.ToString());
     }
     
     public async Task<ICustomResult> UpdateOffice(OfficeUpdateDto officeUpdateDto, CancellationToken cancellationToken)
@@ -55,7 +57,7 @@ public class OfficesService(IOfficesRepo _officesRepo) : IOfficesService
         var office = await _officesRepo.GetOfficeById(officeUpdateDto.IdOffice, cancellationToken);
         if (office == null) return new CustomResult(false, Messages.OfficeNotFound, (int)HttpStatusCode.NotFound);
         
-        var filter = Builders<Office>.Filter.Eq(o => o.IdOffice, officeUpdateDto.IdOffice);
+        var filter = Builders<Office>.Filter.Eq(o => o.IdOffice, ObjectId.Parse(officeUpdateDto.IdOffice));
         var update = Builders<Office>.Update
             .Set(o => o.Address, officeUpdateDto.Address)
             .Set(o => o.RegistryPhoneNumber, officeUpdateDto.RegistryPhoneNumber)
@@ -67,7 +69,7 @@ public class OfficesService(IOfficesRepo _officesRepo) : IOfficesService
         return new CustomResult(true, Messages.OfficeUpdatedSuccess, (int)HttpStatusCode.Created);
     }
 
-    public async Task<ICustomResult> DeleteOffice(Guid idOffice, CancellationToken cancellationToken)
+    public async Task<ICustomResult> DeleteOffice(string idOffice, CancellationToken cancellationToken)
     {
         var office = await _officesRepo.GetOfficeById(idOffice, cancellationToken);
         if (office == null) return new CustomResult(false, Messages.OfficeNotFound, (int)HttpStatusCode.NotFound);

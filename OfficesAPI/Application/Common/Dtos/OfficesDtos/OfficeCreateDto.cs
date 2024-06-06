@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using MongoDB.Bson;
 
 namespace Application.Common.Dtos.OfficesDtos;
 
@@ -8,7 +9,7 @@ public record OfficeCreateDto(string Address, string RegistryPhoneNumber, bool I
     {
         return new Office
         {
-            IdOffice = Guid.NewGuid(),
+            IdOffice = ObjectId.GenerateNewId(DateTime.Now),
             Address = model.Address,
             RegistryPhoneNumber = model.RegistryPhoneNumber,
             IsActive = model.IsActive,

@@ -4,6 +4,7 @@ using Application.Common.Dtos.OfficesDtos;
 using Application.Interfaces;
 using Application.Interfaces.ServicesInterfaces;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using Presentation.Common;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
@@ -14,7 +15,8 @@ public class OfficesController(IOfficesService _officesService)
     : CustomControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAllOffices([AutoValidateAlways] PageSettings pageSettings, 
+    public async Task<IActionResult> GetAllOffices(
+        [AutoValidateAlways] PageSettings pageSettings, 
         CancellationToken cancellationToken)
     {
         var result = await _officesService.GetAllOffices(pageSettings, cancellationToken);
@@ -23,7 +25,8 @@ public class OfficesController(IOfficesService _officesService)
     
     [HttpGet]
     [Route("{idOffice}")]
-    public async Task<IActionResult> GetOfficeInfo(Guid idOffice, 
+    public async Task<IActionResult> GetOfficeInfo(
+        string idOffice, 
         CancellationToken cancellationToken)
     {
         var result = await _officesService.GetOfficeInfo(idOffice, cancellationToken);
@@ -31,7 +34,8 @@ public class OfficesController(IOfficesService _officesService)
     }
     
     [HttpPost]
-    public async Task<IActionResult> CreateOffice([AutoValidateAlways] OfficeCreateDto officeCreateDto,
+    public async Task<IActionResult> CreateOffice(
+        [AutoValidateAlways] OfficeCreateDto officeCreateDto,
         CancellationToken cancellationToken)
     {
         var result = await _officesService.CreateOffice(officeCreateDto, cancellationToken);
@@ -39,7 +43,8 @@ public class OfficesController(IOfficesService _officesService)
     }
     
     [HttpPut]
-    public async Task<IActionResult> UpdateOffice([AutoValidateAlways] OfficeUpdateDto officeUpdateDto,
+    public async Task<IActionResult> UpdateOffice(
+        [AutoValidateAlways] OfficeUpdateDto officeUpdateDto,
         CancellationToken cancellationToken)
     {
         var result = await _officesService.UpdateOffice(officeUpdateDto, cancellationToken);
@@ -48,7 +53,8 @@ public class OfficesController(IOfficesService _officesService)
     
     [HttpPut]
     [Route("{idOffice}")]
-    public async Task<IActionResult> ChangeOfficeStatus(Guid idOffice, 
+    public async Task<IActionResult> ChangeOfficeStatus(
+        string idOffice, 
         CancellationToken cancellationToken)
     {
         var result = await _officesService.ChangeOfficeStatus(idOffice, cancellationToken);
@@ -57,7 +63,8 @@ public class OfficesController(IOfficesService _officesService)
     
     [HttpDelete]
     [Route("{idOffice}")]
-    public async Task<IActionResult> DeleteOffice(Guid idOffice,
+    public async Task<IActionResult> DeleteOffice(
+        string idOffice,
         CancellationToken cancellationToken)
     {
         var result = await _officesService.DeleteOffice(idOffice, cancellationToken);

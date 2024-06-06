@@ -1,5 +1,6 @@
 ﻿using Application.Common.Dtos;
 using FluentValidation;
+using MongoDB.Bson;
 
 namespace Application.Common.Validation;
 
@@ -30,5 +31,17 @@ public static class ValidationRules
         return ruleBuilder
             .Must(x => x.Page > 0).WithMessage("Page number must be greater than 0.")
             .Must(x => x.PageSize > 0).WithMessage("Items per page must be greater than 0.");
+    }
+    
+    public static IRuleBuilder<T, string> IdOffice<T>(this IRuleBuilder<T, string> ruleBuilder)
+    {
+        return ruleBuilder
+            .NotEmpty().WithMessage("The office id is required and cannot be an empty.")
+            .Must(BeAValidObjectId).WithMessage("The office id must be a valid ObjectId.");
+    }
+
+    private static bool BeAValidObjectId(string objectId)
+    {
+        return ObjectId.TryParse(objectId, out _);
     }
 }

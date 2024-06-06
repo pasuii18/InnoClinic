@@ -8,7 +8,7 @@ public class OfficeUpdateValidator : AbstractValidator<OfficeUpdateDto>
     public OfficeUpdateValidator()
     {
         RuleFor(createOffice => createOffice.IdOffice)
-            .NotEmpty().WithMessage("The IdOffice field is required and cannot be an empty GUID.");
+            .IdOffice();
         
         RuleFor(createOffice => createOffice.Address)
             .Address();
