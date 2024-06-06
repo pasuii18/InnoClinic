@@ -402,6 +402,7 @@ bin
 obj
 .ihar
 ClientMVC
+Seeds
 
 .yml
 Properties
