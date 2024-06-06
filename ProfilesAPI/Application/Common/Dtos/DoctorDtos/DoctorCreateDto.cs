@@ -4,7 +4,7 @@ using Domain.Common.Enums;
 namespace Application.Common.Dtos.DoctorDtos;
 
 public record DoctorCreateDto(string FirstName, string LastName, string MiddleName, DateTime DateOfBirth,
-    int CareerStartYear, DoctorStatus Status, Guid IdAccount, Guid IdSpecialization, Guid IdOffice)
+    int CareerStartYear, DoctorStatus Status, Guid IdAccount, Guid IdSpecialization, string IdOffice)
 {
     public CreateDoctorCommand MapInCommand()
     {

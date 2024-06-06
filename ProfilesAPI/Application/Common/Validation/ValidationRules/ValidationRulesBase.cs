@@ -6,19 +6,6 @@ namespace Application.Common.Validation.ValidationRules;
 
 public static class ValidationRulesBase
 {
-    public static IRuleBuilderOptions<T, string> OfficeAddress<T>(this IRuleBuilder<T, string> ruleBuilder)
-    {        
-        return ruleBuilder
-            .NotEmpty().WithMessage("The office address is required.")
-            .MaximumLength(100).WithMessage("The office address must not exceed 100 characters.")
-            .Matches(@"^[a-zA-Z]{2,20},\s*[a-zA-Z0-9]{2,20},\s*[a-zA-Z0-9]{1,5},\s*[a-zA-Z0-9]{1,5}$")
-            .WithMessage("The address is invalid. It must be in the format: 'Street, City, House, Office'.");
-    }
-    public static IRuleBuilderOptions<T, string> Email<T>(this IRuleBuilder<T, string> ruleBuilder)
-    {        
-        return ruleBuilder
-            .EmailAddress().WithMessage("The email address is invalid.");
-    }
     public static IRuleBuilder<T, PageSettings> PageSettings<T>(this IRuleBuilder<T, PageSettings> ruleBuilder)
     {
         ruleBuilder
@@ -73,5 +60,10 @@ public static class ValidationRulesBase
     {
         return ruleBuilder
             .NotEqual(Guid.Empty);
+    }
+    public static IRuleBuilder<T, string> IdOffice<T>(this IRuleBuilder<T, string> ruleBuilder)
+    {
+        return ruleBuilder
+            .NotEmpty().WithMessage("The office id is required and cannot be an empty.");
     }
 }

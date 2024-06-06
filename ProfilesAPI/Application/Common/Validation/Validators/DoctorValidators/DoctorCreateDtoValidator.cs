@@ -16,8 +16,6 @@ public class DoctorCreateDtoValidator : AbstractValidator<DoctorCreateDto>
             .MiddleName();
         RuleFor(command => command.DateOfBirth)
             .DateOfBirth();
-        RuleFor(command => command.Email)
-            .Email();
         RuleFor(command => command.CareerStartYear)
             .CareerStartYear();
         RuleFor(command => command.Status)
@@ -27,6 +25,6 @@ public class DoctorCreateDtoValidator : AbstractValidator<DoctorCreateDto>
         RuleFor(command => command.IdSpecialization)
             .GuidRule();
         RuleFor(command => command.IdOffice)
-            .GuidRule();
+            .IdOffice();
     }
 }

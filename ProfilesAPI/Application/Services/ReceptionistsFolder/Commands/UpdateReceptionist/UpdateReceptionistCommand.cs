@@ -10,7 +10,7 @@ public class UpdateReceptionistCommand : IRequest<ICustomResult>
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string MiddleName { get; set; }
-    public Guid IdOffice { get; set; }
+    public string IdOffice { get; set; }
 
     public void MapInReceptionist(Receptionist rec)
     {

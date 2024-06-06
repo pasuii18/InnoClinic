@@ -14,13 +14,9 @@ public class PatientCreateDtoValidator : AbstractValidator<PatientCreateDto>
             .LastName();
         RuleFor(command => command.MiddleName)
             .MiddleName();
-        RuleFor(command => command.PhoneNumber)
-            .PhoneNumber();
         RuleFor(command => command.IsLinkedToAccount)
             .NotNull().WithMessage("The IsLinkedToAccount field must not be null.");
         RuleFor(command => command.DateOfBirth)
             .DateOfBirth();
-        RuleFor(command => command.IdPhoto)
-            .GuidRule();
     }
 }

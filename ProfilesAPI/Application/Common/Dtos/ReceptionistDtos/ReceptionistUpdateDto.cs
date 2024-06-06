@@ -3,7 +3,7 @@
 namespace Application.Common.Dtos.ReceptionistDtos;
 
 public record ReceptionistUpdateDto(Guid IdReceptionist, string FirstName, string LastName, string MiddleName, 
-    Guid IdOffice)
+    string IdOffice)
 {
     public UpdateReceptionistCommand MapInCommand()
     {

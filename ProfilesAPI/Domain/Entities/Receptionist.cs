@@ -7,5 +7,5 @@ public class Receptionist
     public string LastName { get; set; }
     public string MiddleName { get; set; }
     public Guid IdAccount { get; set; }
-    public Guid IdOffice { get; set; }
+    public string IdOffice { get; set; }
 }

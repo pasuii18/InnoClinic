@@ -22,11 +22,9 @@ public class DoctorUpdateDtoValidator : AbstractValidator<DoctorUpdateDto>
             .CareerStartYear();
         RuleFor(command => command.Status)
             .Status();
-        RuleFor(command => command.IdPhoto)
-            .GuidRule();
         RuleFor(command => command.IdSpecialization)
             .GuidRule();
         RuleFor(command => command.IdOffice)
-            .GuidRule();
+            .IdOffice();
     }
 }

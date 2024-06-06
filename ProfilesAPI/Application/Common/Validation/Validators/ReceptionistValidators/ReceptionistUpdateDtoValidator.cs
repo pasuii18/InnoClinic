@@ -17,8 +17,6 @@ public class ReceptionistUpdateDtoValidator : AbstractValidator<ReceptionistUpda
         RuleFor(command => command.MiddleName)
             .MiddleName();
         RuleFor(command => command.IdOffice)
-            .GuidRule();
-        RuleFor(command => command.IdPhoto)
-            .GuidRule();
+            .IdOffice();
     }
 }

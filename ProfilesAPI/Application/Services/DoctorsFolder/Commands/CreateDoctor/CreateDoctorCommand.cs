@@ -15,7 +15,7 @@ public class CreateDoctorCommand : IRequest<ICustomResult>
     public DoctorStatus Status { get; set; }
     public Guid IdAccount { get; set; }
     public Guid IdSpecialization { get; set; }
-    public Guid IdOffice { get; set; }
+    public string IdOffice { get; set; }
     
     public static Doctor MapInDoctor(CreateDoctorCommand command)
     {

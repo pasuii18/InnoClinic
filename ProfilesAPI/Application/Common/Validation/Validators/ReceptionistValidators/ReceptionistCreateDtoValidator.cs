@@ -14,11 +14,7 @@ public class ReceptionistCreateDtoValidator : AbstractValidator<ReceptionistCrea
             .LastName();
         RuleFor(command => command.MiddleName)
             .MiddleName();
-        RuleFor(command => command.Email)
-            .Email();
         RuleFor(command => command.IdOffice)
-            .GuidRule();
-        RuleFor(command => command.IdPhoto)
-            .GuidRule();
+            .IdOffice();
     }
 }

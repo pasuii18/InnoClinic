@@ -16,11 +16,7 @@ public class PatientUpdateDtoValidator : AbstractValidator<PatientUpdateDto>
             .LastName();
         RuleFor(command => command.MiddleName)
             .MiddleName();
-        RuleFor(command => command.PhoneNumber)
-            .PhoneNumber();
         RuleFor(command => command.DateOfBirth)
             .DateOfBirth();
-        RuleFor(command => command.IdPhoto)
-            .GuidRule();
     }
 }

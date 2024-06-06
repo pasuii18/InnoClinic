@@ -15,7 +15,7 @@ public class UpdateDoctorCommand : IRequest<ICustomResult>
     public int CareerStartYear { get; set; }
     public DoctorStatus Status { get; set; }
     public Guid IdSpecialization { get; set; }
-    public Guid IdOffice { get; set; }
+    public string IdOffice { get; set; }
     
     public void MapInDoctor(Doctor doctor)
     {
