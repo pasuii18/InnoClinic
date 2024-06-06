@@ -1,14 +1,13 @@
-﻿using Application.Common.ValidationRules;
+﻿using Application.Common.Dtos.PatientDtos;
+using Application.Common.Validation.ValidationRules;
 using FluentValidation;
 
-namespace Application.Services.PatientsFolder.Commands.UpdatePatient;
+namespace Application.Common.Validation.Validators.PatientValidators;
 
-public class UpdatePatientCommandValidator : AbstractValidator<UpdatePatientCommand>
+public class PatientCreateDtoValidator : AbstractValidator<PatientCreateDto>
 {
-    public UpdatePatientCommandValidator()
+    public PatientCreateDtoValidator()
     {
-        RuleFor(command => command.IdPatient)
-            .IdPatient();
         RuleFor(command => command.FirstName)
             .FirstName();
         RuleFor(command => command.LastName)
@@ -17,9 +16,11 @@ public class UpdatePatientCommandValidator : AbstractValidator<UpdatePatientComm
             .MiddleName();
         RuleFor(command => command.PhoneNumber)
             .PhoneNumber();
+        RuleFor(command => command.IsLinkedToAccount)
+            .NotNull().WithMessage("The IsLinkedToAccount field must not be null.");
         RuleFor(command => command.DateOfBirth)
             .DateOfBirth();
         RuleFor(command => command.IdPhoto)
-            .IdPhoto();
+            .GuidRule();
     }
 }

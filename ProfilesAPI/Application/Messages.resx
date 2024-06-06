@@ -57,4 +57,7 @@
     <data name="ReceptionistUpdated" xml:space="preserve">
         <value>Receptionist updated successfully!</value>
     </data>
+    <data name="ValidationError" xml:space="preserve">
+        <value>Some validation errors occurred!</value>
+    </data>
 </root>

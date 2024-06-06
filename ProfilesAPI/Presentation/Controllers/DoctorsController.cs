@@ -5,6 +5,7 @@ using Application.Services.DoctorsFolder.Queries.ViewDoctorProfile;
 using Application.Services.DoctorsFolder.Queries.ViewDoctors;
 using Microsoft.AspNetCore.Mvc;
 using ProfilesAPI.Common;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace ProfilesAPI.Controllers;
 
@@ -13,7 +14,8 @@ public class DoctorsController  : CustomControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetDoctors(
-        [FromQuery] PageSettings pageSettings, [FromQuery] DoctorFilters patientFilters, CancellationToken cancellationToken)
+        [FromQuery][AutoValidateAlways] PageSettings pageSettings, 
+        [FromQuery][AutoValidateAlways] DoctorFilters patientFilters, CancellationToken cancellationToken)
     {
         var query = new ViewDoctorsQuery { PageSettings = pageSettings, DoctorFilters = patientFilters };
         var result = await Mediator.Send(query, cancellationToken);
@@ -32,7 +34,7 @@ public class DoctorsController  : CustomControllerBase
     
     [HttpPost]
     public async Task<IActionResult> CreateDoctor(
-        DoctorCreateDto doctorCreateDto, CancellationToken cancellationToken)
+        [AutoValidateAlways] DoctorCreateDto doctorCreateDto, CancellationToken cancellationToken)
     {
         var command = doctorCreateDto.MapInCommand();
         var result = await Mediator.Send(command, cancellationToken);
@@ -41,7 +43,7 @@ public class DoctorsController  : CustomControllerBase
     
     [HttpPut]
     public async Task<IActionResult> UpdateDoctor(
-        DoctorUpdateDto doctorUpdateDto, CancellationToken cancellationToken)
+        [AutoValidateAlways] DoctorUpdateDto doctorUpdateDto, CancellationToken cancellationToken)
     {
         var command = doctorUpdateDto.MapInCommand();
         var result = await Mediator.Send(command, cancellationToken);
@@ -50,7 +52,7 @@ public class DoctorsController  : CustomControllerBase
     
     [HttpPut("status")]
     public async Task<IActionResult> UpdateDoctorStatus(
-        DoctorStatusUpdateDto doctorStatusUpdateDto, CancellationToken cancellationToken)
+        [AutoValidateAlways] DoctorStatusUpdateDto doctorStatusUpdateDto, CancellationToken cancellationToken)
     {
         var command = doctorStatusUpdateDto.MapInCommand();
         var result = await Mediator.Send(command, cancellationToken);

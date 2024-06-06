@@ -1,11 +1,12 @@
-﻿using Application.Common.ValidationRules;
+﻿using Application.Common.Dtos.ReceptionistDtos;
+using Application.Common.Validation.ValidationRules;
 using FluentValidation;
 
-namespace Application.Services.ReceptionistsFolder.Commands.CreateReceptionist;
+namespace Application.Common.Validation.Validators.ReceptionistValidators;
 
-public class CreateReceptionistCommandValidator : AbstractValidator<CreateReceptionistCommand>
+public class ReceptionistCreateDtoValidator : AbstractValidator<ReceptionistCreateDto>
 {
-    public CreateReceptionistCommandValidator()
+    public ReceptionistCreateDtoValidator()
     {
         RuleFor(command => command.FirstName)
             .FirstName();
@@ -16,8 +17,8 @@ public class CreateReceptionistCommandValidator : AbstractValidator<CreateRecept
         RuleFor(command => command.Email)
             .Email();
         RuleFor(command => command.IdOffice)
-            .IdOffice();
+            .GuidRule();
         RuleFor(command => command.IdPhoto)
-            .IdPhoto();
+            .GuidRule();
     }
 }

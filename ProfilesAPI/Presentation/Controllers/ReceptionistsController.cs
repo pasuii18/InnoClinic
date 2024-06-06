@@ -6,6 +6,7 @@ using Application.Services.ReceptionistsFolder.Queries.ViewReceptionistProfile;
 using Application.Services.ReceptionistsFolder.Queries.ViewReceptionists;
 using Microsoft.AspNetCore.Mvc;
 using ProfilesAPI.Common;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace ProfilesAPI.Controllers;
 
@@ -14,8 +15,8 @@ public class ReceptionistsController : CustomControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetReceptionists(
-        [FromQuery] PageSettings pageSettings, 
-        [FromQuery] ReceptionistFilters receptionistFilters, CancellationToken cancellationToken)
+        [FromQuery][AutoValidateAlways] PageSettings pageSettings, 
+        [FromQuery][AutoValidateAlways] ReceptionistFilters receptionistFilters, CancellationToken cancellationToken)
     {
         var query = new ViewReceptionistsQuery
         {
@@ -38,7 +39,7 @@ public class ReceptionistsController : CustomControllerBase
     
     [HttpPost]
     public async Task<IActionResult> CreateReceptionist(
-        ReceptionistCreateDto receptionistCreateDto, CancellationToken cancellationToken)
+        [AutoValidateAlways] ReceptionistCreateDto receptionistCreateDto, CancellationToken cancellationToken)
     {
         var command = receptionistCreateDto.MapInCommand();
         var result = await Mediator.Send(command, cancellationToken);
@@ -47,7 +48,7 @@ public class ReceptionistsController : CustomControllerBase
     
     [HttpPut]
     public async Task<IActionResult> UpdateReceptionist(
-        ReceptionistUpdateDto receptionistUpdateDto, CancellationToken cancellationToken)
+        [AutoValidateAlways] ReceptionistUpdateDto receptionistUpdateDto, CancellationToken cancellationToken)
     {
         var command = receptionistUpdateDto.MapInCommand();
         var result = await Mediator.Send(command, cancellationToken);

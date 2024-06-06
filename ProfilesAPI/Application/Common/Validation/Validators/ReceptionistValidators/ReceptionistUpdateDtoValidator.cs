@@ -1,14 +1,15 @@
-﻿using Application.Common.ValidationRules;
+﻿using Application.Common.Dtos.ReceptionistDtos;
+using Application.Common.Validation.ValidationRules;
 using FluentValidation;
 
-namespace Application.Services.ReceptionistsFolder.Commands.UpdateReceptionist;
+namespace Application.Common.Validation.Validators.ReceptionistValidators;
 
-public class UpdateReceptionistCommandValidation : AbstractValidator<UpdateReceptionistCommand>
+public class ReceptionistUpdateDtoValidator : AbstractValidator<ReceptionistUpdateDto>
 {
-    public UpdateReceptionistCommandValidation()
+    public ReceptionistUpdateDtoValidator()
     {
         RuleFor(command => command.IdReceptionist)
-            .IdReceptionist();
+            .GuidRule();
         RuleFor(command => command.FirstName)
             .FirstName();
         RuleFor(command => command.LastName)
@@ -16,8 +17,8 @@ public class UpdateReceptionistCommandValidation : AbstractValidator<UpdateRecep
         RuleFor(command => command.MiddleName)
             .MiddleName();
         RuleFor(command => command.IdOffice)
-            .IdOffice();
+            .GuidRule();
         RuleFor(command => command.IdPhoto)
-            .IdPhoto();
+            .GuidRule();
     }
 }

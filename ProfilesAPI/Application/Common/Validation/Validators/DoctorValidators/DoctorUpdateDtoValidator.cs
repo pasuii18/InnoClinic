@@ -1,14 +1,15 @@
-﻿using Application.Common.ValidationRules;
+﻿using Application.Common.Dtos.DoctorDtos;
+using Application.Common.Validation.ValidationRules;
 using FluentValidation;
 
-namespace Application.Services.DoctorsFolder.Commands.UpdateDoctor;
+namespace Application.Common.Validation.Validators.DoctorValidators;
 
-public class UpdateDoctorCommandValidator : AbstractValidator<UpdateDoctorCommand>
+public class DoctorUpdateDtoValidator : AbstractValidator<DoctorUpdateDto>
 {
-    public UpdateDoctorCommandValidator()
+    public DoctorUpdateDtoValidator()
     {
         RuleFor(command => command.IdDoctor)
-            .IdDoctor();
+            .GuidRule();
         RuleFor(command => command.FirstName)
             .FirstName();
         RuleFor(command => command.LastName)
@@ -22,10 +23,10 @@ public class UpdateDoctorCommandValidator : AbstractValidator<UpdateDoctorComman
         RuleFor(command => command.Status)
             .Status();
         RuleFor(command => command.IdPhoto)
-            .IdPhoto();
+            .GuidRule();
         RuleFor(command => command.IdSpecialization)
-            .IdSpecialization();
+            .GuidRule();
         RuleFor(command => command.IdOffice)
-            .IdOffice();
+            .GuidRule();
     }
 }

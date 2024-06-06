@@ -2,7 +2,7 @@
 using Domain.Common.Enums;
 using FluentValidation;
 
-namespace Application.Common.ValidationRules;
+namespace Application.Common.Validation.ValidationRules;
 
 public static class ValidationRulesBase
 {
@@ -69,14 +69,9 @@ public static class ValidationRulesBase
         return ruleBuilder
             .Matches(@"^[a-zA-Z '-]*$").WithMessage("The full name can only contain letters, spaces, apostrophes and hyphens");
     }
-    public static IRuleBuilder<T, Guid> IdPhoto<T>(this IRuleBuilder<T, Guid> ruleBuilder)
+    public static IRuleBuilder<T, Guid> GuidRule<T>(this IRuleBuilder<T, Guid> ruleBuilder)
     {
         return ruleBuilder
-            .NotEqual(Guid.Empty).WithMessage("The photo ID is required.");
-    }
-    public static IRuleBuilder<T, Guid> IdOffice<T>(this IRuleBuilder<T, Guid> ruleBuilder)
-    {
-        return ruleBuilder
-            .NotEqual(Guid.Empty).WithMessage("The office ID is required.");
+            .NotEqual(Guid.Empty);
     }
 }
