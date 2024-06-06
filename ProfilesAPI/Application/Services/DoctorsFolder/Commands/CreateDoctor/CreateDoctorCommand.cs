@@ -11,7 +11,6 @@ public class CreateDoctorCommand : IRequest<ICustomResult>
     public string LastName { get; set; }
     public string MiddleName { get; set; }
     public DateTime DateOfBirth { get; set; }
-    public string Email { get; set; } // for account on AuthApi
     public int CareerStartYear { get; set; }
     public DoctorStatus Status { get; set; }
     public Guid IdAccount { get; set; }

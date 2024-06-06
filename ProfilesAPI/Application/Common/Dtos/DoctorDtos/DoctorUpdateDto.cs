@@ -4,7 +4,7 @@ using Domain.Common.Enums;
 namespace Application.Common.Dtos.DoctorDtos;
 
 public record DoctorUpdateDto(Guid IdDoctor, string FirstName, string LastName, string MiddleName, DateTime DateOfBirth,
-    int CareerStartYear, DoctorStatus Status, Guid IdPhoto, Guid IdSpecialization, Guid IdOffice)
+    int CareerStartYear, DoctorStatus Status, Guid IdSpecialization, Guid IdOffice)
 {
     public UpdateDoctorCommand MapInCommand()
     {
@@ -17,7 +17,6 @@ public record DoctorUpdateDto(Guid IdDoctor, string FirstName, string LastName, 
             DateOfBirth = DateOfBirth,
             CareerStartYear = CareerStartYear,
             Status = Status,
-            IdPhoto = IdPhoto,
             IdSpecialization = IdSpecialization,
             IdOffice = IdOffice
         };

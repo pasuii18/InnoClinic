@@ -15,8 +15,7 @@ public class ViewDoctorsQueryHandler(IDoctorsRepo _doctorsRepo)
         var doctors = await _doctorsRepo.GetDoctorsByFiltration(
             request.PageSettings, request.DoctorFilters, cancellationToken);
         
-        // + PHOTO AND SPECIALIZATION + OFFICE ADDRESS
         var doctorsDtos = doctors.Select(DoctorReadDto.MapFromDoctor).ToList().AsReadOnly();
-        return new CustomResult(true, Messages.Success, HttpStatusCode.OK, doctorsDtos);
+        return new CustomResult(true, HttpStatusCode.OK, doctorsDtos);
     }
 }

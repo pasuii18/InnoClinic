@@ -14,6 +14,6 @@ public class CreateReceptionistCommandHandler(IReceptionistsRepo _receptionistsR
         var receptionist = CreateReceptionistCommand.MapInReceptionist(request);
         await _receptionistsRepo.CreateReceptionist(receptionist, cancellationToken);
         
-        return new CustomResult(true, Messages.ReceptionistCreated, HttpStatusCode.OK, receptionist.IdReceptionist);
+        return new CustomResult(true, HttpStatusCode.OK, receptionist.IdReceptionist);
     }
 }

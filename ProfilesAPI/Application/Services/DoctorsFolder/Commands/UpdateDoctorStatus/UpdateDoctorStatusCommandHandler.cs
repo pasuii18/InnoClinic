@@ -12,11 +12,11 @@ public class UpdateDoctorStatusCommandHandler(IDoctorsRepo _doctorsRepo)
     public async Task<ICustomResult> Handle(UpdateDoctorStatusCommand request, CancellationToken cancellationToken)
     {
         var doctor = await _doctorsRepo.GetDoctorById(request.IdDoctor, cancellationToken);
-        if(doctor == null) return new CustomResult(false, Messages.DoctorNotFound, HttpStatusCode.NotFound);
+        if(doctor == null) return new CustomResult(false, HttpStatusCode.NotFound);
 
         doctor.Status = request.Status;
         await _doctorsRepo.UpdateDoctor(doctor, cancellationToken);
         
-        return new CustomResult(true, Messages.DoctorStatusUpdated, HttpStatusCode.OK);
+        return new CustomResult(true, HttpStatusCode.OK);
     }
 }

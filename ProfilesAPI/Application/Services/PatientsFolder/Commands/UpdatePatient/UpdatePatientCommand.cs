@@ -10,9 +10,7 @@ public class UpdatePatientCommand : IRequest<ICustomResult>
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string MiddleName { get; set; }
-    public string PhoneNumber { get; set; }
     public DateTime DateOfBirth { get; set; }
-    public Guid IdPhoto { get; set; }
     
     public void MapInPatient(Patient patient)
     {
@@ -20,9 +18,5 @@ public class UpdatePatientCommand : IRequest<ICustomResult>
         patient.LastName = LastName;
         patient.MiddleName = MiddleName;
         patient.DateOfBirth = DateOfBirth;
-        
-        // need to work with AuthAPI somehow >:(
-        // patient.PhoneNumber = request.PhoneNumber;
-        // patient.IdPhoto = request.IdPhoto;
     }
 }

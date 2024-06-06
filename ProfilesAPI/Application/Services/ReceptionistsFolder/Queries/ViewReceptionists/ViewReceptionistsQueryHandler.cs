@@ -16,6 +16,6 @@ public class ViewReceptionistsQueryHandler(IReceptionistsRepo _receptionistsRepo
             request.ReceptionistFilters, request.PageSettings, cancellationToken);
         
         var receptionistDto = receptionists.Select(ReceptionistReadDto.MapFromReceptionist).ToList().AsReadOnly();
-        return new CustomResult(true, Messages.Success, HttpStatusCode.OK, receptionistDto);
+        return new CustomResult(true, HttpStatusCode.OK, receptionistDto);
     }
 }

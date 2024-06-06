@@ -14,6 +14,6 @@ public class CreateDoctorCommandHandler(IDoctorsRepo _doctorsRepo)
         var doctor = CreateDoctorCommand.MapInDoctor(request);
         await _doctorsRepo.CreateDoctor(doctor, cancellationToken);
         
-        return new CustomResult(true, Messages.DoctorCreated, HttpStatusCode.OK, doctor.IdDoctor);   
+        return new CustomResult(true, HttpStatusCode.OK, doctor.IdDoctor);   
     }
 }

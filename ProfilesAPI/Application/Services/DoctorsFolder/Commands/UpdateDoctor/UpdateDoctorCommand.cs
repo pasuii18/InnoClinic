@@ -14,7 +14,6 @@ public class UpdateDoctorCommand : IRequest<ICustomResult>
     public DateTime DateOfBirth { get; set; }
     public int CareerStartYear { get; set; }
     public DoctorStatus Status { get; set; }
-    public Guid IdPhoto { get; set; } // authAPI
     public Guid IdSpecialization { get; set; }
     public Guid IdOffice { get; set; }
     

@@ -11,7 +11,6 @@ public class UpdateReceptionistCommand : IRequest<ICustomResult>
     public string LastName { get; set; }
     public string MiddleName { get; set; }
     public Guid IdOffice { get; set; }
-    public Guid IdPhoto { get; set; } // authapi
 
     public void MapInReceptionist(Receptionist rec)
     {

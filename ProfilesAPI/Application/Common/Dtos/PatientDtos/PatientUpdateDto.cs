@@ -3,8 +3,7 @@
 namespace Application.Common.Dtos.PatientDtos;
 
 public record PatientUpdateDto
-    (Guid IdPatient, string FirstName, string LastName, string MiddleName, 
-        string PhoneNumber, DateTime DateOfBirth, Guid IdPhoto)
+    (Guid IdPatient, string FirstName, string LastName, string MiddleName, DateTime DateOfBirth)
 {
     public UpdatePatientCommand MapInCommand()
     {
@@ -14,9 +13,7 @@ public record PatientUpdateDto
             FirstName = FirstName,
             LastName = LastName,
             MiddleName = MiddleName,
-            PhoneNumber = PhoneNumber,
             DateOfBirth = DateOfBirth,
-            IdPhoto = IdPhoto
         };
     }
 }

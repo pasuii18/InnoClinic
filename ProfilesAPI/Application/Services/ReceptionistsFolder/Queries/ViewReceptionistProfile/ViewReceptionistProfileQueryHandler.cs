@@ -14,9 +14,9 @@ public class ViewReceptionistProfileQueryHandler(IReceptionistsRepo _receptionis
     {
         var receptionists = await _receptionistsRepo.GetReceptionistById(request.IdReceptionist, cancellationToken);
         if (receptionists == null)
-            return new CustomResult(false, Messages.ReceptionistNotFound, HttpStatusCode.NotFound);
+            return new CustomResult(false, HttpStatusCode.NotFound);
 
         var receptionistDto = ReceptionistReadDto.MapFromReceptionist(receptionists);
-        return new CustomResult(true, Messages.Success, HttpStatusCode.OK, receptionistDto);
+        return new CustomResult(true, HttpStatusCode.OK, receptionistDto);
     }
 }

@@ -2,8 +2,7 @@
 
 namespace Application.Common.Dtos.ReceptionistDtos;
 
-public record ReceptionistCreateDto(string FirstName, string LastName, string MiddleName, 
-    string Email, Guid IdOffice, Guid IdPhoto)
+public record ReceptionistCreateDto(string FirstName, string LastName, string MiddleName, Guid IdOffice)
 {
     public CreateReceptionistCommand MapInCommand()
     {
@@ -12,9 +11,7 @@ public record ReceptionistCreateDto(string FirstName, string LastName, string Mi
             FirstName = FirstName,
             LastName = LastName,
             MiddleName = MiddleName,
-            Email = Email,
             IdOffice = IdOffice,
-            IdPhoto = IdPhoto
         };
     }
 }

@@ -13,11 +13,11 @@ public class UpdateReceptionistCommandHandler(IReceptionistsRepo _receptionistsR
     {
         var receptionist = await _receptionistsRepo.GetReceptionistById(request.IdReceptionist, cancellationToken);
         if (receptionist == null)
-            return new CustomResult(false, Messages.ReceptionistNotFound, HttpStatusCode.NotFound);
+            return new CustomResult(false, HttpStatusCode.NotFound);
 
         request.MapInReceptionist(receptionist);
         await _receptionistsRepo.UpdateReceptionist(receptionist, cancellationToken);
         
-        return new CustomResult(true, Messages.ReceptionistUpdated, HttpStatusCode.OK);
+        return new CustomResult(true, HttpStatusCode.OK);
     }
 }

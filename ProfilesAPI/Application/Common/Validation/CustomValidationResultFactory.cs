@@ -14,7 +14,6 @@ public class CustomValidationResultFactory
             .SelectMany(entry => entry.Value)
             .ToList();
 
-        return BadRequest(new CustomResult(false, Messages.ValidationError, 
-            HttpStatusCode.BadRequest, errorMessages));
+        return BadRequest(new CustomResult(false, HttpStatusCode.BadRequest, errorMessages));
     }
 }
