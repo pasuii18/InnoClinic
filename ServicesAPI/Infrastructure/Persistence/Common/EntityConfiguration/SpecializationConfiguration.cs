@@ -8,8 +8,12 @@ public class SpecializationConfiguration : IEntityTypeConfiguration<Specializati
 {
     public void Configure(EntityTypeBuilder<Specialization> builder)
     {
-        builder.HasKey(service => service.IdSpecialization);
-        builder.Property(service => service.SpecializationName).IsRequired().HasMaxLength(50);
-        builder.Property(service => service.IsActive).IsRequired();
+        builder.HasKey(specialization => specialization.IdSpecialization);
+        builder.Property(specialization => specialization.SpecializationName).IsRequired().HasMaxLength(50);
+        builder.Property(specialization => specialization.IsActive).IsRequired();
+        
+        builder.HasMany(specialization => specialization.Services)
+            .WithOne(service => service.Specialization)
+            .HasForeignKey(service => service.IdSpecialization);
     }
 }
