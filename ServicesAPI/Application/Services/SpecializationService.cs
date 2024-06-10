@@ -1,34 +1,67 @@
-﻿using Application.Common.Dtos.SpecializationDtos;
+﻿using System.Net;
+using Application.Common;
+using Application.Common.Dtos.SpecializationDtos;
 using Application.Interfaces;
+using Application.Interfaces.ReposInterfaces;
 using Application.Interfaces.ServicesInterfaces;
+using Domain.Entities;
+using Mapster;
 
 namespace Application.Services;
 
-public class SpecializationService
+public class SpecializationService(ISpecializationRepo _specializationRepo, IServiceRepo _serviceRepo)
     : ISpecializationService
 {
     public async Task<ICustomResult> GetSpecializations(CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var specializations = await _specializationRepo.GetSpecializations(cancellationToken);
+        var specializationsDtos = specializations.Adapt<IReadOnlyCollection<SpecializationReadDto>>();
+        return new CustomResult(true, HttpStatusCode.OK, specializationsDtos);
     }
 
     public async Task<ICustomResult> GetSpecializationById(Guid idService, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var specialization = await _specializationRepo.GetSpecializationById(idService, cancellationToken);
+        if(specialization == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.SpecializationNotFound);
+        
+        var specializationDto = specialization.Adapt<SpecializationExtendedReadDto>();
+        return new CustomResult(true, HttpStatusCode.OK, specializationDto);
     }
 
     public async Task<ICustomResult> CreateSpecialization(SpecializationCreateDto specializationCreateDto, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var newSpecialization = specializationCreateDto.Adapt<Specialization>();
+        newSpecialization.IdSpecialization = Guid.NewGuid();
+        foreach (var idService in specializationCreateDto.IdsService)
+        {
+            var service = await _serviceRepo.GetServiceById(idService, cancellationToken);
+            if(service == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.ServiceNotFound);
+            service.IdSpecialization = newSpecialization.IdSpecialization;
+        }
+        
+        await _specializationRepo.CreateSpecialization(newSpecialization, cancellationToken);
+        await _specializationRepo.SaveChanges(cancellationToken);
+        return new CustomResult(true, HttpStatusCode.OK, newSpecialization.IdSpecialization);
     }
 
     public async Task<ICustomResult> UpdateSpecialization(SpecializationUpdateDto specializationUpdateDto, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var specialization = await _specializationRepo.GetSpecializationById(
+            specializationUpdateDto.IdSpecialization, cancellationToken);
+        if(specialization == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.SpecializationNotFound);
+        
+        specializationUpdateDto.Adapt(specialization);
+        await _specializationRepo.SaveChanges(cancellationToken);
+        return new CustomResult(true, HttpStatusCode.OK);
     }
 
     public async Task<ICustomResult> UpdateSpecializationStatus(Guid idService, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var specialization = await _specializationRepo.GetSpecializationById(idService, cancellationToken);
+        if(specialization == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.SpecializationNotFound);
+        
+        specialization.IsActive = !specialization.IsActive;
+        await _specializationRepo.SaveChanges(cancellationToken);
+        return new CustomResult(true, HttpStatusCode.OK);
     }
 }

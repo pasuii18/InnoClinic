@@ -10,10 +10,10 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
     {
         builder.HasKey(service => service.IdService);
         builder.Property(service => service.ServiceName).IsRequired().HasMaxLength(50);
-        builder.Property(service => service.Price).IsRequired().HasPrecision(2, 10);
+        builder.Property(service => service.Price).IsRequired().HasColumnType("decimal").HasPrecision(10, 2);
         builder.Property(service => service.IsActive).IsRequired();
         builder.Property(service => service.IdServiceCategory).IsRequired();
-        builder.Property(service => service.IdSpecialization).IsRequired();
+        builder.Property(service => service.IdSpecialization).IsRequired(false);
         
         builder.HasOne(service => service.Specialization)
             .WithMany(specialization => specialization.Services)

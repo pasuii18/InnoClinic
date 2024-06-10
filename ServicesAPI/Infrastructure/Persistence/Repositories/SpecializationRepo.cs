@@ -29,4 +29,9 @@ public class SpecializationRepo(ServiceDbContext _context)
     {
         await _context.Specialization.AddAsync(specialization, cancellationToken);
     }
+
+    public async Task SaveChanges(CancellationToken cancellationToken)
+    {
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }

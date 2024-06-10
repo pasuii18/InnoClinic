@@ -21,6 +21,7 @@ public static class InfrastructureInjection
             => options.UseSqlServer(configuration.GetSection("ConnectionStrings").Value));
 
         services.AddScoped<IServiceRepo, ServiceRepo>();
+        services.AddScoped<IServiceCategoryRepo, ServiceCategoryRepo>();
         services.AddScoped<ISpecializationRepo, SpecializationRepo>();
         return services;
     }
