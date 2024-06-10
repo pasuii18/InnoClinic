@@ -4,6 +4,7 @@ using Application.Common.Dtos.ServiceDtos;
 using Application.Interfaces.ServicesInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using ServicesAPI.Common;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace ServicesAPI.Controllers;
 
@@ -13,8 +14,8 @@ public class ServicesController(IServiceService _serviceService)
 {
     [HttpGet]
     public async Task<IActionResult> GetServices(
-        [FromQuery] PageSettings pageSettings, 
-        [FromQuery] ServicesFilter servicesFilter, CancellationToken cancellationToken)
+        [FromQuery][AutoValidateAlways] PageSettings pageSettings, 
+        [FromQuery][AutoValidateAlways] ServicesFilter servicesFilter, CancellationToken cancellationToken)
     {
         var result = await _serviceService.GetServices(pageSettings, servicesFilter, cancellationToken);
         return Result(result);
@@ -28,14 +29,16 @@ public class ServicesController(IServiceService _serviceService)
     }
     
     [HttpPost]
-    public async Task<IActionResult> CreateService(ServiceCreateDto serviceCreateDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateService([AutoValidateAlways] ServiceCreateDto serviceCreateDto,
+        CancellationToken cancellationToken)
     {
         var result = await _serviceService.CreateService(serviceCreateDto, cancellationToken);
         return Result(result);
     }
     
     [HttpPut]
-    public async Task<IActionResult> UpdateService(ServiceUpdateDto serviceUpdateDto,CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateService([AutoValidateAlways] ServiceUpdateDto serviceUpdateDto,
+        CancellationToken cancellationToken)
     {
         var result = await _serviceService.UpdateService(serviceUpdateDto, cancellationToken);
         return Result(result);

@@ -2,6 +2,7 @@
 using Application.Interfaces.ServicesInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using ServicesAPI.Common;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace SpecializationsAPI.Controllers;
 
@@ -24,14 +25,16 @@ public class SpecializationsController(ISpecializationService _specializationSpe
     }
     
     [HttpPost]
-    public async Task<IActionResult> CreateSpecialization(SpecializationCreateDto serviceCreateDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateSpecialization([AutoValidateAlways] SpecializationCreateDto serviceCreateDto,
+        CancellationToken cancellationToken)
     {
         var result = await _specializationSpecialization.CreateSpecialization(serviceCreateDto, cancellationToken);
         return Result(result);
     }
     
     [HttpPut]
-    public async Task<IActionResult> UpdateSpecialization(SpecializationUpdateDto serviceUpdateDto,CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateSpecialization([AutoValidateAlways] SpecializationUpdateDto serviceUpdateDto,
+        CancellationToken cancellationToken)
     {
         var result = await _specializationSpecialization.UpdateSpecialization(serviceUpdateDto, cancellationToken);
         return Result(result);
