@@ -1,7 +1,7 @@
 ﻿using Application.Common.Dtos.Filters;
 using FluentValidation;
 
-namespace Application.Common.Validation.Validators;
+namespace Application.Common.Validation.Validators.ServicesValidators;
 
 public class ServicesFilterValidator : AbstractValidator<ServicesFilter>
 {

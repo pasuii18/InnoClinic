@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ServicesAPI.Common;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
-namespace SpecializationsAPI.Controllers;
+namespace ServicesAPI.Controllers;
 
 [Route("api/v1/[controller]")]
 public class SpecializationsController(ISpecializationService _specializationSpecialization) 

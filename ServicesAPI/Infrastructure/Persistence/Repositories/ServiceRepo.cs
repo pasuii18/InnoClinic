@@ -1,5 +1,7 @@
-﻿using Application.Common.Dtos;
+﻿using Application.Common;
+using Application.Common.Dtos;
 using Application.Common.Dtos.Filters;
+using Application.Common.Specifications;
 using Application.Interfaces.ReposInterfaces;
 using Domain.Entities;
 using Infrastructure.Persistence.Contexts;
@@ -10,33 +12,20 @@ namespace Infrastructure.Persistence.Repositories;
 public class ServiceRepo(ServiceDbContext _context) 
     : IServiceRepo
 {
-    public async Task<IReadOnlyCollection<Service>> GetServices(PageSettings pageSettings, 
-        ServicesFilter servicesFilter, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<Service>> GetServices(
+        Specification<Service> specification,  CancellationToken cancellationToken)
     {
-        var query = _context.Service
-            .Include(service => service.Specialization)
-            .Where(service => 
-                service.IdServiceCategory == servicesFilter.IdServiceCategory && 
-                service.IsActive && 
-                service.Specialization != null && 
-                service.Specialization.IsActive);
-
-        query = query
-            .OrderBy(service => service.IdService)
-            .Skip((pageSettings.Page - 1) * pageSettings.PageSize)
-            .Take(pageSettings.PageSize)
-            .AsNoTracking();
-        
-        var services = await query.ToListAsync(cancellationToken);
-        
+        var services = await _context.Service.GetQuery(specification)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
         return services;
     }
 
-    public async Task<Service> GetServiceById(Guid idService, CancellationToken cancellationToken)
+    public async Task<Service> GetServiceById(
+        Specification<Service> specification,  CancellationToken cancellationToken)
     {
-        var service = await _context.Service
-            .Include(service => service.ServiceCategory)
-            .FirstOrDefaultAsync(service => service.IdService == idService, cancellationToken);
+        var service = await _context.Service.GetQuery(specification)
+            .FirstOrDefaultAsync(cancellationToken);
         return service;
     }
 

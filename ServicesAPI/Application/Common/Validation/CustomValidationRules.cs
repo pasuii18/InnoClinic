@@ -17,21 +17,21 @@ public static class CustomValidationRules
     public static IRuleBuilder<T, Guid> IsGuid<T>(this IRuleBuilder<T, Guid> ruleBuilder)
     {
         return ruleBuilder
-            .NotEqual(Guid.Empty).WithMessage("Value cannot by empty guid!");
+            .NotEqual(Guid.Empty).WithMessage("{PropertyName} cannot by empty guid!");
     }
     public static IRuleBuilder<T, string> SpecializationName<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
         return ruleBuilder
             .NotEmpty().WithMessage("The specialization name is required.")
             .MaximumLength(50).WithMessage("The specialization name must not exceed 50 characters.")
-            .Matches(@"^[a-zA-Z]+$").WithMessage("The specialization name can only contain letters.");
+            .Matches(@"^[a-zA-Z ]+$").WithMessage("The specialization name can only contain letters.");
     }
     public static IRuleBuilder<T, string> ServiceName<T>(this IRuleBuilder<T, string> ruleBuilder)
     {
         return ruleBuilder
             .NotEmpty().WithMessage("The service name is required.")
             .MaximumLength(50).WithMessage("The service name must not exceed 50 characters.")
-            .Matches(@"^[a-zA-Z]+$").WithMessage("The service name can only contain letters.");
+            .Matches(@"^[a-zA-Z ]+$").WithMessage("The service name can only contain letters.");
     }
     public static IRuleBuilder<T, decimal> Price<T>(this IRuleBuilder<T, decimal> ruleBuilder)
     {
@@ -44,6 +44,6 @@ public static class CustomValidationRules
     {
         return ruleBuilder
             .NotNull().WithMessage("Services filter cannot be null.")
-            .Must(x => x.IdServiceCategory != Guid.Empty).WithMessage("Value cannot by empty guid!");
+            .Must(x => x.IdServiceCategory != Guid.Empty).WithMessage("Service category cannot by empty guid!");
     }
 }

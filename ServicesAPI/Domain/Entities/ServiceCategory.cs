@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities;
 
-public class ServiceCategory
+public class ServiceCategory : BaseEntity
 {
     public Guid IdServiceCategory { get; set; }
     public string ServiceCategoryName { get; set; }

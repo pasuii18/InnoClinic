@@ -1,9 +1,13 @@
-﻿using Domain.Entities;
+﻿using System.Linq.Expressions;
+using Application.Common;
+using Domain.Entities;
 
 namespace Application.Interfaces.ReposInterfaces;
 
-public interface IServiceCategoryRepo
+public interface IServiceCategoryRepo 
 {
-    public Task<IReadOnlyCollection<ServiceCategory>> GetServiceCategories(CancellationToken cancellationToken);
-    public Task<ServiceCategory> GetServiceCategoryById(Guid idServiceCategory, CancellationToken cancellationToken);
+    public Task<IReadOnlyCollection<ServiceCategory>> GetServiceCategories(
+        Specification<ServiceCategory> specification, CancellationToken cancellationToken);
+    public Task<ServiceCategory> GetServiceCategoryById(
+        Specification<ServiceCategory> specification, CancellationToken cancellationToken);
 }

@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities;
 
-public class Specialization
+public class Specialization : BaseEntity
 {
     public Guid IdSpecialization { get; set; }
     public string SpecializationName { get; set; }

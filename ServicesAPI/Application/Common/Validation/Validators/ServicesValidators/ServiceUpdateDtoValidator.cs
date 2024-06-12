@@ -1,7 +1,7 @@
 ﻿using Application.Common.Dtos.ServiceDtos;
 using FluentValidation;
 
-namespace Application.Common.Validation.Validators;
+namespace Application.Common.Validation.Validators.ServicesValidators;
 
 public class ServiceUpdateDtoValidator : AbstractValidator<ServiceUpdateDto>
 {
