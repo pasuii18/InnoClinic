@@ -15,18 +15,34 @@ public static class ApplicationInjection
     public static IServiceCollection AddApplication
         (this IServiceCollection services)
     {
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddFluentValidationAutoValidation(cfg =>
-        {
-            cfg.DisableBuiltInModelValidation = true;
-            cfg.ValidationStrategy = ValidationStrategy.All;
-            cfg.EnableCustomBindingSourceAutomaticValidation = true;
-            cfg.OverrideDefaultResultFactoryWith<CustomValidationResultFactory>();
-        });
+        services
+            .ValidationConfigure()
+            .ServicesConfigure();
         
-        services.AddScoped<IServiceService, ServiceService>();
-        services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
-        services.AddScoped<ISpecializationService, SpecializationService>();
+        return services;
+    }
+    
+    private static IServiceCollection ValidationConfigure(this IServiceCollection services)
+    {
+        services
+            .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
+            .AddFluentValidationAutoValidation(cfg =>
+            {
+                cfg.DisableBuiltInModelValidation = true;
+                cfg.ValidationStrategy = ValidationStrategy.All;
+                cfg.EnableCustomBindingSourceAutomaticValidation = true;
+                cfg.OverrideDefaultResultFactoryWith<CustomValidationResultFactory>();
+            });
+        
+        return services;
+    }
+    private static IServiceCollection ServicesConfigure(this IServiceCollection services)
+    {
+        services
+            .AddScoped<IServiceService, ServiceService>()
+            .AddScoped<IServiceCategoryService, ServiceCategoryService>()
+            .AddScoped<ISpecializationService, SpecializationService>();
+        
         return services;
     }
 }

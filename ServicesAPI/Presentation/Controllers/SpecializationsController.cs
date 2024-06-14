@@ -46,4 +46,11 @@ public class SpecializationsController(ISpecializationService _specializationSpe
         var result = await _specializationSpecialization.UpdateSpecializationStatus(idSpecialization, cancellationToken);
         return Result(result);
     }
+    
+    [HttpDelete("{idSpecialization}")]
+    public async Task<IActionResult> DeleteSpecialization(Guid idSpecialization, CancellationToken cancellationToken)
+    {
+        var result = await _specializationSpecialization.DeleteSpecialization(idSpecialization, cancellationToken);
+        return Result(result);
+    }
 }

@@ -32,6 +32,11 @@ public class SpecializationRepo(ServiceDbContext _context)
         await _context.Specialization.AddAsync(specialization, cancellationToken);
     }
 
+    public async Task DeleteSpecialization(Specialization specialization)
+    {
+        _context.Specialization.Remove(specialization);
+    }
+
     public async Task SaveChanges(CancellationToken cancellationToken)
     {
         await _context.SaveChangesAsync(cancellationToken);

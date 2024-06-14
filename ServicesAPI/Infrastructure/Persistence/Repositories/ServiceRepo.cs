@@ -33,6 +33,11 @@ public class ServiceRepo(ServiceDbContext _context)
     {
         await _context.Service.AddAsync(service, cancellationToken);
     }
+    
+    public async Task DeleteService(Service service)
+    {
+        _context.Service.Remove(service);
+    }
 
     public async Task SaveChanges(CancellationToken cancellationToken)
     {

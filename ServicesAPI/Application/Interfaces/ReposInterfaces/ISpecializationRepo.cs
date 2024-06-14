@@ -10,5 +10,6 @@ public interface ISpecializationRepo
     public Task<Specialization> GetSpecializationById(
         Specification<Specialization> specification, CancellationToken cancellationToken);
     public Task CreateSpecialization(Specialization specialization, CancellationToken cancellationToken);
+    public Task DeleteSpecialization(Specialization specialization);
     public Task SaveChanges(CancellationToken cancellationToken);
 }

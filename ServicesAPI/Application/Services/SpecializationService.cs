@@ -69,4 +69,15 @@ public class SpecializationService(ISpecializationRepo _specializationRepo, ISer
         await _specializationRepo.SaveChanges(cancellationToken);
         return new CustomResult(true, HttpStatusCode.OK);
     }
+
+    public async Task<ICustomResult> DeleteSpecialization(Guid idService, CancellationToken cancellationToken)
+    {
+        var specialization = await _specializationRepo.GetSpecializationById(
+            new GetSpecializationByIdSpecification(idService), cancellationToken);
+        if(specialization == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.SpecializationNotFound);
+        
+        _specializationRepo.DeleteSpecialization(specialization);
+        await _specializationRepo.SaveChanges(cancellationToken);
+        return new CustomResult(true, HttpStatusCode.OK);
+    }
 }

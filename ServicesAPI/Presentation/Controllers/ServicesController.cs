@@ -50,4 +50,11 @@ public class ServicesController(IServiceService _serviceService)
         var result = await _serviceService.UpdateServiceStatus(idService, cancellationToken);
         return Result(result);
     }
+    
+    [HttpDelete("{idService}")]
+    public async Task<IActionResult> DeleteService(Guid idService, CancellationToken cancellationToken)
+    {
+        var result = await _serviceService.DeleteService(idService, cancellationToken);
+        return Result(result);
+    }
 }

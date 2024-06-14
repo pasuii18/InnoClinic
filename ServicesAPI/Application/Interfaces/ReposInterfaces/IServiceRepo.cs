@@ -12,5 +12,6 @@ public interface IServiceRepo
     public Task<Service> GetServiceById(
         Specification<Service> specification, CancellationToken cancellationToken);
     public Task CreateService(Service service, CancellationToken cancellationToken);
+    public Task DeleteService(Service service);
     public Task SaveChanges(CancellationToken cancellationToken);
 }

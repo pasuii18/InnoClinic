@@ -83,7 +83,17 @@ public class ServiceService(IServiceRepo _serviceRepo, IServiceCategoryRepo _ser
         await _serviceRepo.SaveChanges(cancellationToken);
         return new CustomResult(true, HttpStatusCode.OK);
     }
-    
+
+    public async Task<ICustomResult> DeleteService(Guid idService, CancellationToken cancellationToken)
+    {
+        var service = await _serviceRepo.GetServiceById(new GetServiceByIdSpecification(idService), cancellationToken);
+        if(service == null) return new CustomResult(false, HttpStatusCode.NotFound);
+
+        _serviceRepo.DeleteService(service);
+        await _serviceRepo.SaveChanges(cancellationToken);
+        return new CustomResult(true, HttpStatusCode.OK);
+    }
+
     private async Task<bool> IsServiceCategoryNotExist(Guid idServiceCategory, CancellationToken cancellationToken)
     {
         var serviceCategory = await _serviceCategoryRepo.GetServiceCategoryById(
