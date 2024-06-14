@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Application.Common.Validation;
+using Application.Interfaces;
 using Application.Interfaces.ServicesInterfaces;
 using Application.Services;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;

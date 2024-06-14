@@ -1,4 +1,7 @@
-﻿using Application.Interfaces.ReposInterfaces;
+﻿using Application.Interfaces;
+using Application.Interfaces.ReposInterfaces;
+using Application.Services;
+using Infrastructure.Common;
 using Infrastructure.Common.Options;
 using Infrastructure.Persistence.Contexts;
 using Infrastructure.Persistence.Repositories;
@@ -16,6 +19,8 @@ public static class InfrastructureInjection
     {
         services.Configure<SqlServerDbOptions>(
             configuration.GetSection("ConnectionStrings"));
+        services.Configure<RabbitMQOptions>(
+            configuration.GetSection("RabbitMQConfiguration"));
 
         services.AddDbContext<ServiceDbContext>(options
             => options.UseSqlServer(configuration.GetSection("ConnectionStrings").Value));
@@ -23,6 +28,9 @@ public static class InfrastructureInjection
         services.AddScoped<IServiceRepo, ServiceRepo>();
         services.AddScoped<IServiceCategoryRepo, ServiceCategoryRepo>();
         services.AddScoped<ISpecializationRepo, SpecializationRepo>();
+
+        services.AddSingleton<RabbitMQClient>();
+        services.AddScoped<IMessageProducer, MessageProducer>();
         return services;
     }
 }
