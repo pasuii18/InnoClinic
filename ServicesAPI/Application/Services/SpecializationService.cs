@@ -53,8 +53,8 @@ public class SpecializationService(ISpecializationRepo _specializationRepo, ISer
         var specialization = await _specializationRepo.GetSpecializationById(
             new GetSpecializationByIdSpecification(specializationUpdateDto.IdSpecialization), cancellationToken);
         if(specialization == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.SpecializationNotFound);
-        
-        specializationUpdateDto.Adapt(specialization);
+
+        specialization.SpecializationName = specializationUpdateDto.SpecializationName;
         await _specializationRepo.SaveChanges(cancellationToken);
         return new CustomResult(true, HttpStatusCode.OK);
     }

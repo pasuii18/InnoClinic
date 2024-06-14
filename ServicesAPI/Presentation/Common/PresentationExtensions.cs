@@ -1,6 +1,8 @@
 ﻿using Application;
 using Infrastructure;
 using Infrastructure.Common.Options;
+using Infrastructure.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
 using ServicesAPI.Common.Middlewares;
 
 namespace ServicesAPI.Common;
@@ -53,6 +55,12 @@ public static class PresentationExtensions
     
     public static async Task RunApplicationAsync(this WebApplication app)
     {
+        using var scope = app.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ServiceDbContext>();
+        
+        context.Database.EnsureCreated();
+        await context.Database.MigrateAsync();
+        
         await app.RunAsync();
     }
 }

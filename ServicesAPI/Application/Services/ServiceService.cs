@@ -66,7 +66,7 @@ public class ServiceService(IServiceRepo _serviceRepo, IServiceCategoryRepo _ser
         
         var service = await _serviceRepo.GetServiceById(
             new GetServiceByIdSpecification(serviceUpdateDto.IdService), cancellationToken);
-        if(service == null) return new CustomResult(false, HttpStatusCode.NotFound);
+        if(service == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.ServiceNotFound);
         
         serviceUpdateDto.Adapt(service);
         await _serviceRepo.SaveChanges(cancellationToken);
@@ -77,7 +77,7 @@ public class ServiceService(IServiceRepo _serviceRepo, IServiceCategoryRepo _ser
         CancellationToken cancellationToken)
     {
         var service = await _serviceRepo.GetServiceById(new GetServiceByIdSpecification(idService), cancellationToken);
-        if(service == null) return new CustomResult(false, HttpStatusCode.NotFound);
+        if(service == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.ServiceNotFound);
         
         service.IsActive = !service.IsActive;
         await _serviceRepo.SaveChanges(cancellationToken);
@@ -87,7 +87,7 @@ public class ServiceService(IServiceRepo _serviceRepo, IServiceCategoryRepo _ser
     public async Task<ICustomResult> DeleteService(Guid idService, CancellationToken cancellationToken)
     {
         var service = await _serviceRepo.GetServiceById(new GetServiceByIdSpecification(idService), cancellationToken);
-        if(service == null) return new CustomResult(false, HttpStatusCode.NotFound);
+        if(service == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.ServiceNotFound);
 
         _serviceRepo.DeleteService(service);
         await _serviceRepo.SaveChanges(cancellationToken);
