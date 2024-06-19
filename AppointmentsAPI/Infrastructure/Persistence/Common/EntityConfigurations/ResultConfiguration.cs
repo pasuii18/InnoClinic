@@ -11,7 +11,7 @@ public class ResultConfiguration : IEntityTypeConfiguration<Result>
         builder.HasKey(result => result.IdResult);
         builder.Property(result => result.Complaints).IsRequired().HasMaxLength(300);
         builder.Property(result => result.Conclusion).IsRequired().HasMaxLength(300);
-        builder.Property(result => result.Recomendations).IsRequired().HasMaxLength(300);
+        builder.Property(result => result.Recommendations).IsRequired().HasMaxLength(300);
         builder.Property(result => result.IdAppointment).IsRequired();
 
         builder.HasOne(result => result.Appointment)

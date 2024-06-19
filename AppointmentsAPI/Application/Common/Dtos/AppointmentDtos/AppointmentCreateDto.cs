@@ -1,13 +1,7 @@
 ﻿namespace Application.Common.Dtos.AppointmentsDtos;
 
-public class AppointmentCreateDto
-{
-    public DateOnly Date { get; set; }
-    public TimeOnly Time { get; set; }
-    public Guid IdPatient { get; set; } // patient -> auto gen, admin -> handwrite
-    public Guid IdDoctor { get; set; }
-    public Guid IdService { get; set; }
-}
+public record AppointmentCreateDto(DateOnly Date, TimeOnly Time, Guid IdPatient, Guid IdDoctor, Guid IdService);
+// patient -> auto gen, admin -> handwrite
 
 // specialization - combobox
 

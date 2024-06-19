@@ -97,7 +97,7 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
             
             var appointment = await connection.QueryFirstOrDefaultAsync<Appointment>(
                 new CommandDefinition(
-                    query.ToString(), new { IdAppointment = idAppointment }, cancellationToken: cancellationToken));
+                    query, new { IdAppointment = idAppointment }, cancellationToken: cancellationToken));
 
             return appointment;
         }

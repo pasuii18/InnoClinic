@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using Application.Common;
 
 namespace ServicesAPI.Common.Middlewares;
 
@@ -23,6 +24,7 @@ public class CustomExceptionHandlerMiddleware(
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-        return context.Response.WriteAsync(e.Message);
+        return context.Response.WriteAsync(
+            JsonSerializer.Serialize(new CustomResult(false, HttpStatusCode.InternalServerError, e.Message)));
     }
 }

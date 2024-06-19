@@ -11,5 +11,5 @@ public class Appointment
     public Guid IdPatient { get; set; }
     public Guid IdDoctor { get; set; }
     public Guid IdService { get; set; }
-    public Result Result { get; set; }
+    public Result? Result { get; set; }
 }

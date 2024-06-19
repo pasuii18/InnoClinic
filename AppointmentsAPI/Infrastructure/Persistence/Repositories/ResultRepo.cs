@@ -8,11 +8,24 @@ namespace Infrastructure.Persistence.Repositories;
 
 public class ResultRepo(AppointmentsDbContext _context) : IResultRepo
 {
-    public async Task<Result> GetResultById(Guid idAppointment, CancellationToken cancellationToken)
+    public async Task<Result> GetResultById(Guid idResult, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
         {
             var query = QueryBuilder.GetById(nameof(Result));
+            var result = await connection.QueryFirstOrDefaultAsync<Result>(
+                new CommandDefinition(
+                    query, new { IdResult = idResult }, cancellationToken: cancellationToken));
+            
+            return result;
+        }
+    }
+    
+    public async Task<Result> GetResultByAppointmentId(Guid idAppointment, CancellationToken cancellationToken)
+    {
+        using (var connection = _context.CreateConnection())
+        {
+            var query = QueryBuilder.GetByOtherId(nameof(Result), nameof(Appointment));
             var result = await connection.QueryFirstOrDefaultAsync<Result>(
                 new CommandDefinition(
                     query, new { IdAppointment = idAppointment }, cancellationToken: cancellationToken));

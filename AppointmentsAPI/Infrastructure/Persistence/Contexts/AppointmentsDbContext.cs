@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Infrastructure.Common.Options;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using Npgsql;
 
 namespace Infrastructure.Persistence.Contexts;
 
@@ -10,6 +10,6 @@ public class AppointmentsDbContext
 {
     public IDbConnection CreateConnection()
     {
-        return new SqlConnection(sqlOptions.Value.PostgresConnectionString);
+        return new NpgsqlConnection(sqlOptions.Value.PostgresConnectionString);
     }
 }
