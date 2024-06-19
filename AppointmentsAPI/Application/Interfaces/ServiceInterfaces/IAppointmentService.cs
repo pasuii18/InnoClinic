@@ -1,16 +1,20 @@
 ﻿using Application.Common.Dtos;
 using Application.Common.Dtos.AppointmentsDtos;
+using Application.Common.Dtos.Filters;
 
 namespace Application.Interfaces;
 
 public interface IAppointmentService
 {
     // US-13
-    public Task<ICustomResult> GetAppointments(PageSettings pageSettings, CancellationToken cancellationToken);
+    public Task<ICustomResult> GetAppointments(PageSettings pageSettings,
+        AppointmentsFilter filter, CancellationToken cancellationToken);
     // US-45, US-46
-    public Task<ICustomResult> GetAppointmentsHistory(PageSettings pageSettings, CancellationToken cancellationToken);
+    public Task<ICustomResult> GetAppointmentsHistory(PageSettings pageSettings,
+        AppointmentsFilter filter, CancellationToken cancellationToken);
     // US-10
-    public Task<ICustomResult> GetAppointmentsSchedule(AppointmentsScheduleFilter filter, CancellationToken cancellationToken);
+    public Task<ICustomResult> GetAppointmentsSchedule(Guid idDoctor, PageSettings pageSettings,
+        AppointmentsFilter filter, CancellationToken cancellationToken);
     // US-6, US-64
     public Task<ICustomResult> CreateAppointment(AppointmentCreateDto appointmentCreateDto, CancellationToken cancellationToken);
     // US-66, US-67 Only appointments that aren’t approved can be rescheduled

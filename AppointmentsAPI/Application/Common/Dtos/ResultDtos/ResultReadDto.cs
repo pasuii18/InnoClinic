@@ -1,6 +1,6 @@
 ﻿namespace Application.Common.Dtos.ResultDtos;
 
-public class ResultReadDtoByDoctor
+public class ResultReadDto
 {
     public Guid IdResult { get; set; }
     public DateOnly DateOfResult { get; set; }

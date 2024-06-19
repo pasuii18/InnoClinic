@@ -1,26 +1,15 @@
-﻿using System.Reflection;
-using Domain.Entities;
+﻿using System.Data;
 using Infrastructure.Common.Options;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Persistence.Contexts;
 
-public class AppointmentsDbContext(DbContextOptions<AppointmentsDbContext> options,
-    IOptions<PostgresDbOptions> sqlOptions)
-    : DbContext(options)
+public class AppointmentsDbContext
+    (IOptions<PostgresDbOptions> sqlOptions)
 {
-    public virtual DbSet<Appointment> Appointment { get; set; }
-    public virtual DbSet<Result> Result { get; set; }
-    
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public IDbConnection CreateConnection()
     {
-        optionsBuilder.UseNpgsql(sqlOptions.Value.PostgresConnectionString);
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        base.OnModelCreating(modelBuilder);
+        return new SqlConnection(sqlOptions.Value.PostgresConnectionString);
     }
 }

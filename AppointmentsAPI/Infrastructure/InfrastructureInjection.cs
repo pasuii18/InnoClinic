@@ -20,7 +20,7 @@ public static class InfrastructureInjection
     
     private static IServiceCollection DatabaseConfigure(this IServiceCollection services)
     {
-        services.AddDbContext<AppointmentsDbContext>((serviceProvider, options) =>
+        services.AddDbContext<MigrationsDbContext>((serviceProvider, options) =>
         {
             var connectionString = serviceProvider.GetRequiredService<IOptions<PostgresDbOptions>>().Value;
             options.UseNpgsql(connectionString.PostgresConnectionString);

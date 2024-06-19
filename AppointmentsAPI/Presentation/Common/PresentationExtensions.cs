@@ -1,5 +1,6 @@
 ﻿using Application;
 using Infrastructure;
+using Infrastructure.Common.Options;
 using ServicesAPI.Common.Middlewares;
 
 namespace ServicesAPI.Common;
@@ -13,6 +14,8 @@ public static class PresentationExtensions
         builder.Configuration
             .AddJsonFile("appsettings.json", false, false)
             .AddJsonFile($"appsettings.{environment}.json", true, false);
+        
+        builder.Services.Configure<PostgresDbOptions>(builder.Configuration.GetSection("ConnectionStrings"));
 
         builder.Services
             .AddApplication()

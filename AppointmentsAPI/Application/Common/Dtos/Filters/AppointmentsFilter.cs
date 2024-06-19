@@ -3,10 +3,19 @@ using Domain.Common;
 
 namespace Application.Common.Dtos.Filters;
 
-public record AppointmentListFilter(DateOnly? Date, string? DoctorFullName, string? ServiceName,
-    AppointmentStatus? AppointmentStatus, Guid? IdOffice, OrderBy OrderBy, OrderType OrderType) : IFilterBase;
+public record AppointmentsFilter(DateOnly? Date, string? DoctorFullName, string? ServiceName,
+    AppointmentStatus AppointmentStatus, Guid? IdOffice, OrderBy OrderBy, OrderType OrderType) : IFilterBase;
 
 // The table should be ordered ascending by time
+
+// The table should be ordered descending by date
+// + equal dates Then this appointments should be ordered ascending by time
+
+// The table should be ordered ascending by time
+// for doctors schedule
+
+
+
 
 // The page should contain the datepicker for filtration by appointment date
 // The page should contain the field for filtration by doctor full name
