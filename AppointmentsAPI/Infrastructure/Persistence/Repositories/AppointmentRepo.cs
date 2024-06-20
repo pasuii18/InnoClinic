@@ -3,6 +3,7 @@ using Application.Common.Dtos.AppointmentsDtos;
 using Application.Common.Dtos.Filters;
 using Application.Interfaces.RepoInterfaces;
 using Dapper;
+using Domain.Common;
 using Domain.Entities;
 using Infrastructure.Persistence.Common;
 using Infrastructure.Persistence.Contexts;
@@ -20,15 +21,16 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
 
             if (filters.Date is not null)
                 query.Append(QueryBuilder.AddFilter(nameof(filters.Date)));
-                
-            query.Append(QueryBuilder.AddFilter(nameof(filters.AppointmentStatus)));
-            query.Append(QueryBuilder.Order(filters.OrderBy, filters.OrderType));
-            // query.Append(QueryBuilder.AddOrder(filters.OrderBy, filters.OrderType));
+            if(filters.IsApproved != AppointmentStatus.All)
+                query.Append(QueryBuilder.AddApprovedFilter(filters.IsApproved));
+            
+            query.Append(QueryBuilder.Order(OrderBy.Time, OrderType.Ascending));
             query.Append(QueryBuilder.Pagination);
 
             var parameters = new DynamicParameters(filters);
             parameters.Add(nameof(pageSettings.Page), pageSettings.Page);
             parameters.Add(nameof(pageSettings.PageSize), pageSettings.PageSize);
+            
             var appointments = await connection.QueryAsync<Appointment>(
                 new CommandDefinition(
                     query.ToString(), parameters, cancellationToken: cancellationToken));
@@ -38,23 +40,16 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
     }
 
     public async Task<IReadOnlyCollection<Appointment>> GetAppointmentsHistory(PageSettings pageSettings,
-        AppointmentsFilter filters, CancellationToken cancellationToken)
+        CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
         {
             var query = QueryBuilder.GetByFiltration(nameof(Appointment));
-            
-            if (filters.Date is not null)
-                query.Append(QueryBuilder.AddFilter(nameof(filters.Date)));
-            
-
-            query.Append(QueryBuilder.AddFilter(nameof(filters.Date)));
-            query.Append(QueryBuilder.Order(filters.OrderBy, filters.OrderType));
+            query.Append(QueryBuilder.Order(OrderBy.Date, OrderType.Descending));
+            query.Append(QueryBuilder.AddOrder(OrderBy.Time, OrderType.Ascending));
             query.Append(QueryBuilder.Pagination);
             
-            var parameters = new DynamicParameters(filters);
-            parameters.Add(nameof(pageSettings.Page), pageSettings.Page);
-            parameters.Add(nameof(pageSettings.PageSize), pageSettings.PageSize);
+            var parameters = new DynamicParameters(pageSettings);
             var appointments = await connection.QueryAsync<Appointment>(
                 new CommandDefinition(
                     query.ToString(), parameters, cancellationToken: cancellationToken));
@@ -63,24 +58,25 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
         }
     }
 
-    public async Task<IReadOnlyCollection<Appointment>> GetAppointmentsSchedule(PageSettings pageSettings, 
-        AppointmentsFilter filters, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<Appointment>> GetAppointmentsSchedule(Guid idDoctor, PageSettings pageSettings, 
+        AppointmentsScheduleFilter filters, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
         {
             var query = QueryBuilder.GetByFiltration(nameof(Appointment));
             
-            if (filters.Date is not null)
-                query.Append(QueryBuilder.AddFilter(nameof(filters.Date)));
-            
+            if (idDoctor != Guid.Empty)
+                query.Append(QueryBuilder.AddFilter("IdDoctor"));
 
             query.Append(QueryBuilder.AddFilter(nameof(filters.Date)));
-            query.Append(QueryBuilder.Order(filters.OrderBy, filters.OrderType));
+            query.Append(QueryBuilder.Order(OrderBy.Time, OrderType.Ascending));
             query.Append(QueryBuilder.Pagination);
             
             var parameters = new DynamicParameters(filters);
             parameters.Add(nameof(pageSettings.Page), pageSettings.Page);
             parameters.Add(nameof(pageSettings.PageSize), pageSettings.PageSize);
+            parameters.Add("IdDoctor", idDoctor);
+            
             var appointments = await connection.QueryAsync<Appointment>(
                 new CommandDefinition(
                     query.ToString(), parameters, cancellationToken: cancellationToken));

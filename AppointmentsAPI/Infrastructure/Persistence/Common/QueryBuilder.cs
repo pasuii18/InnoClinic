@@ -6,13 +6,15 @@ namespace Infrastructure.Persistence.Common;
 public static class QueryBuilder
 {
     public static string Pagination => 
-        " OFFSET (@Page - 1) * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY";
+        " LIMIT @PageSize OFFSET (@Page - 1) * @PageSize";
 
     public static StringBuilder GetByFiltration(string tableName) => 
         new StringBuilder($"SELECT * FROM \"{tableName}\" WHERE 1=1");
 
     public static string AddFilter(string field) => 
         $" AND \"{field}\" = @{field}";
+    public static string AddApprovedFilter(AppointmentStatus status) => 
+        $" AND \"IsApproved\" = {(status == AppointmentStatus.Approved ? "true" : "false")}";
 
     public static string Order(OrderBy field, OrderType type) => 
         $" ORDER BY \"{field}\" {(type == OrderType.Ascending ? "ASC" : "DESC")}";

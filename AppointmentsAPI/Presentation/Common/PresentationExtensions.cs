@@ -1,6 +1,11 @@
-﻿using Application;
+﻿using System.ComponentModel;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Application;
 using Infrastructure;
 using Infrastructure.Common.Options;
+using Microsoft.AspNetCore.Mvc;
+using ServicesAPI.Common.Converters;
 using ServicesAPI.Common.Middlewares;
 
 namespace ServicesAPI.Common;
@@ -22,7 +27,8 @@ public static class PresentationExtensions
             .AddInfrastructure();
 
         builder.Services
-            .AddControllers();
+            .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
+            .AddJsonOptions(options => options.UseDateAndTimeOnlyJsonConverters());
 
         builder.Services
             .AddEndpointsApiExplorer()
@@ -31,6 +37,18 @@ public static class PresentationExtensions
         return builder;
     }
 
+    private static MvcOptions UseDateOnlyTimeOnlyStringConverters(this MvcOptions options)
+    {
+        TypeDescriptor.AddAttributes(typeof(DateOnly), new TypeConverterAttribute(typeof(DateOnlyTypeConverter)));
+        return options;
+    }
+    private static JsonOptions UseDateAndTimeOnlyJsonConverters(this JsonOptions options)
+    {
+        options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+        options.JsonSerializerOptions.Converters.Add(new TimeOnlyJsonConverter());
+        return options;
+    }
+    
     public static WebApplication ApplicationConfigure(this WebApplication app)
     {
         app.UseMiddleware<CustomExceptionHandlerMiddleware>();

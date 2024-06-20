@@ -69,6 +69,15 @@ namespace Application {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Approved appointment cannot be updated!.
+        /// </summary>
+        internal static string CannotUpdateApprovedAppointment {
+            get {
+                return ResourceManager.GetString("CannotUpdateApprovedAppointment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Result for this appointment already exists!.
         /// </summary>
         internal static string ResultAlreadyExists {

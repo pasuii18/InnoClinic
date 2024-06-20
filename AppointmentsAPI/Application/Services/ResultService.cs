@@ -32,12 +32,12 @@ public class ResultService(IResultRepo _resultRepo, IAppointmentRepo _appointmen
         var newResult = resultCreateDto.Adapt<Result>();
         newResult.IdResult = Guid.NewGuid();
         await _resultRepo.CreateResult(newResult, cancellationToken);
-        return new CustomResult(true, HttpStatusCode.OK, newResult.IdResult);
+        return new CustomResult(true, HttpStatusCode.Created, newResult.IdResult);
     }
 
-    public async Task<ICustomResult> UpdateResult(ResultUpdateDto resultUpdateDto, CancellationToken cancellationToken)
+    public async Task<ICustomResult> UpdateResult(Guid idResult, ResultUpdateDto resultUpdateDto, CancellationToken cancellationToken)
     {
-        var result = await _resultRepo.GetResultById(resultUpdateDto.IdResult, cancellationToken);
+        var result = await _resultRepo.GetResultById(idResult, cancellationToken);
         if (result is null)
             return new CustomResult(false, HttpStatusCode.NotFound, Messages.ResultNotFound);
         
@@ -55,8 +55,6 @@ public class ResultService(IResultRepo _resultRepo, IAppointmentRepo _appointmen
         var resultDto = result.Adapt<ResultReadDto>();
         
         var pdfBytes = PdfGenerator.GeneratePdf(resultDto);
-        // var filePath = Path.Combine("C:\\Users\\Ihar\\Desktop", $"Result_{Guid.NewGuid()}.pdf");
-        // File.WriteAllBytes(filePath, pdfBytes);
         
         return new CustomResult(true, HttpStatusCode.OK, pdfBytes);
     }

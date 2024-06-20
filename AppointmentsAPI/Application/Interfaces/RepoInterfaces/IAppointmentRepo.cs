@@ -10,9 +10,9 @@ public interface IAppointmentRepo
     public Task<IReadOnlyCollection<Appointment>> GetAppointments(PageSettings pageSettings,
         AppointmentsFilter filters, CancellationToken cancellationToken);
     public Task<IReadOnlyCollection<Appointment>> GetAppointmentsHistory(PageSettings pageSettings,
-        AppointmentsFilter filters, CancellationToken cancellationToken);
-    public Task<IReadOnlyCollection<Appointment>> GetAppointmentsSchedule(PageSettings pageSettings,
-        AppointmentsFilter filters, CancellationToken cancellationToken);
+        CancellationToken cancellationToken);
+    public Task<IReadOnlyCollection<Appointment>> GetAppointmentsSchedule(Guid idDoctor, PageSettings pageSettings,
+        AppointmentsScheduleFilter filters, CancellationToken cancellationToken);
     
     public Task<Appointment?> GetAppointmentsById(Guid idAppointment,
         CancellationToken cancellationToken);

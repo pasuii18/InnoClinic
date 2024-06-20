@@ -34,11 +34,11 @@ public class ResultController(IResultService _resultService) : CustomControllerB
         return Result(result);
     }
     
-    [HttpPut]
-    public async Task<IActionResult> UpdateResult([FromBody]ResultUpdateDto resultUpdateDto,
+    [HttpPut("{idResult}")]
+    public async Task<IActionResult> UpdateResult(Guid idResult, [FromBody]ResultUpdateDto resultUpdateDto,
         CancellationToken cancellationToken)
     {
-        var result = await _resultService.UpdateResult(resultUpdateDto, cancellationToken);
+        var result = await _resultService.UpdateResult(idResult, resultUpdateDto, cancellationToken);
         return Result(result);
     }
 }
