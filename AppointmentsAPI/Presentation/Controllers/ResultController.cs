@@ -27,7 +27,7 @@ public class ResultController(IResultService _resultService) : CustomControllerB
     }
     
     [HttpPost]
-    public async Task<IActionResult> CreateResult([FromBody]ResultCreateDto resultCreateDto,
+    public async Task<IActionResult> CreateResult([FromBody][AutoValidateAlways]ResultCreateDto resultCreateDto,
         CancellationToken cancellationToken)
     {
         var result = await _resultService.CreateResult(resultCreateDto, cancellationToken);
@@ -35,7 +35,8 @@ public class ResultController(IResultService _resultService) : CustomControllerB
     }
     
     [HttpPut("{idResult}")]
-    public async Task<IActionResult> UpdateResult(Guid idResult, [FromBody]ResultUpdateDto resultUpdateDto,
+    public async Task<IActionResult> UpdateResult(Guid idResult, 
+        [FromBody][AutoValidateAlways]ResultUpdateDto resultUpdateDto,
         CancellationToken cancellationToken)
     {
         var result = await _resultService.UpdateResult(idResult, resultUpdateDto, cancellationToken);

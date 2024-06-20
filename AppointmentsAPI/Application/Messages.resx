@@ -28,6 +28,6 @@
         <value>Result for this appointment already exists!</value>
     </data>
     <data name="CannotUpdateApprovedAppointment" xml:space="preserve">
-        <value>Approved appointment cannot be updated!</value>
+        <value>Approved appointment cannot be rescheduled!</value>
     </data>
 </root>

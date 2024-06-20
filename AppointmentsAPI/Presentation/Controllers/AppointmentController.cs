@@ -4,6 +4,7 @@ using Application.Common.Dtos.Filters;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using ServicesAPI.Common;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace ServicesAPI.Controllers;
 
@@ -11,15 +12,15 @@ namespace ServicesAPI.Controllers;
 public class AppointmentController(IAppointmentService _appointmentService) : CustomControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAppointments([FromQuery]PageSettings pageSettings, 
-        [FromQuery]AppointmentsFilter filter, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAppointments([FromQuery][AutoValidateAlways]PageSettings pageSettings, 
+        [FromQuery][AutoValidateAlways]AppointmentsFilter filter, CancellationToken cancellationToken)
     {
         var result = await _appointmentService.GetAppointments(pageSettings, filter, cancellationToken);
         return Result(result);
     }
     
     [HttpGet("history")]
-    public async Task<IActionResult> GetAppointmentsHistory([FromQuery]PageSettings pageSettings, 
+    public async Task<IActionResult> GetAppointmentsHistory([FromQuery][AutoValidateAlways]PageSettings pageSettings, 
         CancellationToken cancellationToken)
     {
         var result = await _appointmentService.GetAppointmentsHistory(pageSettings, cancellationToken);
@@ -28,15 +29,16 @@ public class AppointmentController(IAppointmentService _appointmentService) : Cu
     
     [HttpGet("schedule/{idDoctor}")]
     public async Task<IActionResult> GetAppointmentsSchedule(Guid idDoctor, 
-        [FromQuery]PageSettings pageSettings, [FromQuery]AppointmentsScheduleFilter filter, CancellationToken cancellationToken)
+        [FromQuery][AutoValidateAlways]PageSettings pageSettings,
+        [FromQuery][AutoValidateAlways]AppointmentsScheduleFilter filter, CancellationToken cancellationToken)
     {
         var result = await _appointmentService.GetAppointmentsSchedule(idDoctor, pageSettings, filter, cancellationToken);
         return Result(result);
     }
     
     [HttpPost]
-    public async Task<IActionResult> CreateAppointment([FromBody]AppointmentCreateDto appointmentCreateDto, 
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAppointment(
+        [FromBody][AutoValidateAlways]AppointmentCreateDto appointmentCreateDto, CancellationToken cancellationToken)
     {
         var result = await _appointmentService.CreateAppointment(appointmentCreateDto, cancellationToken);
         return Result(result);
@@ -44,7 +46,7 @@ public class AppointmentController(IAppointmentService _appointmentService) : Cu
     
     [HttpPut("{idAppointment}")]
     public async Task<IActionResult> UpdateAppointment(Guid idAppointment, 
-        [FromBody]AppointmentUpdateDto appointmentUpdateDto, CancellationToken cancellationToken)
+        [FromBody][AutoValidateAlways]AppointmentUpdateDto appointmentUpdateDto, CancellationToken cancellationToken)
     {
         var result = await _appointmentService.UpdateAppointment(idAppointment, appointmentUpdateDto, cancellationToken);
         return Result(result);

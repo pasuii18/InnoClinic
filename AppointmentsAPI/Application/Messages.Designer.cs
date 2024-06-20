@@ -69,7 +69,7 @@ namespace Application {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Approved appointment cannot be updated!.
+        ///   Looks up a localized string similar to Approved appointment cannot be rescheduled!.
         /// </summary>
         internal static string CannotUpdateApprovedAppointment {
             get {
