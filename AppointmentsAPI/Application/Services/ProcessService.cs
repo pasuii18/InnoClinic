@@ -16,9 +16,10 @@ public class ProcessService(IAppointmentRepo _appointmentRepo) : IProcessesServi
         
         if (appointment != null)
         {
-            appointment.DoctorFullName = doctorUpdateEvent.DoctorFullName;
-            appointment.SpecializationName = doctorUpdateEvent.SpecializationName;
-            await _appointmentRepo.UpdateAppointment(appointment, cancellationToken);
+            await _appointmentRepo.UpdateAppointmentField(
+                doctorUpdateEvent.DoctorFullName, nameof(doctorUpdateEvent.DoctorFullName), 
+                doctorUpdateEvent.IdDoctor, nameof(doctorUpdateEvent.IdDoctor), 
+                cancellationToken);
         }
     }
     public async Task ProcessPatientUpdate(PatientUpdatedEvent patientUpdateEvent, CancellationToken cancellationToken)
@@ -30,6 +31,7 @@ public class ProcessService(IAppointmentRepo _appointmentRepo) : IProcessesServi
         if (appointment != null)
         {
             appointment.PatientFullName = patientUpdateEvent.PatientFullName;
+            appointment.PatientPhoneNumber = patientUpdateEvent.PatientPhoneNumber;
             appointment.PatientDateOfBirth = patientUpdateEvent.PatientDateOfBirth;
             await _appointmentRepo.UpdateAppointment(appointment, cancellationToken);
         }
@@ -42,10 +44,9 @@ public class ProcessService(IAppointmentRepo _appointmentRepo) : IProcessesServi
         
         if (appointment != null)
         {
-            await _appointmentRepo.UpdateAppointmentField(
-                serviceUpdatedEvent.ServiceName, nameof(serviceUpdatedEvent.ServiceName), 
-                serviceUpdatedEvent.IdService, nameof(serviceUpdatedEvent.IdService), 
-                cancellationToken);
+            appointment.ServiceName = serviceUpdatedEvent.ServiceName;
+            appointment.SpecializationName = serviceUpdatedEvent.SpecializationName;
+            await _appointmentRepo.UpdateAppointment(appointment, cancellationToken);
         }
     }
 }

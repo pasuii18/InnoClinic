@@ -6,12 +6,16 @@ using Application.Common.Dtos.Filters;
 using Application.Interfaces;
 using Application.Interfaces.RepoInterfaces;
 using Domain.Entities;
+using Domain.Events;
+using Domain.Events.DoctorEvents;
 using Domain.Events.ServiceEvents;
 using Mapster;
+using MassTransit;
 
 namespace Application.Services;
 
-public class AppointmentService(IAppointmentRepo _appointmentRepo) : IAppointmentService
+public class AppointmentService(IAppointmentRepo _appointmentRepo, IPublishEndpoint _publishEndpoint)
+    : IAppointmentService
 {
     public async Task<ICustomResult> GetAppointments(PageSettings pageSettings,
         AppointmentsFilter filter, CancellationToken cancellationToken)
@@ -45,6 +49,8 @@ public class AppointmentService(IAppointmentRepo _appointmentRepo) : IAppointmen
         newAppointment.IsApproved = false;
         
         await _appointmentRepo.CreateAppointment(newAppointment, cancellationToken);
+        await AppointmentCreatedEvent(newAppointment, cancellationToken);
+        
         return new CustomResult(true, HttpStatusCode.Created, newAppointment.IdAppointment);
     }
 
@@ -59,6 +65,8 @@ public class AppointmentService(IAppointmentRepo _appointmentRepo) : IAppointmen
         
         appointmentUpdateDto.Adapt(appointment);
         await _appointmentRepo.UpdateAppointment(appointment, cancellationToken);
+        await AppointmentUpdatedEvent(appointment, cancellationToken);
+        
         return new CustomResult(true, HttpStatusCode.OK);
     }
 
@@ -83,5 +91,20 @@ public class AppointmentService(IAppointmentRepo _appointmentRepo) : IAppointmen
         
         await _appointmentRepo.DeleteAppointment(idAppointment, cancellationToken);
         return new CustomResult(true, HttpStatusCode.OK);
+    }
+
+    private async Task AppointmentCreatedEvent(Appointment appointment, CancellationToken cancellationToken)
+    {
+        var appointmentCreatedDoctorEvent = new AppointmentDoctorUpdateEvent(appointment.IdDoctor);
+        var appointmentCreatedPatientEvent = new AppointmentPatientUpdateEvent(appointment.IdPatient);
+        var appointmentCreatedServiceEvent = new AppointmentServiceUpdateEvent(appointment.IdService);
+        await _publishEndpoint.Publish(appointmentCreatedDoctorEvent, cancellationToken);
+        await _publishEndpoint.Publish(appointmentCreatedPatientEvent, cancellationToken);
+        await _publishEndpoint.Publish(appointmentCreatedServiceEvent, cancellationToken);
+    }
+    private async Task AppointmentUpdatedEvent(Appointment appointment, CancellationToken cancellationToken)
+    {
+        var appointmentCreatedDoctorEvent = new AppointmentDoctorUpdateEvent(appointment.IdDoctor);
+        await _publishEndpoint.Publish(appointmentCreatedDoctorEvent, cancellationToken);
     }
 }
