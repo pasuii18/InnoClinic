@@ -1,6 +1,7 @@
 ﻿using Application.Common.Dtos;
 using Application.Common.Dtos.AppointmentsDtos;
 using Application.Common.Dtos.Filters;
+using Domain.Events.ServiceEvents;
 
 namespace Application.Interfaces;
 

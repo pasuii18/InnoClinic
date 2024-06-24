@@ -6,6 +6,7 @@ using Application.Common.Dtos.Filters;
 using Application.Interfaces;
 using Application.Interfaces.RepoInterfaces;
 using Domain.Entities;
+using Domain.Events.ServiceEvents;
 using Mapster;
 
 namespace Application.Services;
@@ -50,7 +51,7 @@ public class AppointmentService(IAppointmentRepo _appointmentRepo) : IAppointmen
     public async Task<ICustomResult> UpdateAppointment(Guid idAppointment, AppointmentUpdateDto appointmentUpdateDto,
         CancellationToken cancellationToken)
     {
-        var appointment = await _appointmentRepo.GetAppointmentsById(idAppointment, cancellationToken); 
+        var appointment = await _appointmentRepo.GetAppointmentById(idAppointment, cancellationToken); 
         if(appointment is null) 
             return new CustomResult(false, HttpStatusCode.NotFound, Messages.AppointmentNotFound);
         if(appointment.IsApproved) 
@@ -63,18 +64,20 @@ public class AppointmentService(IAppointmentRepo _appointmentRepo) : IAppointmen
 
     public async Task<ICustomResult> UpdateAppointmentStatus(Guid idAppointment, CancellationToken cancellationToken)
     {
-        var appointment = await _appointmentRepo.GetAppointmentsById(idAppointment, cancellationToken); 
+        var appointment = await _appointmentRepo.GetAppointmentById(idAppointment, cancellationToken); 
         if(appointment is null) 
             return new CustomResult(false, HttpStatusCode.NotFound, Messages.AppointmentNotFound);
         
-        appointment.IsApproved = !appointment.IsApproved;
-        await _appointmentRepo.UpdateAppointmentStatus(appointment, cancellationToken);
+        await _appointmentRepo.UpdateAppointmentField(
+            !appointment.IsApproved, nameof(appointment.IsApproved),
+            idAppointment, $"Id{nameof(Appointment)}",
+            cancellationToken);
         return new CustomResult(true, HttpStatusCode.OK);
     }
 
     public async Task<ICustomResult> DeleteAppointment(Guid idAppointment, CancellationToken cancellationToken)
     {
-        var appointment = await _appointmentRepo.GetAppointmentsById(idAppointment, cancellationToken); 
+        var appointment = await _appointmentRepo.GetAppointmentById(idAppointment, cancellationToken); 
         if(appointment is null) 
             return new CustomResult(false, HttpStatusCode.NotFound, Messages.AppointmentNotFound);
         

@@ -38,7 +38,6 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
             return appointments.ToList().AsReadOnly();
         }
     }
-
     public async Task<IReadOnlyCollection<Appointment>> GetAppointmentsHistory(PageSettings pageSettings,
         CancellationToken cancellationToken)
     {
@@ -57,7 +56,6 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
             return appointments.ToList().AsReadOnly();
         }
     }
-
     public async Task<IReadOnlyCollection<Appointment>> GetAppointmentsSchedule(Guid idDoctor, PageSettings pageSettings, 
         AppointmentsScheduleFilter filters, CancellationToken cancellationToken)
     {
@@ -84,8 +82,7 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
             return appointments.ToList().AsReadOnly();
         }
     }
-
-    public async Task<Appointment?> GetAppointmentsById(Guid idAppointment, CancellationToken cancellationToken)
+    public async Task<Appointment?> GetAppointmentById(Guid idAppointment, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
         {
@@ -98,7 +95,21 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
             return appointment;
         }
     }
+    public async Task<Appointment?> GetAppointmentByFieldName<T>(T value, string fieldName, CancellationToken cancellationToken)
+    {
+        using (var connection = _context.CreateConnection())
+        {
+            var query = QueryBuilder.GetByFieldName(nameof(Appointment), fieldName);
+            
+            var parameters = new DynamicParameters();
+            parameters.Add(fieldName, value);
+            var appointment = await connection.QueryFirstOrDefaultAsync<Appointment>(
+                new CommandDefinition(
+                    query, parameters, cancellationToken: cancellationToken));
 
+            return appointment;
+        }
+    }
     public async Task CreateAppointment(Appointment appointment, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
@@ -109,7 +120,6 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
                     query, appointment, cancellationToken: cancellationToken));
         }
     }
-
     public async Task UpdateAppointment(Appointment appointment, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
@@ -120,18 +130,21 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
                     query, appointment, cancellationToken: cancellationToken));
         }
     }
-
-    public async Task UpdateAppointmentStatus(Appointment appointment, CancellationToken cancellationToken)
+    public async Task UpdateAppointmentField<T, T2>(T fieldValue, string fieldName, 
+        T2 conditionFieldValue, string conditionFieldName, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = QueryBuilder.UpdateById(appointment);
+            var query = QueryBuilder.UpdateField(nameof(Appointment), fieldName, conditionFieldName);
+            
+            var parameters = new DynamicParameters();
+            parameters.Add(fieldName, fieldValue);
+            parameters.Add(conditionFieldName, conditionFieldValue);
             await connection.ExecuteAsync(
                 new CommandDefinition(
-                    query, appointment, cancellationToken: cancellationToken));
+                    query, parameters, cancellationToken: cancellationToken));
         }
     }
-
     public async Task DeleteAppointment(Guid idAppointment, CancellationToken cancellationToken)
     {
         using (var connection = _context.CreateConnection())

@@ -25,16 +25,17 @@ public class ResultService(IResultRepo _resultRepo, IAppointmentRepo _appointmen
         var result = await _resultRepo.GetResultByAppointmentId(resultCreateDto.IdAppointment, cancellationToken);
         if (result is not null)
             return new CustomResult(false, HttpStatusCode.NotFound, Messages.ResultAlreadyExists);
-        var appointment = await _appointmentRepo.GetAppointmentsById(resultCreateDto.IdAppointment, cancellationToken);
+        
+        var appointment = await _appointmentRepo.GetAppointmentById(resultCreateDto.IdAppointment, cancellationToken);
         if (appointment is null)
             return new CustomResult(false, HttpStatusCode.NotFound, Messages.AppointmentNotFound);
         
         var newResult = resultCreateDto.Adapt<Result>();
         newResult.IdResult = Guid.NewGuid();
+        newResult.Date = DateOnly.FromDateTime(DateTime.Now);
         await _resultRepo.CreateResult(newResult, cancellationToken);
         return new CustomResult(true, HttpStatusCode.Created, newResult.IdResult);
     }
-
     public async Task<ICustomResult> UpdateResult(Guid idResult, ResultUpdateDto resultUpdateDto, CancellationToken cancellationToken)
     {
         var result = await _resultRepo.GetResultById(idResult, cancellationToken);
@@ -45,7 +46,6 @@ public class ResultService(IResultRepo _resultRepo, IAppointmentRepo _appointmen
         await _resultRepo.UpdateResult(result, cancellationToken);
         return new CustomResult(true, HttpStatusCode.OK);
     }
-
     public async Task<ICustomResult> DownloadResult(Guid idResult, CancellationToken cancellationToken)
     {
         var result = await _resultRepo.GetResultById(idResult, cancellationToken);

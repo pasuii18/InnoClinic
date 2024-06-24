@@ -25,12 +25,22 @@ public class ResultRepo(AppointmentsDbContext _context) : IResultRepo
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = QueryBuilder.GetByOtherId(nameof(Result), nameof(Appointment));
-            var result = await connection.QueryFirstOrDefaultAsync<Result>(
+            var query = QueryBuilder.GetBy(nameof(Result));
+            query.Append(QueryBuilder.LeftJoin(nameof(Result), nameof(Appointment), $"Id{nameof(Appointment)}"));
+            query.Append(QueryBuilder.Filtration);
+            query.Append(QueryBuilder.AddJoinFilter(nameof(Result), $"Id{nameof(Appointment)}"));
+
+            var result = await connection.QueryAsync<Result, Appointment, Result>(
                 new CommandDefinition(
-                    query, new { IdAppointment = idAppointment }, cancellationToken: cancellationToken));
-            
-            return result;
+                    query.ToString(), new { IdAppointment = idAppointment }, cancellationToken: cancellationToken),
+                (result, appointment) =>
+                {
+                    result.Appointment = appointment;
+                    return result;
+                },
+                splitOn: $"Id{nameof(Appointment)}");
+
+            return result.FirstOrDefault();
         }
     }
 

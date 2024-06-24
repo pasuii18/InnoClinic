@@ -14,11 +14,13 @@ public interface IAppointmentRepo
     public Task<IReadOnlyCollection<Appointment>> GetAppointmentsSchedule(Guid idDoctor, PageSettings pageSettings,
         AppointmentsScheduleFilter filters, CancellationToken cancellationToken);
     
-    public Task<Appointment?> GetAppointmentsById(Guid idAppointment,
-        CancellationToken cancellationToken);
+    public Task<Appointment?> GetAppointmentById(Guid idAppointment, CancellationToken cancellationToken);
+    public Task<Appointment?> GetAppointmentByFieldName<T>(T value, string fieldName, CancellationToken cancellationToken);
     
     public Task CreateAppointment(Appointment appointment, CancellationToken cancellationToken);
     public Task UpdateAppointment(Appointment appointment, CancellationToken cancellationToken);
-    public Task UpdateAppointmentStatus(Appointment appointment, CancellationToken cancellationToken);
+
+    public Task UpdateAppointmentField<T, T2>(T fieldValue, string fieldName,
+        T2 conditionFieldValue, string conditionFieldName, CancellationToken cancellationToken);
     public Task DeleteAppointment(Guid idAppointment, CancellationToken cancellationToken);
 }

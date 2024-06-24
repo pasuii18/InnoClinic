@@ -7,12 +7,19 @@ public static class QueryBuilder
 {
     public static string Pagination => 
         " LIMIT @PageSize OFFSET (@Page - 1) * @PageSize";
+    public static string Filtration => 
+        " WHERE 1=1";
+    
+    public static StringBuilder GetBy(string tableName) => 
+        new StringBuilder($"SELECT * FROM \"{tableName}\"");
 
     public static StringBuilder GetByFiltration(string tableName) => 
         new StringBuilder($"SELECT * FROM \"{tableName}\" WHERE 1=1");
 
     public static string AddFilter(string field) => 
         $" AND \"{field}\" = @{field}";
+    public static string AddJoinFilter(string tableName, string field) => 
+        $" AND \"{tableName}\".\"{field}\" = @{field}";
     public static string AddApprovedFilter(AppointmentStatus status) => 
         $" AND \"IsApproved\" = {(status == AppointmentStatus.Approved ? "true" : "false")}";
 
@@ -25,11 +32,14 @@ public static class QueryBuilder
     public static string GetById(string tableName) => 
         $"SELECT * FROM \"{tableName}\" WHERE \"Id{tableName}\" = @Id{tableName}";
 
-    public static string GetByOtherId(string tableName, string columnName) => 
-        $"SELECT * FROM \"{tableName}\" WHERE \"Id{columnName}\" = @Id{columnName}";
+    public static string GetByFieldName(string tableName, string fieldName) => 
+        $"SELECT * FROM \"{tableName}\" WHERE \"{fieldName}\" = @{fieldName}";
 
     public static string DeleteById(string tableName) => 
         $"DELETE FROM \"{tableName}\" WHERE \"Id{tableName}\" = @Id{tableName}";
+    
+    public static string LeftJoin(string leftTable, string rightTable, string field) => 
+        $" LEFT JOIN \"{rightTable}\" ON \"{leftTable}\".\"{field}\" = \"{rightTable}\".\"{field}\"";
 
     public static string Create<T>(T entity)
     {
@@ -55,4 +65,9 @@ public static class QueryBuilder
 
         return $"UPDATE \"{tableName}\" SET {updateFields} WHERE \"Id{tableName}\" = @Id{tableName}";
     }
+    public static string UpdateField(string tableName, string fieldName, string conditionField)
+    {
+        return $"UPDATE \"{tableName}\" SET \"{fieldName}\" = @{fieldName} WHERE \"{conditionField}\" = @{conditionField}";
+    }
+    
 }
