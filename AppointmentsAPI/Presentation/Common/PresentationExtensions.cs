@@ -20,7 +20,9 @@ public static class PresentationExtensions
             .AddJsonFile("appsettings.json", false, false)
             .AddJsonFile($"appsettings.{environment}.json", true, false);
         
-        builder.Services.Configure<PostgresDbOptions>(builder.Configuration.GetSection("ConnectionStrings"));
+        builder.Services
+            .Configure<PostgresDbOptions>(builder.Configuration.GetSection("ConnectionStrings"))
+            .Configure<RabbitMQOptions>(builder.Configuration.GetSection("RabbitMQConfiguration"));
 
         builder.Services
             .AddApplication()

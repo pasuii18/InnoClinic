@@ -4,7 +4,7 @@ public record ResultReadDto(
     Guid IdResult,
     DateOnly Date,
     string PatientFullName,
-    DateTime PatientDateOfBirth,
+    DateOnly PatientDateOfBirth,
     string DoctorFullName,
     string SpecializationName,
     string ServiceName,

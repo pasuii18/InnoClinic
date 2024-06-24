@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
+using Application.Common.Mappings;
 using Application.Common.Validation;
 using Application.Interfaces;
 using Application.Services;
 using FluentValidation;
+using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
@@ -22,9 +24,12 @@ public static class ApplicationInjection
     private static IServiceCollection ServicesConfigure
         (this IServiceCollection services)
     {
+        TypeAdapterConfig.GlobalSettings.Scan(typeof(MapsterProfile).Assembly);
+        
         return services
             .AddScoped<IAppointmentService, AppointmentService>()
-            .AddScoped<IResultService, ResultService>();
+            .AddScoped<IResultService, ResultService>()
+            .AddScoped<IProcessesService, ProcessService>();
     }
     
     private static IServiceCollection ValidationConfigure
