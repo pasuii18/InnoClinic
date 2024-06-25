@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.RepoInterfaces;
+﻿using System.Data;
+using Application.Interfaces.RepoInterfaces;
 using Dapper;
 using Domain.Entities;
 using Infrastructure.Persistence.Common;
@@ -12,7 +13,7 @@ public class ResultRepo(AppointmentsDbContext _context) : IResultRepo
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = QueryBuilder.GetById(nameof(Result));
+            var query = CustomQueryBuilder.GetById(nameof(Result));
             var result = await connection.QueryFirstOrDefaultAsync<Result>(
                 new CommandDefinition(
                     query, new { IdResult = idResult }, cancellationToken: cancellationToken));
@@ -25,10 +26,10 @@ public class ResultRepo(AppointmentsDbContext _context) : IResultRepo
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = QueryBuilder.GetBy(nameof(Result));
-            query.Append(QueryBuilder.LeftJoin(nameof(Result), nameof(Appointment), $"Id{nameof(Appointment)}"));
-            query.Append(QueryBuilder.Filtration);
-            query.Append(QueryBuilder.AddJoinFilter(nameof(Result), $"Id{nameof(Appointment)}"));
+            var query = CustomQueryBuilder.GetBy(nameof(Result));
+            query.Append(CustomQueryBuilder.LeftJoin(nameof(Result), nameof(Appointment), $"Id{nameof(Appointment)}"));
+            query.Append(CustomQueryBuilder.Filtration);
+            query.Append(CustomQueryBuilder.AddJoinFilter(nameof(Result), $"Id{nameof(Appointment)}"));
 
             var result = await connection.QueryAsync<Result, Appointment, Result>(
                 new CommandDefinition(
@@ -48,7 +49,7 @@ public class ResultRepo(AppointmentsDbContext _context) : IResultRepo
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = QueryBuilder.Create(result);
+            var query = CustomQueryBuilder.Create(result);
             await connection.ExecuteAsync(
                 new CommandDefinition(
                     query, result, cancellationToken: cancellationToken));
@@ -59,7 +60,7 @@ public class ResultRepo(AppointmentsDbContext _context) : IResultRepo
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = QueryBuilder.UpdateById(result);
+            var query = CustomQueryBuilder.UpdateById(result);
             await connection.ExecuteAsync(
                 new CommandDefinition(
                     query, result, cancellationToken: cancellationToken));

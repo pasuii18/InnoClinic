@@ -3,7 +3,7 @@ using Domain.Common;
 
 namespace Infrastructure.Persistence.Common;
 
-public static class QueryBuilder
+public static class CustomQueryBuilder
 {
     public static string Pagination => 
         " LIMIT @PageSize OFFSET (@Page - 1) * @PageSize";
@@ -22,16 +22,16 @@ public static class QueryBuilder
         $" AND \"{tableName}\".\"{field}\" = @{field}";
     public static string AddApprovedFilter(AppointmentStatus status) => 
         $" AND \"IsApproved\" = {(status == AppointmentStatus.Approved ? "true" : "false")}";
+    public static string AddTimeBordersFilter(string startTime, string endTime) => 
+        $" AND \"StartTime\" >= @{startTime} AND \"EndTime\" <= @{endTime}";
 
     public static string Order(OrderBy field, OrderType type) => 
         $" ORDER BY \"{field}\" {(type == OrderType.Ascending ? "ASC" : "DESC")}";
-
     public static string AddOrder(OrderBy field, OrderType type) => 
         $", \"{field}\" {(type == OrderType.Ascending ? "ASC" : "DESC")}";
 
     public static string GetById(string tableName) => 
         $"SELECT * FROM \"{tableName}\" WHERE \"Id{tableName}\" = @Id{tableName}";
-
     public static string GetByFieldName(string tableName, string fieldName) => 
         $"SELECT * FROM \"{tableName}\" WHERE \"{fieldName}\" = @{fieldName}";
 
@@ -65,9 +65,8 @@ public static class QueryBuilder
 
         return $"UPDATE \"{tableName}\" SET {updateFields} WHERE \"Id{tableName}\" = @Id{tableName}";
     }
-    public static string UpdateField(string tableName, string fieldName, string conditionField)
+    public static StringBuilder UpdateField(string tableName, string fieldName)
     {
-        return $"UPDATE \"{tableName}\" SET \"{fieldName}\" = @{fieldName} WHERE \"{conditionField}\" = @{conditionField}";
+        return new StringBuilder($"UPDATE \"{tableName}\" SET \"{fieldName}\" = @{fieldName}");
     }
-    
 }
