@@ -14,7 +14,7 @@ public class GetPatientProfileQueryHandler(IPatientsRepo _patientsRepo) : IReque
         var patient = await _patientsRepo.GetPatientById(
             request.IdPatient, cancellationToken);
         
-        if (patient == null) return new CustomResult(false, HttpStatusCode.NotFound);
+        if (patient == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.PatientNotFound);
 
         var patientDto = GetPatientProfileDto.MapFromPatient(patient);
         return new CustomResult(true, HttpStatusCode.OK, patientDto);

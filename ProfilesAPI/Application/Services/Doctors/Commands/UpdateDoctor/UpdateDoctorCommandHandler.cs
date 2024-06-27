@@ -12,7 +12,7 @@ public class UpdateDoctorCommandHandler(IDoctorsRepo _doctorsRepo)
     public async Task<ICustomResult> Handle(UpdateDoctorCommand request, CancellationToken cancellationToken)
     {
         var doctor = await _doctorsRepo.GetDoctorById(request.IdDoctor, cancellationToken);
-        if(doctor == null) return new CustomResult(false, HttpStatusCode.NotFound);
+        if(doctor == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.DoctorNotFound);
 
         request.MapInDoctor(doctor);
         await _doctorsRepo.UpdateDoctor(doctor, cancellationToken);

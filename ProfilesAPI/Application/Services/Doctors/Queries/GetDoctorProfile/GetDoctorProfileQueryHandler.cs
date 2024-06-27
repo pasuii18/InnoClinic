@@ -13,7 +13,7 @@ public class GetDoctorProfileQueryHandler(IDoctorsRepo _doctorsRepo)
     public async Task<ICustomResult> Handle(GetDoctorProfileQuery request, CancellationToken cancellationToken)
     {
         var doctor = await _doctorsRepo.GetDoctorById(request.IdDoctor, cancellationToken);
-        if(doctor == null) return new CustomResult(false, HttpStatusCode.NotFound);
+        if(doctor == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.DoctorNotFound);
 
         var doctorDto = GetDoctorProfileDto.MapFromDoctor(doctor);
         return new CustomResult(true, HttpStatusCode.OK, doctorDto);

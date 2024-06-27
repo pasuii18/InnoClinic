@@ -13,7 +13,7 @@ public class UpdateReceptionistCommandHandler(IReceptionistsRepo _receptionistsR
     {
         var receptionist = await _receptionistsRepo.GetReceptionistById(request.IdReceptionist, cancellationToken);
         if (receptionist == null)
-            return new CustomResult(false, HttpStatusCode.NotFound);
+            return new CustomResult(false, HttpStatusCode.NotFound, Messages.ReceptionistNotFound);
 
         request.MapInReceptionist(receptionist);
         await _receptionistsRepo.UpdateReceptionist(receptionist, cancellationToken);

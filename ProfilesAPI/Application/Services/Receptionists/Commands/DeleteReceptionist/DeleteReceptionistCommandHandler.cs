@@ -13,7 +13,7 @@ public class DeleteReceptionistCommandHandler(IReceptionistsRepo _receptionistsR
     {
         var receptionist = await _receptionistsRepo.GetReceptionistById(request.IdReceptionist, cancellationToken);
         if (receptionist == null)
-            return new CustomResult(false, HttpStatusCode.NotFound);
+            return new CustomResult(false, HttpStatusCode.NotFound, Messages.ReceptionistNotFound);
 
         await _receptionistsRepo.DeleteReceptionist(request.IdReceptionist, cancellationToken);
         return new CustomResult(true, HttpStatusCode.OK);

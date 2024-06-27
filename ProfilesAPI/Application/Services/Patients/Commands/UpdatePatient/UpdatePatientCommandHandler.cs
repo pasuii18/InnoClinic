@@ -11,7 +11,7 @@ public class UpdatePatientCommandHandler(IPatientsRepo _patientsRepo) : IRequest
     public async Task<ICustomResult> Handle(UpdatePatientCommand request, CancellationToken cancellationToken)
     {
         var patient = await _patientsRepo.GetPatientById(request.IdPatient, cancellationToken);
-        if(patient == null) return new CustomResult(false, HttpStatusCode.NotFound); 
+        if(patient == null) return new CustomResult(false, HttpStatusCode.NotFound, Messages.PatientNotFound); 
         
         request.MapInPatient(patient);
         await _patientsRepo.UpdatePatient(patient, cancellationToken);
