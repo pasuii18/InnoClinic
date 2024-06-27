@@ -18,7 +18,7 @@ public class PatientsController : CustomControllerBase
         [FromQuery][AutoValidateAlways] PageSettings pageSettings,
         [FromQuery][AutoValidateAlways] PatientFilters patientFilters, CancellationToken cancellationToken)
     {
-        var query = new ViewPatientsQuery { PageSettings = pageSettings, PatientFilters = patientFilters };
+        var query = new GetPatientsQuery { PageSettings = pageSettings, PatientFilters = patientFilters };
         var result = await Mediator.Send(query, cancellationToken);
         return Ok(result);
     }
@@ -28,25 +28,25 @@ public class PatientsController : CustomControllerBase
     public async Task<IActionResult> ViewPatientProfileQuery(
         Guid idPatient, CancellationToken cancellationToken)
     {
-        var query = new ViewPatientProfileQuery { IdPatient = idPatient };
+        var query = new GetPatientProfileQuery { IdPatient = idPatient };
         var result = await Mediator.Send(query, cancellationToken);
         return Result(result);
     }
     
     [HttpPost]
     public async Task<IActionResult> CreatePatient(
-        [AutoValidateAlways] PatientCreateDto patientCreateDto, CancellationToken cancellationToken)
+        [AutoValidateAlways] CreatePatientDto createPatientDto, CancellationToken cancellationToken)
     {
-        var command = patientCreateDto.MapInCommand();
+        var command = createPatientDto.MapInCommand();
         var result = await Mediator.Send(command, cancellationToken);
         return Result(result);
     }
     
     [HttpPut]
     public async Task<IActionResult> UpdatePatient(
-        [AutoValidateAlways] PatientUpdateDto patientUpdateDto, CancellationToken cancellationToken)
+        [AutoValidateAlways] UpdatePatientDto updatePatientDto, CancellationToken cancellationToken)
     {
-        var command = patientUpdateDto.MapInCommand();
+        var command = updatePatientDto.MapInCommand();
         var result = await Mediator.Send(command, cancellationToken);
         return Result(result);
     }

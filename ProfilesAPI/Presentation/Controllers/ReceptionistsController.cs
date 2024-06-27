@@ -18,7 +18,7 @@ public class ReceptionistsController : CustomControllerBase
         [FromQuery][AutoValidateAlways] PageSettings pageSettings, 
         [FromQuery][AutoValidateAlways] ReceptionistFilters receptionistFilters, CancellationToken cancellationToken)
     {
-        var query = new ViewReceptionistsQuery
+        var query = new GetReceptionistsQuery
         {
             PageSettings = pageSettings, 
             ReceptionistFilters = receptionistFilters
@@ -32,25 +32,25 @@ public class ReceptionistsController : CustomControllerBase
     public async Task<IActionResult> ViewReceptionistProfileQuery(
         Guid idReceptionist, CancellationToken cancellationToken)
     {
-        var query = new ViewReceptionistProfileQuery { IdReceptionist = idReceptionist };
+        var query = new GetReceptionistProfileQuery { IdReceptionist = idReceptionist };
         var result = await Mediator.Send(query, cancellationToken);
         return Result(result);
     }
     
     [HttpPost]
     public async Task<IActionResult> CreateReceptionist(
-        [AutoValidateAlways] ReceptionistCreateDto receptionistCreateDto, CancellationToken cancellationToken)
+        [AutoValidateAlways] CreateReceptionistDto createReceptionistDto, CancellationToken cancellationToken)
     {
-        var command = receptionistCreateDto.MapInCommand();
+        var command = createReceptionistDto.MapInCommand();
         var result = await Mediator.Send(command, cancellationToken);
         return Result(result);
     }
     
     [HttpPut]
     public async Task<IActionResult> UpdateReceptionist(
-        [AutoValidateAlways] ReceptionistUpdateDto receptionistUpdateDto, CancellationToken cancellationToken)
+        [AutoValidateAlways] UpdateReceptionistDto updateReceptionistDto, CancellationToken cancellationToken)
     {
-        var command = receptionistUpdateDto.MapInCommand();
+        var command = updateReceptionistDto.MapInCommand();
         var result = await Mediator.Send(command, cancellationToken);
         return Result(result);
     }

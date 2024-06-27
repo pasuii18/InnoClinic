@@ -17,7 +17,7 @@ public class DoctorsController  : CustomControllerBase
         [FromQuery][AutoValidateAlways] PageSettings pageSettings, 
         [FromQuery][AutoValidateAlways] DoctorFilters patientFilters, CancellationToken cancellationToken)
     {
-        var query = new ViewDoctorsQuery { PageSettings = pageSettings, DoctorFilters = patientFilters };
+        var query = new GetDoctorsQuery { PageSettings = pageSettings, DoctorFilters = patientFilters };
         var result = await Mediator.Send(query, cancellationToken);
         return Ok(result);
     }
@@ -27,34 +27,34 @@ public class DoctorsController  : CustomControllerBase
     public async Task<IActionResult> ViewDoctorProfileQuery(
         Guid idDoctor, CancellationToken cancellationToken)
     {
-        var query = new ViewDoctorProfileQuery { IdDoctor = idDoctor };
+        var query = new GetDoctorProfileQuery { IdDoctor = idDoctor };
         var result = await Mediator.Send(query, cancellationToken);
         return Result(result);
     }
     
     [HttpPost]
     public async Task<IActionResult> CreateDoctor(
-        [AutoValidateAlways] DoctorCreateDto doctorCreateDto, CancellationToken cancellationToken)
+        [AutoValidateAlways] CreateDoctorDto createDoctorDto, CancellationToken cancellationToken)
     {
-        var command = doctorCreateDto.MapInCommand();
+        var command = createDoctorDto.MapInCommand();
         var result = await Mediator.Send(command, cancellationToken);
         return Result(result);
     }
     
     [HttpPut]
     public async Task<IActionResult> UpdateDoctor(
-        [AutoValidateAlways] DoctorUpdateDto doctorUpdateDto, CancellationToken cancellationToken)
+        [AutoValidateAlways] UpdateDoctorDto updateDoctorDto, CancellationToken cancellationToken)
     {
-        var command = doctorUpdateDto.MapInCommand();
+        var command = updateDoctorDto.MapInCommand();
         var result = await Mediator.Send(command, cancellationToken);
         return Result(result);
     }
     
     [HttpPut("status")]
     public async Task<IActionResult> UpdateDoctorStatus(
-        [AutoValidateAlways] DoctorStatusUpdateDto doctorStatusUpdateDto, CancellationToken cancellationToken)
+        [AutoValidateAlways] UpdateDoctorStatusDto updateDoctorStatusDto, CancellationToken cancellationToken)
     {
-        var command = doctorStatusUpdateDto.MapInCommand();
+        var command = updateDoctorStatusDto.MapInCommand();
         var result = await Mediator.Send(command, cancellationToken);
         return Result(result);
     }
