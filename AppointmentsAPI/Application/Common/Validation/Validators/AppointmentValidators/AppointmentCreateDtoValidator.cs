@@ -7,9 +7,11 @@ public class AppointmentCreateDtoValidator : AbstractValidator<AppointmentCreate
 {
     public AppointmentCreateDtoValidator()
     {
-        RuleFor(rule => rule.Date)
+        RuleFor(rule => rule.UpdateSlotStatusDto.Date)
             .IsDateOnly();
-        RuleFor(rule => rule.Time)
+        RuleFor(rule => rule.UpdateSlotStatusDto.StartTime)
+            .IsTimeOnly();
+        RuleFor(rule => rule.UpdateSlotStatusDto.EndTime)
             .IsTimeOnly();
         RuleFor(rule => rule.IdPatient)
             .IsGuid();

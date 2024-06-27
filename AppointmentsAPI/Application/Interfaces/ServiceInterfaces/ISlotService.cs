@@ -1,5 +1,7 @@
 ﻿using Application.Common.Dtos;
+using Application.Common.Dtos.SlotDtos;
 using Domain.Common;
+using Domain.Entities;
 
 namespace Application.Interfaces;
 
@@ -8,8 +10,5 @@ public interface ISlotService
     public Task<ICustomResult> GetAvailableDates(CancellationToken cancellationToken);
     public Task<ICustomResult> GetAvailableTimeSlotsOnDate(
         DateOnly date, ServiceType serviceType, CancellationToken cancellationToken);
-    public Task CreateSlots(DateOnly startDate, DateOnly endDate,
-        TimeOnly startDayTime, TimeOnly endDayTime, int timeSlotSize, CancellationToken cancellationToken);
-    public Task ChangeSlotStatus(DateOnly date, TimeOnly startTime, TimeOnly endTime, ServiceType serviceType,
-        bool status, CancellationToken cancellationToken);
+    public Task<Slot> CheckReservationSlot(UpdateSlotStatusDto dto, Guid idAppointment, CancellationToken cancellationToken);
 }

@@ -2,7 +2,6 @@
 
 public enum AppointmentStatus
 {
-    NotApproved,
     Approved,
     All
 }

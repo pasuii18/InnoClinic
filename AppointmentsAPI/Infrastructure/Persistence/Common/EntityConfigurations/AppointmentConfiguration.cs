@@ -10,7 +10,8 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
     {
         builder.HasKey(appointment => appointment.IdAppointment);
         builder.Property(appointment => appointment.Date).IsRequired().HasColumnType("date");
-        builder.Property(appointment => appointment.Time).IsRequired().HasColumnType("time");
+        builder.Property(appointment => appointment.StartTime).IsRequired().HasColumnType("time");
+        builder.Property(appointment => appointment.EndTime).IsRequired().HasColumnType("time");
         builder.Property(appointment => appointment.IsApproved).IsRequired();
         builder.Property(appointment => appointment.IdPatient).IsRequired();
         builder.Property(appointment => appointment.IdDoctor).IsRequired();

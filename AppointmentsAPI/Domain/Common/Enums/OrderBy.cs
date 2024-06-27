@@ -3,5 +3,5 @@
 public enum OrderBy
 {
     Date,
-    Time
+    StartTime
 }

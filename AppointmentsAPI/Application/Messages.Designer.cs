@@ -78,6 +78,15 @@ namespace Application {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The number of slots required cannot be reservated!.
+        /// </summary>
+        internal static string NumberOfTimeSlotsIsNotValid {
+            get {
+                return ResourceManager.GetString("NumberOfTimeSlotsIsNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Result for this appointment already exists!.
         /// </summary>
         internal static string ResultAlreadyExists {
@@ -92,6 +101,24 @@ namespace Application {
         internal static string ResultNotFound {
             get {
                 return ResourceManager.GetString("ResultNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time slots not found!.
+        /// </summary>
+        internal static string TimeSlotsNotFound {
+            get {
+                return ResourceManager.GetString("TimeSlotsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time slots are already reserved!.
+        /// </summary>
+        internal static string TimeSlotsReserved {
+            get {
+                return ResourceManager.GetString("TimeSlotsReserved", resourceCulture);
             }
         }
     }

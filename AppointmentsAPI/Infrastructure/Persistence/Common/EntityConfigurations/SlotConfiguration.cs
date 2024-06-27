@@ -13,5 +13,6 @@ public class SlotConfiguration : IEntityTypeConfiguration<Slot>
         builder.Property(slot => slot.StartTime).IsRequired().HasColumnType("time");
         builder.Property(slot => slot.EndTime).IsRequired().HasColumnType("time");
         builder.Property(slot => slot.IsFree).IsRequired();
+        builder.Property(slot => slot.IdAppointment);
     }
 }

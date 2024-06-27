@@ -82,8 +82,10 @@ public static class InfrastructureInjection
     private static IServiceCollection RepositoriesConfigure(this IServiceCollection services)
     {
         return services
-            .AddScoped<IAppointmentRepo, AppointmentRepo>()
-            .AddScoped<IResultRepo, ResultRepo>();
+            .AddScoped<IAppointmentReadRepo, AppointmentReadRepo>()
+            .AddScoped<IAppointmentWriteRepo, AppointmentWriteRepo>()
+            .AddScoped<IResultRepo, ResultRepo>()
+            .AddScoped<ISlotRepo, SlotRepo>();
     }
     private static IServiceCollection MappingsConfigure(this IServiceCollection services)
     {

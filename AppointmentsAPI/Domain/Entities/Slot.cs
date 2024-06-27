@@ -7,4 +7,5 @@ public class Slot
     public TimeOnly StartTime { get; set; }
     public TimeOnly EndTime { get; set; }
     public bool IsFree { get; set; } = true;
+    public Guid? IdAppointment { get; set; }
 }

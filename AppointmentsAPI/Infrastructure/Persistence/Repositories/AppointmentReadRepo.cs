@@ -1,5 +1,4 @@
 ﻿using Application.Common.Dtos;
-using Application.Common.Dtos.AppointmentsDtos;
 using Application.Common.Dtos.Filters;
 using Application.Interfaces.RepoInterfaces;
 using Dapper;
@@ -7,11 +6,10 @@ using Domain.Common;
 using Domain.Entities;
 using Infrastructure.Persistence.Common;
 using Infrastructure.Persistence.Contexts;
-using Microsoft.Extensions.Primitives;
 
 namespace Infrastructure.Persistence.Repositories;
 
-public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
+public class AppointmentReadRepo(AppointmentsDbContext _context) : IAppointmentReadRepo
 {
     public async Task<IReadOnlyCollection<Appointment>> GetAppointments(PageSettings pageSettings, 
         AppointmentsFilter filters, CancellationToken cancellationToken)
@@ -22,10 +20,16 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
 
             if (filters.Date is not null)
                 query.Append(CustomQueryBuilder.AddFilter(nameof(filters.Date)));
+            if (filters.DoctorFullName is not null)
+                query.Append(CustomQueryBuilder.AddFilter(nameof(filters.DoctorFullName)));
+            if (filters.ServiceName is not null)
+                query.Append(CustomQueryBuilder.AddFilter(nameof(filters.ServiceName)));
+            if (filters.IdOffice is not null)
+                query.Append(CustomQueryBuilder.AddFilter(nameof(filters.IdOffice)));
             if(filters.IsApproved != AppointmentStatus.All)
                 query.Append(CustomQueryBuilder.AddApprovedFilter(filters.IsApproved));
             
-            query.Append(CustomQueryBuilder.Order(OrderBy.Time, OrderType.Ascending));
+            query.Append(CustomQueryBuilder.Order(OrderBy.StartTime, OrderType.Ascending));
             query.Append(CustomQueryBuilder.Pagination);
 
             var parameters = new DynamicParameters(filters);
@@ -46,7 +50,7 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
         {
             var query = CustomQueryBuilder.GetByFiltration(nameof(Appointment));
             query.Append(CustomQueryBuilder.Order(OrderBy.Date, OrderType.Descending));
-            query.Append(CustomQueryBuilder.AddOrder(OrderBy.Time, OrderType.Ascending));
+            query.Append(CustomQueryBuilder.AddOrder(OrderBy.StartTime, OrderType.Ascending));
             query.Append(CustomQueryBuilder.Pagination);
             
             var parameters = new DynamicParameters(pageSettings);
@@ -68,7 +72,7 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
                 query.Append(CustomQueryBuilder.AddFilter("IdDoctor"));
 
             query.Append(CustomQueryBuilder.AddFilter(nameof(filters.Date)));
-            query.Append(CustomQueryBuilder.Order(OrderBy.Time, OrderType.Ascending));
+            query.Append(CustomQueryBuilder.Order(OrderBy.StartTime, OrderType.Ascending));
             query.Append(CustomQueryBuilder.Pagination);
             
             var parameters = new DynamicParameters(filters);
@@ -109,53 +113,6 @@ public class AppointmentRepo(AppointmentsDbContext _context) : IAppointmentRepo
                     query, parameters, cancellationToken: cancellationToken));
 
             return appointment;
-        }
-    }
-    public async Task CreateAppointment(Appointment appointment, CancellationToken cancellationToken)
-    {
-        using (var connection = _context.CreateConnection())
-        {
-            var query = CustomQueryBuilder.Create(appointment);
-            await connection.ExecuteAsync(
-                new CommandDefinition(
-                    query, appointment, cancellationToken: cancellationToken));
-        }
-    }
-    public async Task UpdateAppointment(Appointment appointment, CancellationToken cancellationToken)
-    {
-        using (var connection = _context.CreateConnection())
-        {
-            var query = CustomQueryBuilder.UpdateById(appointment);
-            await connection.ExecuteAsync(
-                new CommandDefinition(
-                    query, appointment, cancellationToken: cancellationToken));
-        }
-    }
-    public async Task UpdateAppointmentField<T, T2>(T fieldValue, string fieldName, 
-        T2 conditionFieldValue, string conditionFieldName, CancellationToken cancellationToken)
-    {
-        using (var connection = _context.CreateConnection())
-        {
-            var query = CustomQueryBuilder.UpdateField(nameof(Appointment), fieldName);
-            query.Append(CustomQueryBuilder.Filtration);
-            query.Append(CustomQueryBuilder.AddFilter(conditionFieldName));
-            
-            var parameters = new DynamicParameters();
-            parameters.Add(fieldName, fieldValue);
-            parameters.Add(conditionFieldName, conditionFieldValue);
-            await connection.ExecuteAsync(
-                new CommandDefinition(
-                    query.ToString(), parameters, cancellationToken: cancellationToken));
-        }
-    }
-    public async Task DeleteAppointment(Guid idAppointment, CancellationToken cancellationToken)
-    {
-        using (var connection = _context.CreateConnection())
-        {
-            var query = CustomQueryBuilder.DeleteById(nameof(Appointment));
-            await connection.ExecuteAsync(
-                new CommandDefinition(
-                    query, new { IdAppointment = idAppointment }, cancellationToken: cancellationToken));
         }
     }
 }

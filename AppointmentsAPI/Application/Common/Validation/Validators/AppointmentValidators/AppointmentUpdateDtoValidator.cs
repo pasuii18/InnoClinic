@@ -9,8 +9,12 @@ public class AppointmentUpdateDtoValidator : AbstractValidator<AppointmentUpdate
     {
         RuleFor(rule => rule.Date)
             .IsDateOnly();
-        RuleFor(rule => rule.Time)
+        RuleFor(rule => rule.StartTime)
             .IsTimeOnly();
+        RuleFor(rule => rule.EndTime)
+            .IsTimeOnly();
+        RuleFor(rule => rule.ServiceType)
+            .IsInEnum();
         RuleFor(rule => rule.IdDoctor)
             .IsGuid();
     }

@@ -1,10 +1,12 @@
 ﻿using System.Net;
 using Application.Common;
 using Application.Common.Dtos;
+using Application.Common.Dtos.SlotDtos;
 using Application.Interfaces;
 using Application.Interfaces.RepoInterfaces;
 using Domain.Common;
 using Domain.Entities;
+using Mapster;
 
 namespace Application.Services;
 
@@ -40,40 +42,28 @@ public class SlotService(ISlotRepo _slotRepo) : ISlotService
         
         return new CustomResult(true, HttpStatusCode.OK, availableSlotsDtos.AsReadOnly());
     }
-    public async Task CreateSlots(DateOnly startDate, DateOnly endDate, 
-        TimeOnly startDayTime, TimeOnly endDayTime, int timeSlotSize, CancellationToken cancellationToken)
+    public async Task<Slot> CheckReservationSlot(UpdateSlotStatusDto dto, Guid idAppointment, CancellationToken cancellationToken)
     {
-        var slots = new List<Slot>();
+        var requiredSlots = 
+            await _slotRepo.GetSlotsByDateAndTime(dto.Date, dto.StartTime, dto.EndTime, cancellationToken);
+        ValidateSlots(requiredSlots, idAppointment);
         
-        for (var currentDate = startDate; currentDate <= endDate; currentDate = currentDate.AddDays(1))
-        {
-            for (var currentTime = startDayTime; currentTime.AddMinutes(timeSlotSize) <= endDayTime; 
-                 currentTime = currentTime.AddMinutes(timeSlotSize))
-            {
-                slots.Add(new Slot { IdSlot = Guid.NewGuid(), Date = currentDate,
-                    StartTime = currentTime, EndTime = currentTime.AddMinutes(timeSlotSize) });
-            }
-        }
-        
-        await _slotRepo.CreateSlots(slots, cancellationToken);
+        var slot = dto.Adapt<Slot>();
+        slot.StartTime = requiredSlots.First().StartTime;
+        slot.EndTime = requiredSlots.Last().EndTime;
+        slot.IsFree = false;
+        return slot;
     }
-    public async Task ChangeSlotStatus(DateOnly date, TimeOnly startTime, TimeOnly endTime, ServiceType serviceType, 
-        bool status, CancellationToken cancellationToken)
-    {
-        var requiredSlots = await _slotRepo.GetSlotsByDateAndTime(date, startTime, endTime, cancellationToken);
-        ValidateSlots(requiredSlots, serviceType, status);
-        await _slotRepo.ChangeSlotsStatuses(date, startTime, endTime, status, cancellationToken);
-    }
-    private void ValidateSlots(IReadOnlyCollection<Slot> slots, ServiceType serviceType, bool shouldBeFree)
+    private void ValidateSlots(IReadOnlyCollection<Slot> slots, Guid idAppointment)
     {
         if (slots.Count == 0)
-            throw new Exception("Time slots not found!");
+            throw new Exception(Messages.TimeSlotsNotFound);
+        
+        if (!Enum.IsDefined(typeof(ServiceType), slots.Count - 1))
+            throw new Exception(Messages.NumberOfTimeSlotsIsNotValid);
 
-        if (slots.Count != GetSlotsSize(serviceType))
-            throw new Exception("Required slots count does not match!");
-
-        if (slots.Any(slot => slot.IsFree == shouldBeFree))
-            throw new Exception($"Time slots are{(shouldBeFree ? " not" : " already")} reserved!");
+        if (slots.Any(slot => slot.IsFree == false && slot.IdAppointment != idAppointment))
+            throw new Exception(Messages.TimeSlotsReserved);
     }
     private int GetSlotsSize(ServiceType serviceType)
     {

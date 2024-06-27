@@ -57,11 +57,4 @@ public static class CustomValidationRules
             return TimeOnly.TryParseExact(timeString, "HH:mm", null, System.Globalization.DateTimeStyles.None, out _);
         }
     }
-    public static IRuleBuilder<T, AppointmentStatus> IsAppointmentStatus<T>(
-        this IRuleBuilder<T, AppointmentStatus> ruleBuilder)
-    {
-        return ruleBuilder
-            .NotNull().WithMessage("The status is required.")
-            .IsInEnum().WithMessage("The status must be a valid status.");
-    }
 }

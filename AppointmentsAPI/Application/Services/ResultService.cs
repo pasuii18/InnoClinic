@@ -8,7 +8,7 @@ using Mapster;
 
 namespace Application.Services;
 
-public class ResultService(IResultRepo _resultRepo, IAppointmentRepo _appointmentRepo) : IResultService
+public class ResultService(IResultRepo _resultRepo, IAppointmentReadRepo _appointmentReadRepo) : IResultService
 {
     public async Task<ICustomResult> GetAppointmentResult(Guid idAppointment, CancellationToken cancellationToken)
     {
@@ -26,7 +26,7 @@ public class ResultService(IResultRepo _resultRepo, IAppointmentRepo _appointmen
         if (result is not null)
             return new CustomResult(false, HttpStatusCode.NotFound, Messages.ResultAlreadyExists);
         
-        var appointment = await _appointmentRepo.GetAppointmentById(resultCreateDto.IdAppointment, cancellationToken);
+        var appointment = await _appointmentReadRepo.GetAppointmentById(resultCreateDto.IdAppointment, cancellationToken);
         if (appointment is null)
             return new CustomResult(false, HttpStatusCode.NotFound, Messages.AppointmentNotFound);
         

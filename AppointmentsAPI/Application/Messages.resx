@@ -30,4 +30,13 @@
     <data name="CannotUpdateApprovedAppointment" xml:space="preserve">
         <value>Approved appointment cannot be rescheduled!</value>
     </data>
+    <data name="TimeSlotsNotFound" xml:space="preserve">
+        <value>Time slots not found!</value>
+    </data>
+    <data name="TimeSlotsReserved" xml:space="preserve">
+        <value>Time slots are already reserved!</value>
+    </data>
+    <data name="NumberOfTimeSlotsIsNotValid" xml:space="preserve">
+        <value>The number of slots required cannot be reservated!</value>
+    </data>
 </root>

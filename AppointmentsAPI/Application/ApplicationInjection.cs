@@ -18,6 +18,7 @@ public static class ApplicationInjection
     {
         return services
             .ServicesConfigure()
+            .HostedServicesConfigure()
             .ValidationConfigure();
     }
     
@@ -27,9 +28,17 @@ public static class ApplicationInjection
         TypeAdapterConfig.GlobalSettings.Scan(typeof(MapsterProfile).Assembly);
         
         return services
-            .AddScoped<IAppointmentService, AppointmentService>()
+            .AddScoped<IAppointmentReadService, AppointmentReadService>()
+            .AddScoped<IAppointmentWriteService, AppointmentWriteService>()
             .AddScoped<IResultService, ResultService>()
+            .AddScoped<ISlotService, SlotService>()
             .AddScoped<IProcessesService, ProcessService>();
+    }
+    private static IServiceCollection HostedServicesConfigure
+        (this IServiceCollection services)
+    {
+        return services
+            .AddHostedService<ScheduleService>();
     }
     
     private static IServiceCollection ValidationConfigure

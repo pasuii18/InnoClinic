@@ -8,6 +8,6 @@ public class AppointmentsFilterValidator : AbstractValidator<AppointmentsFilter>
     public AppointmentsFilterValidator()
     {
         RuleFor(f => f.IsApproved)
-            .IsAppointmentStatus();
+            .IsInEnum();
     }
 }
