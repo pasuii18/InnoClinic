@@ -11,7 +11,8 @@ public class MigrationsDbContext(DbContextOptions<MigrationsDbContext> options,
     : DbContext(options)
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
-        => optionsBuilder.UseNpgsql(sqlOptions.Value.PostgresConnectionString);
+        => optionsBuilder.UseNpgsql(sqlOptions.Value.PostgresConnectionString,
+            options => options.EnableRetryOnFailure());
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
