@@ -18,11 +18,12 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.Property(appointment => appointment.IdService).IsRequired();
         
         builder.Property(appointment => appointment.DoctorFullName).HasMaxLength(100);
-        builder.Property(appointment => appointment.SpecializationName).HasMaxLength(50);
+        builder.Property(appointment => appointment.IdOffice).HasMaxLength(100);
         builder.Property(appointment => appointment.PatientFullName).HasMaxLength(100);
         builder.Property(appointment => appointment.PatientDateOfBirth).HasColumnType("date");
         builder.Property(appointment => appointment.PatientPhoneNumber).HasMaxLength(30);
         builder.Property(appointment => appointment.ServiceName).HasMaxLength(50);
+        builder.Property(appointment => appointment.SpecializationName).HasMaxLength(50);
         
         builder.HasOne(appointment => appointment.Result)
             .WithOne(result => result.Appointment)

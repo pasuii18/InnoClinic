@@ -10,9 +10,12 @@ public class MigrationsDbContext(DbContextOptions<MigrationsDbContext> options,
     IOptions<PostgresDbOptions> sqlOptions)
     : DbContext(options)
 {
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql(sqlOptions.Value.PostgresConnectionString,
-            options => options.EnableRetryOnFailure());
+            options => options.EnableRetryOnFailure(
+                maxRetryCount: 3,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorCodesToAdd: new List<string> { "57P01" }));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

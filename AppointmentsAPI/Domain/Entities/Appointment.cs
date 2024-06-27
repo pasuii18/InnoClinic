@@ -15,6 +15,7 @@ public class Appointment
     public Result? Result { get; set; }
     
     public string? DoctorFullName { get; set; }
+    public Guid? IdOffice { get; set; }
     public string? PatientFullName { get; set; }
     public DateOnly? PatientDateOfBirth { get; set; }
     public string? PatientPhoneNumber { get; set; }

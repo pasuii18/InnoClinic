@@ -17,10 +17,9 @@ public class ProcessService(IAppointmentReadRepo _appointmentReadRepo, IAppointm
         
         if (appointment != null)
         {
-            await _appointmentWriteRepo.UpdateAppointmentField(
-                doctorUpdateEvent.DoctorFullName, nameof(doctorUpdateEvent.DoctorFullName), 
-                doctorUpdateEvent.IdDoctor, nameof(doctorUpdateEvent.IdDoctor), 
-                cancellationToken);
+            appointment.DoctorFullName = doctorUpdateEvent.DoctorFullName;
+            appointment.IdOffice = doctorUpdateEvent.IdOffice;
+            await _appointmentWriteRepo.UpdateAppointment(appointment, cancellationToken);
         }
     }
     public async Task ProcessPatientUpdate(PatientUpdatedEvent patientUpdateEvent, CancellationToken cancellationToken)

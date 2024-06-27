@@ -12,11 +12,6 @@ public class TimeOnlyTypeHandler : SqlMapper.TypeHandler<TimeOnly>
 
     public override TimeOnly Parse(object value)
     {
-        if (value is TimeSpan timeSpan)
-        {
-            return TimeOnly.FromTimeSpan(timeSpan);
-        }
-
-        throw new InvalidCastException($"Unable to cast object of type '{value.GetType()}' to type 'System.TimeSpan'.");
+        return TimeOnly.FromTimeSpan((TimeSpan)value);
     }
 }
