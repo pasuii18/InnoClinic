@@ -24,7 +24,7 @@ public class ReceptionistsController : CustomControllerBase
             ReceptionistFilters = receptionistFilters
         };
         var result = await Mediator.Send(query, cancellationToken);
-        return Ok(result);
+        return Result(result);
     }
 
 

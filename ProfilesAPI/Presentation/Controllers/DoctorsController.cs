@@ -19,7 +19,7 @@ public class DoctorsController  : CustomControllerBase
     {
         var query = new GetDoctorsQuery { PageSettings = pageSettings, DoctorFilters = patientFilters };
         var result = await Mediator.Send(query, cancellationToken);
-        return Ok(result);
+        return Result(result);
     }
 
 
