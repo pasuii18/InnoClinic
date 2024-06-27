@@ -16,13 +16,13 @@ public class ReceptionistsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.GetByFiltration(nameof(Receptionist));
+            var query = CustomQueryBuilder.GetByFiltration(nameof(Receptionist));
             
             if (!string.IsNullOrEmpty(filters.FullName)) 
-                query.Append(ReposQueries.AddFullNameFilter(filters.FullName));
+                query.Append(CustomQueryBuilder.AddFullNameFilter(filters.FullName));
 
-            query.Append(ReposQueries.AddOrder(filters.OrderBy, filters.OrderType));
-            query.Append(ReposQueries.Pagination);
+            query.Append(CustomQueryBuilder.AddOrder(filters.OrderBy, filters.OrderType));
+            query.Append(CustomQueryBuilder.Pagination);
             
             var parameters = new DynamicParameters(filters);
             parameters.Add(nameof(pageSettings.Page), pageSettings.Page);
@@ -38,7 +38,7 @@ public class ReceptionistsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.GetById(nameof(Receptionist));
+            var query = CustomQueryBuilder.GetById(nameof(Receptionist));
             var receptionist = await connection.QueryFirstOrDefaultAsync<Receptionist>(
                 new CommandDefinition(query, new { idReceptionist }, cancellationToken: cancellationToken));
             return receptionist;
@@ -50,7 +50,7 @@ public class ReceptionistsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.Create(receptionist);
+            var query = CustomQueryBuilder.Create(receptionist);
             await connection.ExecuteAsync(
                 new CommandDefinition(query, receptionist, cancellationToken: cancellationToken));
         }
@@ -60,7 +60,7 @@ public class ReceptionistsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.UpdateById(receptionist);
+            var query = CustomQueryBuilder.UpdateById(receptionist);
             await connection.ExecuteAsync(
                 new CommandDefinition(query, receptionist, cancellationToken: cancellationToken));
         }
@@ -71,7 +71,7 @@ public class ReceptionistsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.DeleteById(nameof(Receptionist));
+            var query = CustomQueryBuilder.DeleteById(nameof(Receptionist));
             await connection.ExecuteAsync(
                 new CommandDefinition(query, new { idReceptionist }, cancellationToken: cancellationToken));
         }

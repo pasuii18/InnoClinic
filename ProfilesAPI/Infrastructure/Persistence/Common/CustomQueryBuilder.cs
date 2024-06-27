@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Infrastructure.Persistence.Common;
 
-public static class ReposQueries
+public static class CustomQueryBuilder
 {
     public static string Pagination => 
         " OFFSET (@Page - 1) * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY";

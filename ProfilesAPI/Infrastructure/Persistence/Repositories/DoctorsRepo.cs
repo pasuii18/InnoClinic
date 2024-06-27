@@ -16,18 +16,18 @@ public class DoctorsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.GetByFiltration(nameof(Doctor));
+            var query = CustomQueryBuilder.GetByFiltration(nameof(Doctor));
 
             if (!string.IsNullOrEmpty(filters.FullName))
-                query.Append(ReposQueries.AddFullNameFilter(filters.FullName));
+                query.Append(CustomQueryBuilder.AddFullNameFilter(filters.FullName));
             if (filters.IdSpecialization != Guid.Empty && filters.IdSpecialization != null) 
-                query.Append(ReposQueries.AddFilter(nameof(filters.IdSpecialization)));
+                query.Append(CustomQueryBuilder.AddFilter(nameof(filters.IdSpecialization)));
             if (filters.IdOffice != Guid.Empty && filters.IdOffice != null) 
-                query.Append(ReposQueries.AddFilter(nameof(filters.IdOffice)));
+                query.Append(CustomQueryBuilder.AddFilter(nameof(filters.IdOffice)));
             
-            query.Append(ReposQueries.AddFilter(nameof(filters.Status)));
-            query.Append(ReposQueries.AddOrder(filters.OrderBy, filters.OrderType));
-            query.Append(ReposQueries.Pagination);
+            query.Append(CustomQueryBuilder.AddFilter(nameof(filters.Status)));
+            query.Append(CustomQueryBuilder.AddOrder(filters.OrderBy, filters.OrderType));
+            query.Append(CustomQueryBuilder.Pagination);
             
             var parameters = new DynamicParameters(filters);
             parameters.Add(nameof(pageSettings.Page), pageSettings.Page);
@@ -43,7 +43,7 @@ public class DoctorsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.GetById(nameof(Doctor));
+            var query = CustomQueryBuilder.GetById(nameof(Doctor));
             var doctor = await connection.QueryFirstOrDefaultAsync<Doctor>(
                 new CommandDefinition(query, new { idDoctor }, cancellationToken: cancellationToken));
             return doctor;
@@ -55,7 +55,7 @@ public class DoctorsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.Create(doctor);
+            var query = CustomQueryBuilder.Create(doctor);
             await connection.ExecuteAsync(
                 new CommandDefinition(query, doctor, cancellationToken: cancellationToken));
         }
@@ -65,7 +65,7 @@ public class DoctorsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.UpdateById(doctor);
+            var query = CustomQueryBuilder.UpdateById(doctor);
             await connection.ExecuteAsync(
                 new CommandDefinition(query, doctor, cancellationToken: cancellationToken));
         }

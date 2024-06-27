@@ -16,13 +16,13 @@ public class PatientsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.GetByFiltration(nameof(Patient));
+            var query = CustomQueryBuilder.GetByFiltration(nameof(Patient));
             
             if (!string.IsNullOrEmpty(filters.FullName)) 
-                query.Append(ReposQueries.AddFullNameFilter(filters.FullName));
+                query.Append(CustomQueryBuilder.AddFullNameFilter(filters.FullName));
 
-            query.Append(ReposQueries.AddOrder(filters.OrderBy, filters.OrderType));
-            query.Append(ReposQueries.Pagination);
+            query.Append(CustomQueryBuilder.AddOrder(filters.OrderBy, filters.OrderType));
+            query.Append(CustomQueryBuilder.Pagination);
             
             var parameters = new DynamicParameters(filters);
             parameters.Add(nameof(pageSettings.Page), pageSettings.Page);
@@ -38,7 +38,7 @@ public class PatientsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.GetById(nameof(Patient));
+            var query = CustomQueryBuilder.GetById(nameof(Patient));
             var patient = await connection.QuerySingleOrDefaultAsync<Patient>(
                 new CommandDefinition(query, new { idPatient }, cancellationToken: cancellationToken));
             return patient;
@@ -50,7 +50,7 @@ public class PatientsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.Create(patient);
+            var query = CustomQueryBuilder.Create(patient);
             await connection.ExecuteAsync(
                 new CommandDefinition(query, patient, cancellationToken: cancellationToken));
         }
@@ -61,7 +61,7 @@ public class PatientsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.UpdateById(patient);
+            var query = CustomQueryBuilder.UpdateById(patient);
             await connection.ExecuteAsync(
                 new CommandDefinition(query, patient, cancellationToken: cancellationToken));
         }
@@ -72,7 +72,7 @@ public class PatientsRepo(ProfilesDbContext _context)
     {
         using (var connection = _context.CreateConnection())
         {
-            var query = ReposQueries.DeleteById(nameof(Patient));
+            var query = CustomQueryBuilder.DeleteById(nameof(Patient));
             await connection.ExecuteAsync(
                 new CommandDefinition(query, new { idPatient }, cancellationToken: cancellationToken));
         }
