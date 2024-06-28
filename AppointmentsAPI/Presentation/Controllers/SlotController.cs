@@ -16,10 +16,10 @@ public class SlotController(ISlotService _slotService) : CustomControllerBase
     }
 
     [HttpGet("{date}/{serviceType}")]
-    public async Task<IActionResult> GetAvailableTimeSlotsOnDate(DateOnly date, ServiceType serviceType, 
+    public async Task<IActionResult> GetAvailableTimeSlotsOnDate(DateOnly date, int slotSize, 
         CancellationToken cancellationToken)
     {
-        var result = await _slotService.GetAvailableTimeSlotsOnDate(date, serviceType, cancellationToken);
+        var result = await _slotService.GetAvailableTimeSlotsOnDate(date, slotSize, cancellationToken);
         return Result(result);
     }
 }

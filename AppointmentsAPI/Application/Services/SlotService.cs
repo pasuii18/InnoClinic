@@ -18,27 +18,26 @@ public class SlotService(ISlotRepo _slotRepo) : ISlotService
         return new CustomResult(true, HttpStatusCode.OK, dates.AsReadOnly());
     }
     public async Task<ICustomResult> GetAvailableTimeSlotsOnDate(
-        DateOnly date, ServiceType serviceType, CancellationToken cancellationToken)
+        DateOnly date, int slotSize, CancellationToken cancellationToken)
     {
         var availableSlots = await _slotRepo.GetAvailableSlotsOnDate(date, cancellationToken);
         if(availableSlots.Count == 0)
             throw new Exception("There is no available slots today!");
         
         var availableSlotsDtos = new List<SlotReadDto>();
-        var slotsSize = GetSlotsSize(serviceType);
         var timeSlotSize = (availableSlots.First().EndTime - availableSlots.First().StartTime).Minutes;
         
         foreach (var slot in availableSlots)
         {
-            if (AreConsecutiveSlotsFree(availableSlots, slot, slotsSize))
+            if (AreConsecutiveSlotsFree(availableSlots, slot, slotSize))
             {
                 var slotDto = 
-                    new SlotReadDto(slot.Date, slot.StartTime, slot.EndTime.AddMinutes(timeSlotSize * (slotsSize - 1)));
+                    new SlotReadDto(slot.Date, slot.StartTime, slot.EndTime.AddMinutes(timeSlotSize * (slotSize - 1)));
                 availableSlotsDtos.Add(slotDto);
             }
         }
         if(availableSlotsDtos.Count == 0)
-            throw new Exception($"There is no available slots on this date for {serviceType}!");
+            throw new Exception($"There is no available slots on this date!");
         
         return new CustomResult(true, HttpStatusCode.OK, availableSlotsDtos.AsReadOnly());
     }
@@ -46,7 +45,7 @@ public class SlotService(ISlotRepo _slotRepo) : ISlotService
     {
         var requiredSlots = 
             await _slotRepo.GetSlotsByDateAndTime(dto.Date, dto.StartTime, dto.EndTime, cancellationToken);
-        ValidateSlots(requiredSlots, idAppointment);
+        ValidateSlots(requiredSlots, dto.SlotSize, idAppointment);
         
         var slot = dto.Adapt<Slot>();
         slot.StartTime = requiredSlots.First().StartTime;
@@ -54,26 +53,16 @@ public class SlotService(ISlotRepo _slotRepo) : ISlotService
         slot.IsFree = false;
         return slot;
     }
-    private void ValidateSlots(IReadOnlyCollection<Slot> slots, Guid idAppointment)
+    private void ValidateSlots(IReadOnlyCollection<Slot> slots, int slotSize, Guid idAppointment)
     {
         if (slots.Count == 0)
             throw new Exception(Messages.TimeSlotsNotFound);
         
-        if (!Enum.IsDefined(typeof(ServiceType), slots.Count - 1))
+        if (slotSize != slots.Count)
             throw new Exception(Messages.NumberOfTimeSlotsIsNotValid);
 
         if (slots.Any(slot => slot.IsFree == false && slot.IdAppointment != idAppointment))
             throw new Exception(Messages.TimeSlotsReserved);
-    }
-    private int GetSlotsSize(ServiceType serviceType)
-    {
-        return serviceType switch
-        {
-            ServiceType.Analyses => 1,
-            ServiceType.Consultation => 2,
-            ServiceType.Diagnostics => 3,
-            _ => throw new ArgumentOutOfRangeException(nameof(serviceType), "Unknown service type")
-        };
     }
     private bool AreConsecutiveSlotsFree(List<Slot> allSlots, Slot startSlot, int slotsSize)
     {
