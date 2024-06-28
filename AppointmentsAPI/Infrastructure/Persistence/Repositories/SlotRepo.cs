@@ -25,7 +25,7 @@ public class SlotRepo(AppointmentsDbContext _context) : ISlotRepo
         using (var connection = _context.CreateConnection())
         {
             var query = "SELECT DISTINCT \"Date\" FROM \"Slot\" " +
-                        "WHERE \"IsFree\" = true " +
+                        "WHERE \"Date\" >= CURRENT_DATE AND \"IsFree\" = true " +
                         "ORDER BY \"Date\" ASC";
             var slots = await connection.QueryAsync<DateOnly>(
                 new CommandDefinition(query, cancellationToken: cancellationToken));
