@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Common.Validation.Validators.ResultValidators;
 
-public class ResultCreateDtoValidator : AbstractValidator<ResultCreateDto>
+public class UpdateResultDtoValidator : AbstractValidator<UpdateResultDto>
 {
-    public ResultCreateDtoValidator()
+    public UpdateResultDtoValidator()
     {
         RuleFor(x => x.Complaints)
             .IsDoctorResult();
@@ -13,7 +13,5 @@ public class ResultCreateDtoValidator : AbstractValidator<ResultCreateDto>
             .IsDoctorResult();
         RuleFor(x => x.Recommendations)
             .IsDoctorResult();
-        RuleFor(x => x.IdAppointment)
-            .IsGuid();
     }
 }

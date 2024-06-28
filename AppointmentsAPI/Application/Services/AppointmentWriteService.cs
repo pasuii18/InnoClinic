@@ -19,11 +19,11 @@ public class AppointmentWriteService(IAppointmentWriteRepo _appointmentWriteRepo
     IAppointmentReadRepo _appointmentReadRepo, IPublishEndpoint _publishEndpoint, ISlotService _slotService) 
     : IAppointmentWriteService
 {
-    public async Task<ICustomResult> CreateAppointment(AppointmentCreateDto appointmentCreateDto,
+    public async Task<ICustomResult> CreateAppointment(CreateAppointmentDto createAppointmentDto,
         CancellationToken cancellationToken)
     {
-        var newAppointment = appointmentCreateDto.Adapt<Appointment>();
-        var slot = await _slotService.CheckReservationSlot(appointmentCreateDto.UpdateSlotStatusDto, 
+        var newAppointment = createAppointmentDto.Adapt<Appointment>();
+        var slot = await _slotService.CheckReservationSlot(createAppointmentDto.UpdateSlotStatusDto, 
             newAppointment.IdAppointment, cancellationToken);
         slot.Adapt(newAppointment);
         
@@ -32,7 +32,7 @@ public class AppointmentWriteService(IAppointmentWriteRepo _appointmentWriteRepo
         
         return new CustomResult(true, HttpStatusCode.Created, newAppointment.IdAppointment);
     }
-    public async Task<ICustomResult> UpdateAppointment(Guid idAppointment, AppointmentUpdateDto appointmentUpdateDto,
+    public async Task<ICustomResult> UpdateAppointment(Guid idAppointment, UpdateAppointmentDto updateAppointmentDto,
         CancellationToken cancellationToken)
     {
         var appointment = await _appointmentReadRepo.GetAppointmentById(idAppointment, cancellationToken); 
@@ -41,12 +41,12 @@ public class AppointmentWriteService(IAppointmentWriteRepo _appointmentWriteRepo
         if(appointment.IsApproved) 
             return new CustomResult(false, HttpStatusCode.NotFound, Messages.CannotUpdateApprovedAppointment);
 
-        var dto = appointmentUpdateDto.Adapt<UpdateSlotStatusDto>();
+        var dto = updateAppointmentDto.Adapt<UpdateSlotStatusDto>();
         var newSlot = await _slotService.CheckReservationSlot(dto, idAppointment, cancellationToken);
         
         var newAppointment = appointment.Adapt<Appointment>();
         newSlot.Adapt(newAppointment);
-        newAppointment.IdDoctor = appointmentUpdateDto.IdDoctor;
+        newAppointment.IdDoctor = updateAppointmentDto.IdDoctor;
         
         await _appointmentWriteRepo.UpdateAppointmentAndSlot(appointment, newAppointment, cancellationToken);
         await PublishAppointmentEvents(appointment, cancellationToken, false);

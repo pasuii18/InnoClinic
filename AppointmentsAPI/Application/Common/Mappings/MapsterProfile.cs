@@ -9,14 +9,14 @@ public class MapsterProfile : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-            config.NewConfig<Result, ResultReadDto>()
+            config.NewConfig<Result, GetResultDto>()
                 .Map(dest => dest.DoctorFullName, src => src.Appointment.DoctorFullName)
                 .Map(dest => dest.SpecializationName, src => src.Appointment.SpecializationName)
                 .Map(dest => dest.PatientFullName, src => src.Appointment.PatientFullName)
                 .Map(dest => dest.PatientDateOfBirth, src => src.Appointment.PatientDateOfBirth)
                 .Map(dest => dest.ServiceName, src => src.Appointment.ServiceName);
 
-            config.NewConfig<AppointmentCreateDto, Appointment>()
+            config.NewConfig<CreateAppointmentDto, Appointment>()
                 .Map(dest => dest.IdAppointment, src => Guid.NewGuid())
                 .Map(dest => dest.IsApproved, src => false);
 

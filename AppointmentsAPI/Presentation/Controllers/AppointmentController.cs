@@ -39,17 +39,17 @@ public class AppointmentController(IAppointmentReadService _appointmentReadServi
     
     [HttpPost]
     public async Task<IActionResult> CreateAppointment(
-        [FromBody][AutoValidateAlways]AppointmentCreateDto appointmentCreateDto, CancellationToken cancellationToken)
+        [FromBody][AutoValidateAlways]CreateAppointmentDto createAppointmentDto, CancellationToken cancellationToken)
     {
-        var result = await _appointmentWriteService.CreateAppointment(appointmentCreateDto, cancellationToken);
+        var result = await _appointmentWriteService.CreateAppointment(createAppointmentDto, cancellationToken);
         return Result(result);
     }
     
     [HttpPut("{idAppointment}")]
     public async Task<IActionResult> UpdateAppointment(Guid idAppointment, 
-        [FromBody][AutoValidateAlways]AppointmentUpdateDto appointmentUpdateDto, CancellationToken cancellationToken)
+        [FromBody][AutoValidateAlways]UpdateAppointmentDto updateAppointmentDto, CancellationToken cancellationToken)
     {
-        var result = await _appointmentWriteService.UpdateAppointment(idAppointment, appointmentUpdateDto, cancellationToken);
+        var result = await _appointmentWriteService.UpdateAppointment(idAppointment, updateAppointmentDto, cancellationToken);
         return Result(result);
     }
     

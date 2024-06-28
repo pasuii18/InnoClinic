@@ -1,6 +1,6 @@
 ﻿namespace Application.Common.Dtos.ResultDtos;
 
-public record ResultReadDto(
+public record GetResultDto(
     Guid IdResult,
     DateOnly Date,
     string PatientFullName,

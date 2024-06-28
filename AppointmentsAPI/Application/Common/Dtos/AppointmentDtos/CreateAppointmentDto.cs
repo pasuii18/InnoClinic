@@ -4,5 +4,5 @@ using Newtonsoft.Json;
 
 namespace Application.Common.Dtos.AppointmentsDtos;
 
-public record AppointmentCreateDto(UpdateSlotStatusDto UpdateSlotStatusDto, 
+public record CreateAppointmentDto(UpdateSlotStatusDto UpdateSlotStatusDto, 
     Guid IdPatient, Guid IdDoctor, Guid IdService);

@@ -1,6 +1,6 @@
 ﻿namespace Application.Common.Dtos.ResultDtos;
 
-public record ResultCreateDto(string Complaints, string Conclusion, string Recommendations,
+public record CreateResultDto(string Complaints, string Conclusion, string Recommendations,
     Guid IdAppointment);
 
     // public DateOnly DateOfResult { get; set; }

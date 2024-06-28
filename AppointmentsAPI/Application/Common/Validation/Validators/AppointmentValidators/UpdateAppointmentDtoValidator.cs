@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Common.Validation.Validators;
 
-public class AppointmentUpdateDtoValidator : AbstractValidator<AppointmentUpdateDto>
+public class UpdateAppointmentDtoValidator : AbstractValidator<UpdateAppointmentDto>
 {
-    public AppointmentUpdateDtoValidator()
+    public UpdateAppointmentDtoValidator()
     {
         RuleFor(rule => rule.Date)
             .IsDateOnly();

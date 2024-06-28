@@ -24,7 +24,7 @@ public class SlotService(ISlotRepo _slotRepo) : ISlotService
         if(availableSlots.Count == 0)
             throw new Exception("There is no available slots today!");
         
-        var availableSlotsDtos = new List<SlotReadDto>();
+        var availableSlotsDtos = new List<GetSlotDto>();
         var timeSlotSize = (availableSlots.First().EndTime - availableSlots.First().StartTime).Minutes;
         
         foreach (var slot in availableSlots)
@@ -32,7 +32,7 @@ public class SlotService(ISlotRepo _slotRepo) : ISlotService
             if (AreConsecutiveSlotsFree(availableSlots, slot, slotSize))
             {
                 var slotDto = 
-                    new SlotReadDto(slot.Date, slot.StartTime, slot.EndTime.AddMinutes(timeSlotSize * (slotSize - 1)));
+                    new GetSlotDto(slot.Date, slot.StartTime, slot.EndTime.AddMinutes(timeSlotSize * (slotSize - 1)));
                 availableSlotsDtos.Add(slotDto);
             }
         }

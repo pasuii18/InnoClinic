@@ -11,9 +11,7 @@ public class PdfGenerator
     {
         using (var stream = new MemoryStream())
         {
-            var writer = new PdfWriter(stream);
-            var pdf = new PdfDocument(writer);
-            var document = new Document(pdf);
+            var document = new Document(new PdfDocument(new PdfWriter(stream)));
             
             var properties = typeof(T).GetProperties()
                 .Where(prop => prop.GetValue(entity) != null)
