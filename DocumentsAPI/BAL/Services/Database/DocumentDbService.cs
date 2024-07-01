@@ -13,10 +13,11 @@ namespace BAL.Services;
 public class DocumentDbService(IDocumentDbRepo _documentDbRepo, IDocumentBlobService _documentBlobService)
     : IDocumentDbService
 {
-    public async Task<ICustomResult<string>> GetDocumentUrlByResultId(Guid idResult, 
+    public async Task<ICustomResult<string>> GetDocumentUrlByResultId(Guid idResult, DocumentTypeEnum type,
         CancellationToken cancellationToken)
     {
-        var document = await _documentDbRepo.GetDocumentByIdLinked(idResult, cancellationToken);
+        var document = await _documentDbRepo.GetDocumentByIdLinked(idResult,
+            new PartitionKey(type.ToString()), cancellationToken);
         if (document == null) 
             return new CustomResult<string>(false, HttpStatusCode.NotFound, messages: [Messages.DocumentNotFound]);
         
@@ -36,7 +37,8 @@ public class DocumentDbService(IDocumentDbRepo _documentDbRepo, IDocumentBlobSer
     }
     public async Task UpdateDocument(UpdateDocumentDto updateDocumentDto, CancellationToken cancellationToken)
     {
-        var document = await _documentDbRepo.GetDocumentByIdLinked(updateDocumentDto.IdLinked, cancellationToken);
+        var document = await _documentDbRepo.GetDocumentByIdLinked(updateDocumentDto.IdLinked,
+            new PartitionKey(updateDocumentDto.Type.ToString()), cancellationToken);
         if (document == null) return;
         
         await _documentBlobService.DeleteDocument(document.Url, cancellationToken);
@@ -47,7 +49,8 @@ public class DocumentDbService(IDocumentDbRepo _documentDbRepo, IDocumentBlobSer
     }
     public async Task DeleteDocument(DeleteDocumentDto deleteDocumentDto, CancellationToken cancellationToken)
     {
-        var document = await _documentDbRepo.GetDocumentByIdLinked(deleteDocumentDto.IdLinked, cancellationToken);
+        var document = await _documentDbRepo.GetDocumentByIdLinked(deleteDocumentDto.IdLinked,
+            new PartitionKey(deleteDocumentDto.Type.ToString()), cancellationToken);
         if (document == null) return;
         
         await _documentDbRepo.DeleteDocument(document.IdDocument.ToString(),

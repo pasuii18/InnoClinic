@@ -12,7 +12,9 @@ public class PhotoDbRepo(CosmosDbContext _context) : IPhotoDbRepo
         var query = new QueryDefinition("SELECT * FROM c WHERE c.IdLinked = @IdLinked")
             .WithParameter("@IdLinked", idLinked);
 
-        var iterator = _context.PhotosContainer.GetItemQueryIterator<Photo>(query);
+        var iterator = _context.PhotosContainer.GetItemQueryIterator<Photo>(
+            query,
+            requestOptions: new QueryRequestOptions { PartitionKey = partition });
 
         if (iterator.HasMoreResults)
         {

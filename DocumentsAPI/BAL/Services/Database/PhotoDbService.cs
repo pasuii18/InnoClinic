@@ -12,10 +12,10 @@ namespace BAL.Services;
 
 public class PhotoDbService(IPhotoDbRepo _photoDbRepo, IPhotoBlobService _photoBlobService) : IPhotoDbService
 {
-    public async Task<ICustomResult<string>> GetPhotoUrlById(Guid idPhoto, CancellationToken cancellationToken)
+    public async Task<ICustomResult<string>> GetPhotoUrlById(Guid idPhoto, PhotoTypeEnum type, CancellationToken cancellationToken)
     {
         var photo = await _photoDbRepo.GetPhotoByIdLinked(idPhoto.ToString(),
-            new PartitionKey("blya ya huy znaet..."), cancellationToken);
+            new PartitionKey(type.ToString()), cancellationToken);
         if (photo == null)
             return new CustomResult<string>(false, HttpStatusCode.NotFound, messages: [Messages.PhotoNotFound]);
         

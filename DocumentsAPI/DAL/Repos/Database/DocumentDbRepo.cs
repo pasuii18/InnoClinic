@@ -7,12 +7,14 @@ namespace DAL.Repos.Database;
 
 public class DocumentDbRepo(CosmosDbContext _context) : IDocumentDbRepo
 {
-    public async Task<Document?> GetDocumentByIdLinked(Guid idLinked, CancellationToken cancellationToken)
+    public async Task<Document?> GetDocumentByIdLinked(Guid idLinked, PartitionKey partition, CancellationToken cancellationToken)
     {
         var query = new QueryDefinition("SELECT * FROM c WHERE c.IdLinked = @IdLinked")
             .WithParameter("@IdLinked", idLinked);
 
-        var iterator = _context.DocumentsContainer.GetItemQueryIterator<Document>(query);
+        var iterator = _context.DocumentsContainer.GetItemQueryIterator<Document>(
+            query,
+            requestOptions: new QueryRequestOptions { PartitionKey = partition });
 
         if (iterator.HasMoreResults)
         {

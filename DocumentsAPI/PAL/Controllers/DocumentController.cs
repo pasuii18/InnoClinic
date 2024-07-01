@@ -2,6 +2,7 @@
 using BAL.Common.ServicesInterfaces;
 using DAL;
 using DAL.Common.Contexts;
+using DAL.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Common;
@@ -13,9 +14,10 @@ namespace Presentation.Controllers;
 public class DocumentController(IDocumentDbService _documentDbService, AzureBlobContext context) : CustomControllerBase
 {
     [HttpGet("{idResult}")]
-    public async Task<IActionResult> GetDocumentByIdResult(Guid idResult, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDocumentByIdResult(Guid idResult, DocumentTypeEnum type,
+        CancellationToken cancellationToken)
     {
-        return Result(await _documentDbService.GetDocumentUrlByResultId(idResult, cancellationToken));
+        return Result(await _documentDbService.GetDocumentUrlByResultId(idResult, type, cancellationToken));
     }
     
     [HttpGet("all")]
