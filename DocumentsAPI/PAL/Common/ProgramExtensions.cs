@@ -1,7 +1,12 @@
 ﻿using BAL;
 using DAL;
 using DAL.Common;
+using DAL.Common.Options;
+using MassTransit;
+using Microsoft.Extensions.Options;
 using Presentation.Common.Middlewares;
+using Presentation.Consumers;
+using Presentation.Consumers.AccountConsumers;
 
 namespace Presentation.Common;
 
@@ -17,11 +22,13 @@ public static class ProgramExtensions
 
         builder.Services
             .Configure<AzureBlobStorageOptions>(builder.Configuration.GetSection("AzureBlobStorage"))
-            .Configure<CosmosDbOptions>(builder.Configuration.GetSection("AzureCosmosDb"));
+            .Configure<CosmosDbOptions>(builder.Configuration.GetSection("AzureCosmosDb"))
+            .Configure<RabbitMQOptions>(builder.Configuration.GetSection("RabbitMQConfiguration"));
             
         builder.Services
             .AddDataAccessLayer()
-            .AddBusinessAccessLayer();
+            .AddBusinessAccessLayer()
+            .MassTransitConfigure();
         
         builder.Services
             .AddControllers();
@@ -49,9 +56,54 @@ public static class ProgramExtensions
         
         return app;
     }
-    
     public static async Task RunApplicationAsync(this WebApplication app)
     {
         await app.RunAsync();
+    }
+    private static IServiceCollection MassTransitConfigure
+        (this IServiceCollection services)
+    {
+        services.AddMassTransit(x =>
+        {
+            x.ConsumersConfigure();
+            
+            x.UsingRabbitMq((context,cfg) =>
+            {
+                var rabbitMqConfig = context.GetRequiredService<IOptions<RabbitMQOptions>>().Value;
+                
+                cfg.Host(rabbitMqConfig.HostName, rabbitMqConfig.VirtualHost, h => {
+                    h.Username(rabbitMqConfig.UserName);
+                    h.Password(rabbitMqConfig.Password);
+                });
+
+                // cfg.EndpointsConfigure(context);
+            
+                cfg.ClearSerialization();
+                cfg.UseRawJsonSerializer();
+                cfg.ConfigureEndpoints(context, 
+                    new DefaultEndpointNameFormatter(prefix: "Queue", includeNamespace: false));
+            });
+        });
+        
+        return services;
+    }
+    private static IBusRegistrationConfigurator ConsumersConfigure
+        (this IBusRegistrationConfigurator configurator)
+    {
+        configurator.AddConsumer<ResultConsumer>();
+        configurator.AddConsumer<OfficeConsumer>();
+        configurator.AddConsumer<AccountConsumer>();
+
+        return configurator;
+    }
+    private static IRabbitMqBusFactoryConfigurator EndpointsConfigure
+        (this IRabbitMqBusFactoryConfigurator configurator, IBusRegistrationContext context)
+    {
+        configurator.ReceiveEndpoint("CreatedResultQueue", e =>
+        {
+            e.ConfigureConsumer<ResultConsumer>(context);
+        });
+
+        return configurator;
     }
 }

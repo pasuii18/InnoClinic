@@ -1,4 +1,4 @@
-﻿namespace DAL.Common;
+﻿namespace DAL.Common.Options;
 
 public class CosmosDbOptions
 {

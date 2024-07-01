@@ -9,6 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="itext7" Version="8.0.4" />
+        <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.4" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.3" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
@@ -16,10 +19,6 @@
     <ItemGroup>
       <ProjectReference Include="..\BAL\BAL.csproj" />
       <ProjectReference Include="..\DAL\DAL.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Controllers\" />
     </ItemGroup>
 
 </Project>
